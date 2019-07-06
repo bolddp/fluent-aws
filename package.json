@@ -1,6 +1,6 @@
 {
   "name": "fluent-aws",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Fluent AWS API, written in Typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -23,7 +23,6 @@
     "@types/debug": "^4.1.4",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.0.10",
-    "aws-sdk": "^2.484.0",
     "chai": "^4.2.0",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.2"
@@ -31,6 +30,7 @@
   "dependencies": {
     "debug": "^4.1.1",
     "mocha": "^6.1.4",
-    "node": "^12.5.0"
+    "node": "^12.5.0",
+    "aws-sdk": "^2.484.0"
   }
 }
