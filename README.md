@@ -1,28 +1,43 @@
-# Goals of API
+# fluent-aws
 
-Configure and assume role (during development)
+A fluent, Promise based Amazon Web Services API, with a goal of being intuitive and easy to use.
+
+The official AWS SDK is huge, and compatibility with it in **fluent-aws** will be added on a need-to-have basis for me personally. But pull requests to expand the SDK is most welcome!
+
+## Installation
+
+  > npm install --save fluent-aws
+
+## Sample code
+
+Configure and assume role
 ```ts
 aws().configure({
   region: 'eu-west-1'
 })
-.assumeRole('roleArn')
+.assumeRole('roleArn') // Handy during development on dev computer
 ```
 
-Access across AWS services
+Fluent access across AWS services
 ```ts
 // Bridge from ECS task to the EC2 container its running on
-const ipAddress = await aws().ecs()
+const ec2Instance = await aws().ecs()
   .cluster('clusterArn')
-  .task('taskArn').instance().publicIpAddress();
+  .task('taskArn')
+  .ec2Instance().awsData();
+
+expect(ec2Instance.PublicIpAddress).to.equal('1.2.3.4');
 ```
 
 Logical representation of AWS objects, e.g. a S3 bucket, for multiple operations on the same object
 ```ts
 const bucket = await aws().s3()
   .bucket('bucketName')
-  .createIfNotExists(bucketConfig);
+  .createIfNotExists()
+  .resolve();
 
-await bucket.write('fileName', fileContentsBuffer);
-const readFileBuffer = await bucket.read('fileName');
+await bucket.object('fileName').writeString('Howdy partner!');
+const str = await bucket.object('fileName').readString();
+await bucket.object('fileName').delete();
 ```
 
