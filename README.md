@@ -4,11 +4,8 @@ A fluent, Promise based Amazon Web Services API, with a goal of being intuitive 
 
 The official AWS SDK is huge, and compatibility with it in **fluent-aws** will be added on a need-to-have basis for me personally. But pull requests to expand the SDK is most welcome!
 
-## Installation
-
-  > npm install --save fluent-aws
-
-## Sample code
+The documentation for the API can be found [here](https://github.com/bolddp/fluent-aws/wiki/Documentation).
+## Some introductory sample code
 
 Configure and assume role
 ```ts
