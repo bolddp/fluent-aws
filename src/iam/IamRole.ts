@@ -7,14 +7,10 @@ export class IamRole extends AwsDataApiNode<AWS.IAM.Role> {
 
   constructor(parent: ApiNode, name: string, awsData?: AWS.IAM.Role) {
     super(parent, awsData);
+    this.name = name;
   }
 
   loadAwsData() {
     return AwsApi.iam.getRole(this.name);
-  }
-
-  async resolve() {
-    await this.resolveNode();
-    return this;
   }
 }

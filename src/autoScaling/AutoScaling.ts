@@ -3,6 +3,10 @@ import { AutoScalingGroup } from "./AutoScalingGroup";
 import { ApiNodeFactory } from '../node/ApiNodeFactory';
 import { AutoScalingGroupCollection } from "./AutoScalingGroupCollection";
 
+/**
+ * Base node for the Autoscaling group API, providing access to underlying
+ * collections.
+ */
 export class AutoScaling extends ApiNode {
   asgCollection: AutoScalingGroupCollection;
 

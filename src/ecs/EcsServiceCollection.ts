@@ -7,26 +7,26 @@ import { EcsService } from "./EcsService";
 import { AwsApi } from "../awsapi/AwsApi";
 
 export class EcsServiceCollection extends ApiNodeCollection<EcsService, AWS.ECS.Service> {
+  clusterId: string;
   serviceArns?: string[];
-  cluster: EcsCluster;
 
-  constructor(parent: ApiNode, cluster: EcsCluster) {
+  constructor(parent: ApiNode, clusterId: string) {
     super(parent);
-    this.cluster = cluster;
+    this.clusterId = clusterId;
   }
 
   apiNodeFromAwsData(awsData: AWS.ECS.Service): EcsService {
-    return ApiNodeFactory.ecsService(this, this.cluster, awsData.serviceName, awsData);
+    return ApiNodeFactory.ecsService(this, this.clusterId, awsData.serviceName, awsData);
   }
 
   apiNodeFromId(id: string): EcsService {
-    return ApiNodeFactory.ecsService(this, this.cluster, id);
+    return ApiNodeFactory.ecsService(this, this.clusterId, id);
   }
 
   async load(): Promise<AWS.ECS.Service[]> {
     if (!this.serviceArns) {
-      this.serviceArns = await AwsApi.ecs.listServices(this.cluster.idOrArn);
+      this.serviceArns = await AwsApi.ecs.listServices(this.clusterId);
     }
-    return AwsApi.ecs.describeServices(this.cluster.idOrArn, this.serviceArns);
+    return AwsApi.ecs.describeServices(this.clusterId, this.serviceArns);
   }
 }

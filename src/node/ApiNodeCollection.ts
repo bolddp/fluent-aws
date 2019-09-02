@@ -31,7 +31,7 @@ export abstract class ApiNodeCollection<T, TAwsData> extends ApiNode {
   }
 
   async find(predicate: (o: TAwsData) => boolean): Promise<T[]> {
-    await this.resolveNode();
+    await this.ensureResolved();
     const result: T[] = [];
     const awsDatas = await this.load();
     for (const awsData of awsDatas) {
@@ -46,14 +46,7 @@ export abstract class ApiNodeCollection<T, TAwsData> extends ApiNode {
    * Retrieves the AWS SDK data for this collection.
    */
   async awsData(): Promise<TAwsData[]> {
-    await this.resolveNode();
+    await this.ensureResolved();
     return await this.load();
-  }
-
-  /**
-   * Returns an instance of this collection.
-   */
-  async resolve(): Promise<T[]> {
-    return this.find(() => true);
   }
 }

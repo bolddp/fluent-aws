@@ -18,9 +18,4 @@ export class Ecs extends ApiNode {
   cluster(idOrArn: string): EcsCluster {
     return this.clusterCollection.getById(idOrArn);
   }
-
-  async resolve(): Promise<Ecs> {
-    await this.resolveNode();
-    return this;
-  }
 }

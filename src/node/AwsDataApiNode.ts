@@ -21,7 +21,7 @@ export abstract class AwsDataApiNode<T> extends ApiNode {
    * getting it from the AWS SDK.
    */
   async awsData(): Promise<T> {
-    await this.resolveNode();
+    await this.ensureResolved();
     if (!this.awsDataInstance) {
       this.awsDataInstance = await this.loadAwsData();
     }

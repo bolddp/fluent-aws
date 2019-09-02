@@ -6,22 +6,22 @@ import { ApiNode } from "../node/ApiNode";
 import { AwsApi } from '../awsapi/AwsApi';
 
 export class S3ObjectCollection extends ApiNodeCollection<S3Object, AWS.S3.Object> {
-  s3Bucket: S3Bucket;
+  bucketName: string;
 
-  constructor(parent: ApiNode, s3Bucket: S3Bucket) {
+  constructor(parent: ApiNode, bucketName: string) {
     super(parent);
-    this.s3Bucket = s3Bucket;
+    this.bucketName = bucketName;
   }
 
   apiNodeFromAwsData(awsData: AWS.S3.Object) {
-    return ApiNodeFactory.s3Object(this, this.s3Bucket, awsData.Key);
+    return ApiNodeFactory.s3Object(this, this.bucketName, awsData.Key);
   }
 
   apiNodeFromId(id: string) {
-    return ApiNodeFactory.s3Object(this, this.s3Bucket, id);
+    return ApiNodeFactory.s3Object(this, this.bucketName, id);
   }
 
   async load(): Promise<AWS.S3.Object[]> {
-    return AwsApi.s3.listObjects(this.s3Bucket.name);
+    return AwsApi.s3.listObjects(this.bucketName);
   }
 }

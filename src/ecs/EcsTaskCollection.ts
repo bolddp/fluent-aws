@@ -6,24 +6,26 @@ import { ApiNodeFactory } from "../node/ApiNodeFactory";
 import { AwsApi } from "../awsapi/AwsApi";
 
 export class EcsTaskCollection extends ApiNodeCollection<EcsTask, AWS.ECS.Task> {
-  cluster: EcsCluster;
+  taskArns?: string[];
+  clusterId: string;
 
-  constructor(parent: ApiNode, cluster: EcsCluster) {
+  constructor(parent: ApiNode, clusterId: string) {
     super(parent);
-    this.cluster = cluster;
+    this.clusterId = clusterId;
   }
 
   apiNodeFromAwsData(awsData: AWS.ECS.Task): EcsTask {
-    return ApiNodeFactory.ecsTask(this, this.cluster, awsData.clusterArn, awsData);
+    return ApiNodeFactory.ecsTask(this, this.clusterId, awsData.taskArn, awsData);
   }
 
   apiNodeFromId(id: string): EcsTask {
-    return ApiNodeFactory.ecsTask(this, this.cluster, id);
+    return ApiNodeFactory.ecsTask(this, this.clusterId, id);
   }
 
   async load(): Promise<AWS.ECS.Task[]> {
-    const taskArns = await AwsApi.ecs.listTasks(this.cluster.idOrArn);
-    return AwsApi.ecs.describeTasks(this.cluster.idOrArn, taskArns);
+    if (!this.taskArns) {
+      this.taskArns = await AwsApi.ecs.listTasks(this.clusterId);
+    }
+    return AwsApi.ecs.describeTasks(this.clusterId, this.taskArns);
   }
-
 }

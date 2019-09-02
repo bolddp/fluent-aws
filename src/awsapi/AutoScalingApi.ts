@@ -22,4 +22,18 @@ export class AutoScalingApi {
     return autoScalingGroups[0];
   }
 
+  async update(updateData: AWS.AutoScaling.UpdateAutoScalingGroupType): Promise<void> {
+    await this.autoScaling().updateAutoScalingGroup(updateData).promise();
+  }
+
+  async setInstanceProtection(idOrArn: string, instanceIds: string[], value: boolean): Promise<void> {
+    debug('setting instance proection: %s, instances: %j, value: %b', idOrArn, instanceIds, value);
+    await this.autoScaling().setInstanceProtection({
+      AutoScalingGroupName: idOrArn,
+      InstanceIds: instanceIds,
+      ProtectedFromScaleIn: value
+    }).promise();
+    debug('set instance protection');
+  }
+
 }

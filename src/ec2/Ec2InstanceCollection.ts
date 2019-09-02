@@ -15,6 +15,6 @@ export class Ec2InstanceCollection extends ApiNodeCollection<Ec2Instance, AWS.EC
   }
 
   load(): Promise<AWS.EC2.Instance[]> {
-    return AwsApi.ec2.ec2DescribeInstances(this.instanceIds);
+    return AwsApi.ec2.describeInstances(this.instanceIds);
   }
 }

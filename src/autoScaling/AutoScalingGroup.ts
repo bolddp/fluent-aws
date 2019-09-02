@@ -11,10 +11,10 @@ import { AwsDataApiNode } from '../node/AwsDataApiNode';
 export class AutoScalingGroup extends AwsDataApiNode<AWS.AutoScaling.AutoScalingGroup> {
   name: string;
   ec2InstanceCollection: Ec2InstanceCollection;
-  constructor(parent: ApiNode, name: string, awsData: AWS.AutoScaling.AutoScalingGroup) {
+
+  constructor(parent: ApiNode, name: string, awsData?: AWS.AutoScaling.AutoScalingGroup) {
     super(parent, awsData);
     this.name = name;
-    this.ec2InstanceCollection = ApiNodeFactory.ec2InstanceCollection(this);
   }
 
   loadAwsData() {
@@ -22,16 +22,29 @@ export class AutoScalingGroup extends AwsDataApiNode<AWS.AutoScaling.AutoScaling
   }
 
   ec2Instances(): Ec2InstanceCollection {
-    // Promise to determine the id's of all instances in the autoscaling group
-    this.promiseChain.add(async () => {
-      const awsData = await this.loadAwsData();
-      this.ec2InstanceCollection.instanceIds = awsData.Instances.map(x => x.InstanceId);
-    });
+    if (!this.ec2InstanceCollection) {
+      this.ec2InstanceCollection = ApiNodeFactory.ec2InstanceCollection(this);
+      // Promise to determine the id's of all instances in the autoscaling group
+      this.promiseChain.add(async () => {
+        const awsData = await this.loadAwsData();
+        this.ec2InstanceCollection.instanceIds = awsData.Instances.map(x => x.InstanceId);
+      });
+    }
     return this.ec2InstanceCollection;
   }
 
-  async resolve(): Promise<AutoScalingGroup> {
-    await this.resolveNode();
-    return this;
+  async updateSize(minSize: number, maxSize: number, desiredSize: number): Promise<void> {
+    await this.ensureResolved();
+    return AwsApi.autoScaling.update({
+      AutoScalingGroupName: this.name,
+      MinSize: minSize,
+      MaxSize: maxSize,
+      DesiredCapacity: desiredSize
+    });
+  }
+
+  async setInstanceProtection(instanceIds: string[], value: boolean): Promise<void> {
+    await this.ensureResolved();
+    return AwsApi.autoScaling.setInstanceProtection(this.name, instanceIds, value);
   }
 }
