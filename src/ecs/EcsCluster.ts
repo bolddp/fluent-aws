@@ -15,8 +15,8 @@ export class EcsCluster extends AwsDataApiNode<AWS.ECS.Cluster> {
   constructor(parent: ApiNode, idOrArn: string, awsData?: AWS.ECS.Cluster) {
     super(parent, awsData);
     this.idOrArn = idOrArn;
-    this.serviceCollection = ApiNodeFactory.ecsServiceCollection(this, this);
-    this.taskCollection = ApiNodeFactory.ecsTaskCollection(this, this);
+    this.serviceCollection = ApiNodeFactory.ecsServiceCollection(this, this.idOrArn);
+    this.taskCollection = ApiNodeFactory.ecsTaskCollection(this, this.idOrArn);
   }
 
   loadAwsData() {
@@ -37,10 +37,5 @@ export class EcsCluster extends AwsDataApiNode<AWS.ECS.Cluster> {
 
   services(): EcsServiceCollection {
     return this.serviceCollection;
-  }
-
-  async resolve(): Promise<EcsCluster> {
-    await this.resolveNode();
-    return this;
   }
 }

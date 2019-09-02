@@ -29,4 +29,6 @@ export * from './s3/S3BucketCollection';
 export * from './s3/S3Object';
 export * from './s3/S3ObjectCollection';
 
-
+export * from './dynamoDb/DynamoDb';
+export * from './dynamoDb/DynamoDbTable';
+export * from './dynamoDb/DynamoDbTableCollection';

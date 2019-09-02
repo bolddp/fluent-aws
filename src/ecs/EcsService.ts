@@ -6,21 +6,16 @@ import { AwsDataApiNode } from "../node/AwsDataApiNode";
 const debug = require('debug')('fluentaws:EcsService');
 
 export class EcsService extends AwsDataApiNode<AWS.ECS.Service> {
-  cluster: EcsCluster;
+  clusterId: string;
   name: string;
 
-  constructor(parent: ApiNode, cluster: EcsCluster, name: string, awsData: AWS.ECS.Service) {
+  constructor(parent: ApiNode, clusterId: string, name: string, awsData?: AWS.ECS.Service) {
     super(parent, awsData);
-    this.cluster = cluster;
+    this.clusterId = clusterId;
     this.name = name;
   }
 
   loadAwsData() {
-    return AwsApi.ecs.describeService(this.cluster.idOrArn, this.name);
-  }
-
-  async resolve(): Promise<EcsService> {
-    await this.resolveNode();
-    return this;
+    return AwsApi.ecs.describeService(this.clusterId, this.name);
   }
 }

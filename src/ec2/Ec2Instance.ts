@@ -9,13 +9,13 @@ export class Ec2Instance extends AwsDataApiNode<AWS.EC2.Instance> {
   instanceId: string;
   iamRoleInstance: IamRole;
 
-  constructor(parent: ApiNode, instanceId: string, awsData: AWS.EC2.Instance) {
+  constructor(parent: ApiNode, instanceId: string, awsData?: AWS.EC2.Instance) {
     super(parent, awsData);
     this.instanceId = instanceId;
   }
 
   loadAwsData() {
-    return AwsApi.ec2.ec2DescribeInstance(this.instanceId);
+    return AwsApi.ec2.describeInstance(this.instanceId);
   }
 
   iamRole(): IamRole {
@@ -31,10 +31,5 @@ export class Ec2Instance extends AwsDataApiNode<AWS.EC2.Instance> {
       });
     }
     return this.iamRoleInstance;
-  }
-
-  async resolve(): Promise<Ec2Instance> {
-    await this.resolveNode();
-    return this;
   }
 }

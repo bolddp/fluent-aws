@@ -13,7 +13,7 @@ export class S3Bucket extends ApiNode {
   constructor(parent: ApiNode, name: string) {
     super(parent);
     this.name = name;
-    this.objectCollection = ApiNodeFactory.s3ObjectCollection(this, this);
+    this.objectCollection = ApiNodeFactory.s3ObjectCollection(this, this.name);
   }
 
   /**
@@ -55,10 +55,5 @@ export class S3Bucket extends ApiNode {
 
   object(key: string): S3Object {
     return this.objectCollection.getById(key);
-  }
-
-  async resolve(): Promise<S3Bucket> {
-    await this.resolveNode();
-    return this;
   }
 }

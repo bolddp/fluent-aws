@@ -13,7 +13,7 @@ export class Route53HealthCheckCollection extends ApiNodeCollection<Route53Healt
   }
 
   load(): Promise<AWS.Route53.HealthCheck[]> {
-    return AwsApi.route53.getAllHealthChecks();
+    return AwsApi.route53.listHealthChecks();
   }
 
   /**

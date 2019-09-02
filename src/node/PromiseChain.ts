@@ -26,6 +26,7 @@ export class PromiseChain {
   invalidate() {
     this.resolved = undefined;
     this.chain = [];
+    this.volatileChain = [];
   }
 
   resolve(): Promise<void> {

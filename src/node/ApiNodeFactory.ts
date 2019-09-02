@@ -1,3 +1,4 @@
+import { Route53RecordSetCollection } from './../route53/Route53RecordSetCollection';
 import { ApiNode } from "./ApiNode";
 import { S3 } from "../s3/S3";
 import { Ecs } from "../ecs/Ecs";
@@ -21,6 +22,11 @@ import { IamRole } from "../iam/IamRole";
 import { Route53HealthCheck } from "../route53/Route53HealthCheck";
 import { Route53HealthCheckCollection } from '../route53/Route53HealthCheckCollection';
 import { Route53 } from "../route53/Route53";
+import { DynamoDbTable } from "../dynamoDb/DynamoDbTable";
+import { DynamoDbTableCollection } from "../dynamoDb/DynamoDbTableCollection";
+import { DynamoDb } from "../dynamoDb/DynamoDb";
+import { Route53HostedZone } from "../route53/Route53HostedZone";
+import { Route53HostedZoneCollection } from "../route53/Route53HostedZoneCollection";
 
 export class ApiNodeFactory {
   // IAM
@@ -33,18 +39,18 @@ export class ApiNodeFactory {
   static s3(parent: ApiNode) { return new S3(parent); }
   static s3Bucket(parent: ApiNode, name: string) { return new S3Bucket(parent, name); }
   static s3BucketCollection(parent: ApiNode) { return new S3BucketCollection(parent); }
-  static s3Object(parent: ApiNode, bucket: S3Bucket, key: string) { return new S3Object(parent, bucket, key); }
-  static s3ObjectCollection(parent: ApiNode, bucket: S3Bucket) { return new S3ObjectCollection(parent, bucket); }
+  static s3Object(parent: ApiNode, bucketName: string, key: string) { return new S3Object(parent, bucketName, key); }
+  static s3ObjectCollection(parent: ApiNode, bucketName: string) { return new S3ObjectCollection(parent, bucketName); }
   // ECS
   static ecs(parent: ApiNode) { return new Ecs(parent); }
   static ecsCluster(parent: ApiNode, idOrArn: string, awsData?: AWS.ECS.Cluster) { return new EcsCluster(parent, idOrArn, awsData); }
   static ecsClusterCollection(parent: ApiNode) { return new EcsClusterCollection(parent); }
-  static ecsTask(parent: ApiNode, cluster: EcsCluster, idOrArn: string, awsData?: AWS.ECS.Task) { return new EcsTask(parent, cluster, idOrArn, awsData); }
-  static ecsTaskCollection(parent: ApiNode, cluster: EcsCluster) { return new EcsTaskCollection(parent, cluster); }
-  static ecsService(parent: ApiNode, cluster: EcsCluster, name: string, awsData?: AWS.ECS.Cluster) {
-    return new EcsService(parent, cluster, name, awsData);
+  static ecsTask(parent: ApiNode, clusterId: string, idOrArn: string, awsData?: AWS.ECS.Task) { return new EcsTask(parent, clusterId, idOrArn, awsData); }
+  static ecsTaskCollection(parent: ApiNode, clusterId: string) { return new EcsTaskCollection(parent, clusterId); }
+  static ecsService(parent: ApiNode, clusterId: string, name: string, awsData?: AWS.ECS.Cluster) {
+    return new EcsService(parent, clusterId, name, awsData);
   }
-  static ecsServiceCollection(parent: ApiNode, cluster: EcsCluster) { return new EcsServiceCollection(parent, cluster); }
+  static ecsServiceCollection(parent: ApiNode, clusterId: string) { return new EcsServiceCollection(parent, clusterId); }
   // EC2
   static ec2(parent: ApiNode) { return new Ec2(parent); }
   static ec2Instance(parent: ApiNode, instanceId: string, awsData?: AWS.EC2.Instance) { return new Ec2Instance(parent, instanceId, awsData); }
@@ -53,4 +59,11 @@ export class ApiNodeFactory {
   static route53(parent: ApiNode) { return new Route53(parent); }
   static route53HealthCheck(parent: ApiNode, id: string, awsData?: AWS.Route53.HealthCheck) { return new Route53HealthCheck(parent, id, awsData); }
   static route53HealthCheckCollection(parent: ApiNode) { return new Route53HealthCheckCollection(parent); }
+  static route53HostedZone(parent: ApiNode, id: string, awsData?: AWS.Route53.HostedZone) { return new Route53HostedZone(parent, id, awsData); }
+  static route53HostedZoneCollection(parent: ApiNode) { return new Route53HostedZoneCollection(parent); }
+  static route53RecordSetCollection(parent: ApiNode, hostedZoneId: string) { return new Route53RecordSetCollection(parent, hostedZoneId); }
+  // Dynamo DB
+  static dynamoDb(parent: ApiNode) { return new DynamoDb(parent); }
+  static dynamoDbTableCollection(parent: ApiNode) { return new DynamoDbTableCollection(parent); }
+  static dynamoDbTable(parent: ApiNode, name: string, awsData?: AWS.DynamoDB.CreateTableInput) { return new DynamoDbTable(parent, name, awsData); }
 }

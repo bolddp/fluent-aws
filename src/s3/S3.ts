@@ -18,9 +18,4 @@ export class S3 extends ApiNode {
   bucket(name: string): S3Bucket {
     return this.bucketCollection.getById(name);
   }
-
-  async resolve(): Promise<S3> {
-    await this.resolveNode();
-    return this;
-  }
 }
