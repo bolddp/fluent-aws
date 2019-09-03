@@ -9,8 +9,8 @@ export class Ec2Instance extends AwsDataApiNode<AWS.EC2.Instance> {
   instanceId: string;
   iamRoleInstance: IamRole;
 
-  constructor(parent: ApiNode, instanceId: string, awsData?: AWS.EC2.Instance) {
-    super(parent, awsData);
+  constructor(parent: ApiNode, instanceId: string) {
+    super(parent);
     this.instanceId = instanceId;
   }
 

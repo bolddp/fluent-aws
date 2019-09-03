@@ -8,8 +8,8 @@ export class Route53HostedZone extends AwsDataApiNode<AWS.Route53.HostedZone> {
   id: string;
   recordSetCollection: Route53RecordSetCollection;
 
-  constructor(parent: ApiNode, id: string, awsData?: AWS.Route53.HostedZone) {
-    super(parent, awsData);
+  constructor(parent: ApiNode, id: string) {
+    super(parent);
     this.id = id;
     this.recordSetCollection = ApiNodeFactory.route53RecordSetCollection(this, this.id);
   }

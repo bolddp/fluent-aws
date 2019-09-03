@@ -15,7 +15,7 @@ export class EcsTaskCollection extends ApiNodeCollection<EcsTask, AWS.ECS.Task> 
   }
 
   apiNodeFromAwsData(awsData: AWS.ECS.Task): EcsTask {
-    return ApiNodeFactory.ecsTask(this, this.clusterId, awsData.taskArn, awsData);
+    return ApiNodeFactory.ecsTask(this, this.clusterId, awsData.taskArn);
   }
 
   apiNodeFromId(id: string): EcsTask {

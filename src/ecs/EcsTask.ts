@@ -10,8 +10,8 @@ export class EcsTask extends AwsDataApiNode<AWS.ECS.Task> {
   idOrArn: string;
   ec2InstanceInstance: Ec2Instance;
 
-  constructor(parent: ApiNode, clusterId: string, idOrArn: string, awsData?: AWS.ECS.Task) {
-    super(parent, awsData);
+  constructor(parent: ApiNode, clusterId: string, idOrArn: string) {
+    super(parent);
     this.clusterId = clusterId;
     this.idOrArn = idOrArn;
   }

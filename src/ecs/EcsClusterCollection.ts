@@ -11,7 +11,7 @@ export class EcsClusterCollection extends ApiNodeCollection<EcsCluster, AWS.ECS.
   }
 
   apiNodeFromAwsData(data: AWS.ECS.Cluster): EcsCluster {
-    return ApiNodeFactory.ecsCluster(this, data.clusterArn, data);
+    return ApiNodeFactory.ecsCluster(this, data.clusterArn);
   }
 
   async load(): Promise<AWS.ECS.Cluster[]> {

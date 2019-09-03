@@ -5,7 +5,7 @@ import { AwsApi } from '../awsapi/AwsApi';
 
 export class Route53HealthCheckCollection extends ApiNodeCollection<Route53HealthCheck, AWS.Route53.HealthCheck> {
   apiNodeFromAwsData(awsData: AWS.Route53.HealthCheck): Route53HealthCheck {
-    return ApiNodeFactory.route53HealthCheck(this, awsData.Id, awsData);
+    return ApiNodeFactory.route53HealthCheck(this, awsData.Id);
   }
 
   apiNodeFromId(id: string): Route53HealthCheck {
@@ -21,7 +21,7 @@ export class Route53HealthCheckCollection extends ApiNodeCollection<Route53Healt
    */
   async create(request: AWS.Route53.CreateHealthCheckRequest): Promise<Route53HealthCheck> {
     const healthCheck = await AwsApi.route53.createHealthCheck(request);
-    const apiNode = ApiNodeFactory.route53HealthCheck(this, healthCheck.Id, healthCheck);
+    const apiNode = ApiNodeFactory.route53HealthCheck(this, healthCheck.Id);
     this.nodeMap.set(healthCheck.Id, apiNode);
     return apiNode;
   }

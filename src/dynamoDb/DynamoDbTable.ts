@@ -9,8 +9,8 @@ export type DynamoDbKey = { [key: string]: any };
 export class DynamoDbTable extends AwsDataApiNode<AWS.DynamoDB.TableDescription> {
   tableName: string;
 
-  constructor(parent: ApiNode, tableName: string, awsData?: AWS.DynamoDB.TableDescription) {
-    super(parent, awsData);
+  constructor(parent: ApiNode, tableName: string) {
+    super(parent);
     this.tableName = tableName;
   }
 

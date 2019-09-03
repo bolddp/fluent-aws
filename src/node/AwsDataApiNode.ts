@@ -4,17 +4,14 @@ import { ApiNode } from "./ApiNode";
  * An API node that can provide AWS data about itself.
  */
 export abstract class AwsDataApiNode<T> extends ApiNode {
-  awsDataInstance?: T;
-
-  constructor(parent: ApiNode, initialValue?: T) {
+  constructor(parent: ApiNode) {
     super(parent);
-    this.awsDataInstance = initialValue;
   }
 
   /**
    * Loads the AWS data for this node, through the AWS SDK.
    */
-  abstract loadAwsData(): Promise<T>;
+  protected abstract loadAwsData(): Promise<T>;
 
   /**
    * Returns the AWS Data, either by loading from the cache or by
@@ -22,9 +19,6 @@ export abstract class AwsDataApiNode<T> extends ApiNode {
    */
   async awsData(): Promise<T> {
     await this.ensureResolved();
-    if (!this.awsDataInstance) {
-      this.awsDataInstance = await this.loadAwsData();
-    }
-    return this.awsDataInstance;
+    return await this.loadAwsData();
   }
 }

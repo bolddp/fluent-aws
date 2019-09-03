@@ -18,8 +18,6 @@ export class Route53RecordSetCollection extends AwsDataApiNode<AWS.Route53.Resou
   async create(recordSet: AWS.Route53.ResourceRecordSet): Promise<void> {
     await this.ensureResolved();
     await AwsApi.route53.createRecordSet(this.hostedZoneId, recordSet);
-    // Force a reload of the record sets if queried again
-    this.awsDataInstance = undefined;
   }
 
   /**
@@ -28,7 +26,5 @@ export class Route53RecordSetCollection extends AwsDataApiNode<AWS.Route53.Resou
   async delete(recordSet: AWS.Route53.ResourceRecordSet): Promise<void> {
     await this.ensureResolved();
     await AwsApi.route53.deleteRecordSet(this.hostedZoneId, recordSet);
-    // Force a reload of the record sets if queried again
-    this.awsDataInstance = undefined;
   }
 }

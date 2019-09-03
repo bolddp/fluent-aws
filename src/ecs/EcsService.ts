@@ -9,8 +9,8 @@ export class EcsService extends AwsDataApiNode<AWS.ECS.Service> {
   clusterId: string;
   name: string;
 
-  constructor(parent: ApiNode, clusterId: string, name: string, awsData?: AWS.ECS.Service) {
-    super(parent, awsData);
+  constructor(parent: ApiNode, clusterId: string, name: string) {
+    super(parent);
     this.clusterId = clusterId;
     this.name = name;
   }

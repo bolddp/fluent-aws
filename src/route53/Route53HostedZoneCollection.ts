@@ -5,7 +5,7 @@ import { ApiNodeCollection } from '../node/ApiNodeCollection';
 
 export class Route53HostedZoneCollection extends ApiNodeCollection<Route53HostedZone, AWS.Route53.HostedZone> {
   apiNodeFromAwsData(awsData: AWS.Route53.HostedZone): Route53HostedZone {
-    return ApiNodeFactory.route53HostedZone(this, awsData.Id, awsData);
+    return ApiNodeFactory.route53HostedZone(this, awsData.Id);
   }
 
   apiNodeFromId(id: string): Route53HostedZone {

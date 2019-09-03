@@ -30,10 +30,10 @@ import { Route53HostedZoneCollection } from "../route53/Route53HostedZoneCollect
 
 export class ApiNodeFactory {
   // IAM
-  static iamRole(parent: ApiNode, name: string, awsData?: AWS.IAM.Role) { return new IamRole(parent, name, awsData); }
+  static iamRole(parent: ApiNode, name: string) { return new IamRole(parent, name); }
   // AutoScaling
   static autoScaling(parent: ApiNode) { return new AutoScaling(parent); }
-  static autoScalingGroup(parent: ApiNode, name: string, awsData?: AWS.AutoScaling.AutoScalingGroup) { return new AutoScalingGroup(parent, name, awsData); }
+  static autoScalingGroup(parent: ApiNode, name: string) { return new AutoScalingGroup(parent, name); }
   static autoScalingGroupCollection(parent: ApiNode) { return new AutoScalingGroupCollection(parent); }
   // S3
   static s3(parent: ApiNode) { return new S3(parent); }
@@ -43,27 +43,27 @@ export class ApiNodeFactory {
   static s3ObjectCollection(parent: ApiNode, bucketName: string) { return new S3ObjectCollection(parent, bucketName); }
   // ECS
   static ecs(parent: ApiNode) { return new Ecs(parent); }
-  static ecsCluster(parent: ApiNode, idOrArn: string, awsData?: AWS.ECS.Cluster) { return new EcsCluster(parent, idOrArn, awsData); }
+  static ecsCluster(parent: ApiNode, idOrArn: string) { return new EcsCluster(parent, idOrArn); }
   static ecsClusterCollection(parent: ApiNode) { return new EcsClusterCollection(parent); }
-  static ecsTask(parent: ApiNode, clusterId: string, idOrArn: string, awsData?: AWS.ECS.Task) { return new EcsTask(parent, clusterId, idOrArn, awsData); }
+  static ecsTask(parent: ApiNode, clusterId: string, idOrArn: string) { return new EcsTask(parent, clusterId, idOrArn); }
   static ecsTaskCollection(parent: ApiNode, clusterId: string) { return new EcsTaskCollection(parent, clusterId); }
-  static ecsService(parent: ApiNode, clusterId: string, name: string, awsData?: AWS.ECS.Cluster) {
-    return new EcsService(parent, clusterId, name, awsData);
+  static ecsService(parent: ApiNode, clusterId: string, name: string) {
+    return new EcsService(parent, clusterId, name);
   }
   static ecsServiceCollection(parent: ApiNode, clusterId: string) { return new EcsServiceCollection(parent, clusterId); }
   // EC2
   static ec2(parent: ApiNode) { return new Ec2(parent); }
-  static ec2Instance(parent: ApiNode, instanceId: string, awsData?: AWS.EC2.Instance) { return new Ec2Instance(parent, instanceId, awsData); }
+  static ec2Instance(parent: ApiNode, instanceId: string) { return new Ec2Instance(parent, instanceId); }
   static ec2InstanceCollection(parent: ApiNode) { return new Ec2InstanceCollection(parent); }
   // Route53
   static route53(parent: ApiNode) { return new Route53(parent); }
-  static route53HealthCheck(parent: ApiNode, id: string, awsData?: AWS.Route53.HealthCheck) { return new Route53HealthCheck(parent, id, awsData); }
+  static route53HealthCheck(parent: ApiNode, id: string) { return new Route53HealthCheck(parent, id); }
   static route53HealthCheckCollection(parent: ApiNode) { return new Route53HealthCheckCollection(parent); }
-  static route53HostedZone(parent: ApiNode, id: string, awsData?: AWS.Route53.HostedZone) { return new Route53HostedZone(parent, id, awsData); }
+  static route53HostedZone(parent: ApiNode, id: string) { return new Route53HostedZone(parent, id); }
   static route53HostedZoneCollection(parent: ApiNode) { return new Route53HostedZoneCollection(parent); }
   static route53RecordSetCollection(parent: ApiNode, hostedZoneId: string) { return new Route53RecordSetCollection(parent, hostedZoneId); }
   // Dynamo DB
   static dynamoDb(parent: ApiNode) { return new DynamoDb(parent); }
   static dynamoDbTableCollection(parent: ApiNode) { return new DynamoDbTableCollection(parent); }
-  static dynamoDbTable(parent: ApiNode, name: string, awsData?: AWS.DynamoDB.CreateTableInput) { return new DynamoDbTable(parent, name, awsData); }
+  static dynamoDbTable(parent: ApiNode, name: string) { return new DynamoDbTable(parent, name); }
 }

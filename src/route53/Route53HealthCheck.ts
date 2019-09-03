@@ -5,8 +5,8 @@ import { AwsApi } from "../awsapi/AwsApi";
 export class Route53HealthCheck extends AwsDataApiNode<AWS.Route53.HealthCheck> {
   id: string;
 
-  constructor(parent: ApiNode, id: string, awsData?: AWS.Route53.HealthCheck) {
-    super(parent, awsData);
+  constructor(parent: ApiNode, id: string) {
+    super(parent);
     this.id = id;
   }
 

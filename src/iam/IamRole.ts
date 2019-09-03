@@ -5,8 +5,8 @@ import { AwsApi } from "../awsapi/AwsApi";
 export class IamRole extends AwsDataApiNode<AWS.IAM.Role> {
   name: string;
 
-  constructor(parent: ApiNode, name: string, awsData?: AWS.IAM.Role) {
-    super(parent, awsData);
+  constructor(parent: ApiNode, name: string) {
+    super(parent);
     this.name = name;
   }
 

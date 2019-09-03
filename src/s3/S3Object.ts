@@ -8,8 +8,8 @@ export class S3Object extends AwsDataApiNode<AWS.S3.GetObjectOutput> {
   bucketName: string;
   key: string;
 
-  constructor(parent: ApiNode, bucketName: string, key: string, awsData?: AWS.S3.Object) {
-    super(parent, awsData);
+  constructor(parent: ApiNode, bucketName: string, key: string) {
+    super(parent);
     this.bucketName = bucketName;
     this.key = key;
   }

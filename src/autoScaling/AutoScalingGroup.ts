@@ -12,8 +12,8 @@ export class AutoScalingGroup extends AwsDataApiNode<AWS.AutoScaling.AutoScaling
   name: string;
   ec2InstanceCollection: Ec2InstanceCollection;
 
-  constructor(parent: ApiNode, name: string, awsData?: AWS.AutoScaling.AutoScalingGroup) {
-    super(parent, awsData);
+  constructor(parent: ApiNode, name: string) {
+    super(parent);
     this.name = name;
   }
 

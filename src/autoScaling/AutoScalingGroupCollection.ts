@@ -5,7 +5,7 @@ import { AwsApi } from '../awsapi/AwsApi';
 
 export class AutoScalingGroupCollection extends ApiNodeCollection<AutoScalingGroup, AWS.AutoScaling.AutoScalingGroup> {
   apiNodeFromAwsData(awsData: AWS.AutoScaling.AutoScalingGroup): AutoScalingGroup {
-    return ApiNodeFactory.autoScalingGroup(this, awsData.AutoScalingGroupName, awsData);
+    return ApiNodeFactory.autoScalingGroup(this, awsData.AutoScalingGroupName);
   }
 
   apiNodeFromId(id: string): AutoScalingGroup {

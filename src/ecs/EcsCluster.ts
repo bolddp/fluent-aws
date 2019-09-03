@@ -12,8 +12,8 @@ export class EcsCluster extends AwsDataApiNode<AWS.ECS.Cluster> {
   serviceCollection: EcsServiceCollection;
   taskCollection: EcsTaskCollection;
 
-  constructor(parent: ApiNode, idOrArn: string, awsData?: AWS.ECS.Cluster) {
-    super(parent, awsData);
+  constructor(parent: ApiNode, idOrArn: string) {
+    super(parent);
     this.idOrArn = idOrArn;
     this.serviceCollection = ApiNodeFactory.ecsServiceCollection(this, this.idOrArn);
     this.taskCollection = ApiNodeFactory.ecsTaskCollection(this, this.idOrArn);

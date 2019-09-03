@@ -16,7 +16,7 @@ export class EcsServiceCollection extends ApiNodeCollection<EcsService, AWS.ECS.
   }
 
   apiNodeFromAwsData(awsData: AWS.ECS.Service): EcsService {
-    return ApiNodeFactory.ecsService(this, this.clusterId, awsData.serviceName, awsData);
+    return ApiNodeFactory.ecsService(this, this.clusterId, awsData.serviceName);
   }
 
   apiNodeFromId(id: string): EcsService {
