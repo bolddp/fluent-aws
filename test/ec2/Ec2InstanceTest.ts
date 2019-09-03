@@ -27,11 +27,18 @@ describe('Ec2Instance', () => {
     ApiNodeFactory.iamRole = stubs.factoryStub.returns(iamRole);
 
     AwsApi.ec2.describeInstance = stubs.awsApiStub.returns({
-      IamInstanceProfile: { Arn: 'tjoho/iamRoleArn' }
+      IamInstanceProfile: { Arn: 'tjoho/iamRoleName' }
     })
 
+    const stubs2 = apiNodeCollectionStubs();
+    AwsApi.iam.getInstanceProfile = stubs2.awsApiStub.returns({
+      Roles: [
+        { RoleName: 'iamRoleName' }
+      ]
+    });
+
     await sut.iamRole().ensureResolved();
-    expect(iamRole.name).to.equal('iamRoleArn');
+    expect(iamRole.name).to.equal('iamRoleName');
   });
 
   it('throw error in missing IAM role', async () => {

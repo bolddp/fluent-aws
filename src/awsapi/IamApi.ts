@@ -11,4 +11,10 @@ export class IamApi {
     debug('got role: %s', name);
     return response.Role;
   }
+
+  async getInstanceProfile(name: string): Promise<AWS.IAM.InstanceProfile> {
+    debug('getting instance profile: %s', name);
+    const response = await this.iam().getInstanceProfile({ InstanceProfileName: name }).promise();
+    return response.InstanceProfile;
+  }
 }

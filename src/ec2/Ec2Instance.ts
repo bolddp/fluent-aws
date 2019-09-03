@@ -27,7 +27,11 @@ export class Ec2Instance extends AwsDataApiNode<AWS.EC2.Instance> {
         if (!awsData.IamInstanceProfile) {
           throw new Error('EC2 instance has no IAM role');
         }
-        this.iamRoleInstance.name = awsData.IamInstanceProfile.Arn.split('/')[1];
+        const instanceProfile = await AwsApi.iam.getInstanceProfile(awsData.IamInstanceProfile.Arn.split('/')[1]);
+        if (instanceProfile.Roles.length == 0) {
+          throw new Error(`No role in EC2 instance profile (profile ARN: ${awsData.IamInstanceProfile.Arn})`);
+        }
+        this.iamRoleInstance.name = instanceProfile.Roles[0].RoleName;
       });
     }
     return this.iamRoleInstance;
