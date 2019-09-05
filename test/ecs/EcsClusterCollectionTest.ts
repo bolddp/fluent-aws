@@ -48,17 +48,4 @@ describe('EcsClusterCollection', () => {
     expect(stubs02.awsApiStub.calledOnce).to.be.true;
     expect(stubs02.awsApiStub.args[0][0]).to.eql(['clusterId01', 'clusterId02']);
   });
-
-  it('will load with predefined ids', async () => {
-    const stubs01 = apiNodeCollectionStubs();
-    AwsApi.ecs.describeClusters = stubs01.awsApiStub.returns([{ clusterName: 'name01' }, { clusterName: 'name02' }]);
-
-    const sut = new EcsClusterCollection(<any>stubs01.parentStub);
-    sut.idOrArns = ['clusterId01', 'clusterId02'];
-
-    await sut.load();
-
-    expect(stubs01.awsApiStub.calledOnce).to.be.true;
-    expect(stubs01.awsApiStub.args[0][0]).to.eql(['clusterId01', 'clusterId02']);
-  });
 });

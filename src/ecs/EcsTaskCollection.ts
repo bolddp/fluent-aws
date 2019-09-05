@@ -6,7 +6,6 @@ import { ApiNodeFactory } from "../node/ApiNodeFactory";
 import { AwsApi } from "../awsapi/AwsApi";
 
 export class EcsTaskCollection extends ApiNodeCollection<EcsTask, AWS.ECS.Task> {
-  taskArns?: string[];
   clusterId: string;
 
   constructor(parent: ApiNode, clusterId: string) {
@@ -23,9 +22,7 @@ export class EcsTaskCollection extends ApiNodeCollection<EcsTask, AWS.ECS.Task> 
   }
 
   async load(): Promise<AWS.ECS.Task[]> {
-    if (!this.taskArns) {
-      this.taskArns = await AwsApi.ecs.listTasks(this.clusterId);
-    }
-    return AwsApi.ecs.describeTasks(this.clusterId, this.taskArns);
+    const taskArns = await AwsApi.ecs.listTasks(this.clusterId);
+    return AwsApi.ecs.describeTasks(this.clusterId, taskArns);
   }
 }

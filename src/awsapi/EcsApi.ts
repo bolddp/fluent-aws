@@ -30,7 +30,9 @@ export class EcsApi {
   }
 
   async listTasks(clusterId: string): Promise<string[]> {
+    debug('listing ECS tasks: %s', clusterId);
     const response = await this.ecs().listTasks({ cluster: clusterId }).promise();
+    debug('listed ECS tasks');
     return response.taskArns;
   }
 

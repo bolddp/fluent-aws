@@ -51,18 +51,4 @@ describe('EcsServiceCollection', () => {
     expect(stubs02.awsApiStub.args[0][0]).to.equal('clusterId');
     expect(stubs02.awsApiStub.args[0][1]).to.eql(['serviceArn01', 'serviceArn02']);
   });
-
-  it('will load with predefined ids', async () => {
-    const stubs01 = apiNodeCollectionStubs();
-    AwsApi.ecs.describeServices = stubs01.awsApiStub.returns([{ serviceArn: 'name01' }, { serviceArn: 'name02' }]);
-
-    const sut = new EcsServiceCollection(<any>stubs01.parentStub, 'clusterId');
-    sut.serviceArns = ['serviceArn01', 'serviceArn02'];
-
-    await sut.load();
-
-    expect(stubs01.awsApiStub.calledOnce).to.be.true;
-    expect(stubs01.awsApiStub.args[0][0]).to.equal('clusterId');
-    expect(stubs01.awsApiStub.args[0][1]).to.eql(['serviceArn01', 'serviceArn02']);
-  });
 });

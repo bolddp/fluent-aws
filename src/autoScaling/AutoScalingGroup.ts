@@ -25,7 +25,7 @@ export class AutoScalingGroup extends AwsDataApiNode<AWS.AutoScaling.AutoScaling
     if (!this.ec2InstanceCollection) {
       this.ec2InstanceCollection = ApiNodeFactory.ec2InstanceCollection(this);
       // Promise to determine the id's of all instances in the autoscaling group
-      this.promiseChain.add(async () => {
+      this.promiseChain.addVolatile(async () => {
         const awsData = await this.loadAwsData();
         this.ec2InstanceCollection.instanceIds = awsData.Instances.map(x => x.InstanceId);
       });
