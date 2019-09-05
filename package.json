@@ -1,13 +1,13 @@
 {
   "name": "fluent-aws",
-  "version": "0.3.3",
+  "version": "0.3.31",
   "description": "Fluent AWS API, written in Typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "mocha --require ts-node/register test/**/*Test.ts",
     "coverage": "nyc --require ts-node/register --require source-map-support/register mocha test/**/*Test.ts",
-    "npm:publish": "rm ./dist -r && node ./node_modules/typescript/bin/tsc --sourcemap false && npm publish"
+    "npm:publish": "rm ./dist -rf && node ./node_modules/typescript/bin/tsc --sourcemap false && npm publish"
   },
   "repository": {
     "type": "git",
@@ -37,6 +37,10 @@
     "node": "^12.5.0",
     "aws-sdk": "^2.484.0"
   },
+  "files": [
+    "/dist",
+    "README.md"
+  ],
   "nyc": {
     "extension": [
       ".ts",
