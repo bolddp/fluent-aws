@@ -50,4 +50,20 @@ describe('AutoScalingGroup', () => {
     expect(stubs.awsApiStub.args[0][0]).to.equal('groupName');
     expect(stubs.awsApiStub.args[0][1]).to.eql(['id01', 'id02']);
   });
+
+  it('will update size', async () => {
+    const stubs = apiNodeCollectionStubs();
+    AwsApi.autoScaling.update = stubs.awsApiStub;
+
+    const sut = new AutoScalingGroup(<any>stubs.parentStub, 'groupName');
+    await sut.updateSize(10, 20, 15);
+
+    expect(stubs.awsApiStub.calledOnce).to.be.true;
+    expect(stubs.awsApiStub.args[0][0]).to.eql({
+      AutoScalingGroupName: 'groupName',
+      MinSize: 10,
+      MaxSize: 20,
+      DesiredCapacity: 15
+    });
+  });
 });

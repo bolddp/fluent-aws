@@ -41,7 +41,7 @@ describe('Ec2Instance', () => {
     expect(iamRole.name).to.equal('iamRoleName');
   });
 
-  it('throw error in missing IAM role', async () => {
+  it('will throw error in missing IAM role', async () => {
     const stubs = apiNodeCollectionStubs();
     const sut = new Ec2Instance(<any>stubs.parentStub, 'instanceId');
 
@@ -55,6 +55,29 @@ describe('Ec2Instance', () => {
       .catch(error => thrownError = error);
     expect(thrownError).to.not.undefined;
     expect(thrownError.message).to.equal('EC2 instance has no IAM role');
+  });
+
+  it('will throw error in missing IAM role', async () => {
+    const stubs = apiNodeCollectionStubs();
+    const sut = new Ec2Instance(<any>stubs.parentStub, 'instanceId');
+
+    const iamRole = new IamRole(sut, undefined);
+    ApiNodeFactory.iamRole = stubs.factoryStub.returns(iamRole);
+
+    AwsApi.ec2.describeInstance = stubs.awsApiStub.returns({
+      IamInstanceProfile: { Arn: 'tjoho/iamRoleName' }
+    })
+
+    const stubs2 = apiNodeCollectionStubs();
+    AwsApi.iam.getInstanceProfile = stubs2.awsApiStub.returns({
+      Roles: [ ]
+    });
+
+    let thrownError: Error;
+    await sut.iamRole().awsData()
+      .catch(error => thrownError = error);
+    expect(thrownError).to.not.undefined;
+    expect(thrownError.message).to.equal('No role in EC2 instance profile (profile ARN: tjoho/iamRoleName)');
   });
 
 });

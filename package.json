@@ -1,6 +1,6 @@
 {
   "name": "fluent-aws",
-  "version": "0.3.31",
+  "version": "0.4.0",
   "description": "Fluent AWS API, written in Typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -28,14 +28,15 @@
     "chai": "^4.2.0",
     "nyc": "^14.1.1",
     "sinon": "^7.3.2",
-    "ts-node": "^8.3.0",
+    "ts-node": "^8.4.1",
     "typescript": "^3.5.2"
   },
   "dependencies": {
+    "amazon-cognito-identity-js": "^3.0.15",
+    "aws-sdk": "^2.484.0",
     "debug": "^4.1.1",
     "mocha": "^6.1.4",
-    "node": "^12.5.0",
-    "aws-sdk": "^2.484.0"
+    "node": "^12.5.0"
   },
   "files": [
     "/dist",

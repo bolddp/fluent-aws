@@ -1,3 +1,6 @@
+import { KmsKeyCollection } from './../kms/KmsKeyCollection';
+import { SystemsManagerParameterCollection } from './../ssm/SystemsManagerParameterCollection';
+import { CloudFormationStack } from './../cf/CloudFormationStack';
 import { Route53RecordSetCollection } from './../route53/Route53RecordSetCollection';
 import { ApiNode } from "./ApiNode";
 import { S3 } from "../s3/S3";
@@ -27,6 +30,14 @@ import { DynamoDbTableCollection } from "../dynamoDb/DynamoDbTableCollection";
 import { DynamoDb } from "../dynamoDb/DynamoDb";
 import { Route53HostedZone } from "../route53/Route53HostedZone";
 import { Route53HostedZoneCollection } from "../route53/Route53HostedZoneCollection";
+import { CloudFormation } from '../cf/CloudFormation';
+import { CloudFormationStackCollection } from '../cf/CloudFormationStackCollection';
+import { SystemsManager } from '../ssm/SystemsManager';
+import { SystemsManagerParameter } from '../ssm/SystemsManagerParameter';
+import { Kms } from '../kms/Kms';
+import { KmsKey } from '../kms/KmsKey';
+import { KmsAliasCollection } from '../kms/KmsAliasCollection';
+import { KmsAlias } from '../kms/KmsAlias';
 
 export class ApiNodeFactory {
   // IAM
@@ -66,4 +77,18 @@ export class ApiNodeFactory {
   static dynamoDb(parent: ApiNode) { return new DynamoDb(parent); }
   static dynamoDbTableCollection(parent: ApiNode) { return new DynamoDbTableCollection(parent); }
   static dynamoDbTable(parent: ApiNode, name: string) { return new DynamoDbTable(parent, name); }
+  // CloudFormation
+  static cloudFormation(parent: ApiNode) { return new CloudFormation(parent); }
+  static cloudFormationStackCollection(parent: ApiNode) { return new CloudFormationStackCollection(parent); }
+  static cloudFormationStack(parent: ApiNode, stackName: string) { return new CloudFormationStack(parent, stackName); }
+  // Systems manager
+  static systemsManager(parent: ApiNode) { return new SystemsManager(parent); }
+  static systemsManagerParameterCollection(parent: ApiNode) { return new SystemsManagerParameterCollection(parent); }
+  static systemsManagerParameter(parent: ApiNode, name: string) { return new SystemsManagerParameter(parent, name); }
+  // KMS
+  static kms(parent: ApiNode) { return new Kms(parent); }
+  static kmsKeyCollection(parent: ApiNode) { return new KmsKeyCollection(parent); }
+  static kmsKey(parent: ApiNode, id: string) { return new KmsKey(parent, id); }
+  static kmsAliasCollection(parent: ApiNode) { return new KmsAliasCollection(parent); }
+  static kmsAlias(parent: ApiNode, id: string) { return new KmsAlias(parent, id); }
 }

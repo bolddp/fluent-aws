@@ -9,6 +9,9 @@ import { AutoScaling } from './autoScaling/AutoScaling';
 import { AwsApi } from './awsapi/AwsApi';
 import { Route53 } from './route53/Route53';
 import { DynamoDb } from "./dynamoDb/DynamoDb";
+import { CloudFormation } from "./cf/CloudFormation";
+import { SystemsManager } from "./ssm/SystemsManager";
+import { Kms } from './kms/Kms';
 
 export class FluentAws extends ApiNode {
   promiseChain = new PromiseChain();
@@ -18,6 +21,9 @@ export class FluentAws extends ApiNode {
   autoScalingInstance: AutoScaling;
   route53Instance: Route53;
   dynamoDbInstance: DynamoDb;
+  cloudFormationInstance: CloudFormation;
+  systemsManagerInstance: SystemsManager;
+  kmsInstance: Kms;
 
   constructor() {
     super(undefined);
@@ -27,6 +33,9 @@ export class FluentAws extends ApiNode {
     this.autoScalingInstance = ApiNodeFactory.autoScaling(this);
     this.route53Instance = ApiNodeFactory.route53(this);
     this.dynamoDbInstance = ApiNodeFactory.dynamoDb(this);
+    this.cloudFormationInstance = ApiNodeFactory.cloudFormation(this);
+    this.systemsManagerInstance = ApiNodeFactory.systemsManager(this);
+    this.kmsInstance = ApiNodeFactory.kms(this);
   }
 
   configure(config: FluentAwsConfig): FluentAws {
@@ -57,6 +66,9 @@ export class FluentAws extends ApiNode {
   ec2(): Ec2 { return this.ec2Instance; }
   route53(): Route53 { return this.route53Instance; }
   dynamoDb(): DynamoDb { return this.dynamoDbInstance; }
+  cloudFormation(): CloudFormation { return this.cloudFormationInstance; }
+  systemsManager(): SystemsManager { return this.systemsManagerInstance; }
+  kms(): Kms { return this.kmsInstance; }
 }
 
 const fluentAwsInstances = new Map<string, FluentAws>();

@@ -11,6 +11,10 @@ describe('FluentAws', () => {
   let ec2Stub: sinon.SinonStub<any[], any>;
   let autoScalingStub: sinon.SinonStub<any[], any>;
   let route53Stub: sinon.SinonStub<any[], any>;
+  let dynamoDbStub: sinon.SinonStub<any[], any>
+  let cloudFormationStub: sinon.SinonStub<any[], any>
+  let systemsManagerStub: sinon.SinonStub<any[], any>
+  let kmsStub: sinon.SinonStub<any[], any>
 
   let sut: FluentAws;
 
@@ -25,12 +29,24 @@ describe('FluentAws', () => {
     autoScalingStub = autoScalingStub.returns(autoScalingStub);
     route53Stub = sinon.stub();
     route53Stub = route53Stub.returns(route53Stub);
+    dynamoDbStub = sinon.stub();
+    dynamoDbStub = dynamoDbStub.returns(dynamoDbStub);
+    cloudFormationStub = sinon.stub();
+    cloudFormationStub = cloudFormationStub.returns(cloudFormationStub);
+    systemsManagerStub = sinon.stub();
+    systemsManagerStub = systemsManagerStub.returns(systemsManagerStub);
+    kmsStub = sinon.stub();
+    kmsStub = kmsStub.returns(kmsStub);
 
     ApiNodeFactory.s3 = s3Stub;
     ApiNodeFactory.ecs = ecsStub;
     ApiNodeFactory.ec2 = ec2Stub;
     ApiNodeFactory.autoScaling = autoScalingStub;
     ApiNodeFactory.route53 = route53Stub;
+    ApiNodeFactory.dynamoDb = dynamoDbStub;
+    ApiNodeFactory.cloudFormation = cloudFormationStub;
+    ApiNodeFactory.systemsManager = systemsManagerStub;
+    ApiNodeFactory.kms = kmsStub;
 
     sut = aws();
   });
@@ -41,12 +57,20 @@ describe('FluentAws', () => {
     expect(ec2Stub.calledOnce).to.be.true;
     expect(autoScalingStub.calledOnce).to.be.true;
     expect(route53Stub.calledOnce).to.be.true;
+    expect(dynamoDbStub.calledOnce).to.be.true;
+    expect(cloudFormationStub.calledOnce).to.be.true;
+    expect(systemsManagerStub.calledOnce).to.be.true;
+    expect(kmsStub.calledOnce).to.be.true;
 
     expect(sut.s3()).to.equal(s3Stub);
     expect(sut.ecs()).to.equal(ecsStub);
     expect(sut.ec2()).to.equal(ec2Stub);
     expect(sut.autoScaling()).to.equal(autoScalingStub);
     expect(sut.route53()).to.equal(route53Stub);
+    expect(sut.dynamoDb()).to.equal(dynamoDbStub);
+    expect(sut.cloudFormation()).to.equal(cloudFormationStub);
+    expect(sut.systemsManager()).to.equal(systemsManagerStub);
+    expect(sut.kms()).to.equal(kmsStub);
   });
 
   it('should configure', async () => {

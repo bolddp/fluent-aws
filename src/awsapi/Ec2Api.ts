@@ -27,7 +27,7 @@ export class Ec2Api {
   async describeInstance(instanceId: string): Promise<AWS.EC2.Instance> {
     const instances = await this.describeInstances([instanceId]);
     if (instances.length == 0) {
-      throw new Error(`instance not found: ${instanceId}`);
+      throw new Error(`Instance not found: ${instanceId}`);
     }
     return instances[0];
   }

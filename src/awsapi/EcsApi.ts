@@ -24,7 +24,7 @@ export class EcsApi {
   async describeCluster(idOrArn: string): Promise<AWS.ECS.Cluster> {
     const clusters = await this.describeClusters();
     if (clusters.length == 0) {
-      throw new Error(`cluster not found: ${idOrArn}`);
+      throw new Error(`Cluster not found: ${idOrArn}`);
     }
     return clusters[0];
   }
@@ -49,7 +49,7 @@ export class EcsApi {
   async describeTask(clusterId: string, idOrArn: string): Promise<AWS.ECS.Task> {
     const tasks = await this.describeTasks(clusterId, [idOrArn])
     if (tasks.length == 0) {
-      throw new Error(`task not found: ${idOrArn}`);
+      throw new Error(`Task not found: ${idOrArn}`);
     }
     return tasks[0];
   }

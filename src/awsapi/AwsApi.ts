@@ -1,3 +1,5 @@
+import { SystemsManagerApi } from './SystemsManagerApi';
+import { CloudFormationApi } from './CloudFormationApi';
 import * as AWS from 'aws-sdk';
 import { S3Api } from "./S3Api";
 import { Ec2Api } from "./Ec2Api";
@@ -8,6 +10,7 @@ import { Route53Api } from './Route53Api';
 import { FluentAwsConfig } from '../FluentAwsConfig';
 import { DynamoDbApi } from './DynamoDbApi';
 import { StsApi } from './StsApi';
+import { KmsApi } from './KmsApi';
 
 const debug = require('debug')('fluentaws:AwsApi');
 
@@ -24,6 +27,9 @@ export class AwsApi {
   static autoScaling: AutoScalingApi = new AutoScalingApi();
   static route53: Route53Api = new Route53Api();
   static dynamoDb: DynamoDbApi = new DynamoDbApi();
+  static cloudFormation: CloudFormationApi = new CloudFormationApi();
+  static systemsManager: SystemsManagerApi = new SystemsManagerApi();
+  static kms: KmsApi = new KmsApi();
 
   static configure = (config: FluentAwsConfig): void => {
     debug('applying configuration: %j', config);
