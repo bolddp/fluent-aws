@@ -1,8 +1,9 @@
 import { ApiNode } from "../node/ApiNode";
-import { S3Bucket } from "./S3Bucket";
 import { Readable } from "stream";
 import { AwsApi } from "../awsapi/AwsApi";
 import { AwsDataApiNode } from "../node/AwsDataApiNode";
+
+const debug = require('debug')('fluentaws:S3Object');
 
 export class S3Object extends AwsDataApiNode<AWS.S3.GetObjectOutput> {
   bucketName: string;
@@ -16,6 +17,24 @@ export class S3Object extends AwsDataApiNode<AWS.S3.GetObjectOutput> {
 
   loadAwsData() {
     return AwsApi.s3.getObject(this.bucketName, this.key);
+  }
+
+  /**
+   * Indicates whether the bucket exists or not.
+   */
+  async exists(): Promise<boolean> {
+    try {
+      debug('checking object exists... bucket: %s, key: %s', this.bucketName, this.key);
+      await AwsApi.s3.headObject(this.bucketName, this.key);
+      debug('checked object exists = true... bucket: %s, key: %s', this.bucketName, this.key);
+      return true;
+    } catch (error) {
+      if (error.statusCode === 404) {
+        debug('checked object exists = false... bucket: %s, key: %s', this.bucketName, this.key);
+        return false;
+      }
+      throw error;
+    }
   }
 
   async delete(): Promise<void> {
@@ -42,5 +61,13 @@ export class S3Object extends AwsDataApiNode<AWS.S3.GetObjectOutput> {
   async readStream(): Promise<Readable> {
     await this.ensureResolved();
     return AwsApi.s3.getObjectStream(this.bucketName, this.key);
+  }
+
+  async signedGetUrl(): Promise<string> {
+    return await AwsApi.s3.getSignedUrl('getObject', this.bucketName, this.key);
+  }
+
+  async signedPutUrl(): Promise<string> {
+    return await AwsApi.s3.getSignedUrl('putObject', this.bucketName, this.key);
   }
 }

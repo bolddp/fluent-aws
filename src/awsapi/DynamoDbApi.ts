@@ -23,14 +23,18 @@ export class DynamoDbApi {
     return response.Table;
   }
 
-  async get(tableName: string, key: AWS.DynamoDB.DocumentClient.Key): Promise<AWS.DynamoDB.AttributeMap> {
-    debug('getting item: %s, key: %j', tableName, key);
-    const response = await this.docClient().get({
-      TableName: tableName,
-      Key: key
-    }).promise();
+  async get(input: AWS.DynamoDB.GetItemInput): Promise<AWS.DynamoDB.AttributeMap> {
+    debug('getting item: %s, key: %j', input.TableName, input.Key);
+    const response = await this.docClient().get(input).promise();
     debug('got item');
     return response.Item;
+  }
+
+  async query(input: AWS.DynamoDB.QueryInput): Promise<AWS.DynamoDB.AttributeMap[]> {
+    debug('querying: %j', input);
+    const response = await this.docClient().query(input).promise();
+    debug('queried');
+    return response.Items;
   }
 
   async put(tableName: string, item: DynamoDbItem): Promise<void> {

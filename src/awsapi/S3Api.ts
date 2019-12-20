@@ -1,6 +1,7 @@
 import * as AWS from 'aws-sdk';
 import { Readable } from "stream";
 import { Body } from "aws-sdk/clients/s3";
+import { S3Bucket } from '../s3/S3Bucket';
 
 export class S3Api {
   s3 = () => new AWS.S3();
@@ -23,6 +24,14 @@ export class S3Api {
   async listBuckets(): Promise<AWS.S3.Bucket[]> {
     const response = await this.s3().listBuckets().promise();
     return response.Buckets;
+  }
+
+  async headObject(bucketName: string, key: string): Promise<void> {
+    await this.s3().headObject({
+      Bucket: bucketName,
+      Key: key
+
+    }).promise();
   }
 
   async getObject(bucketName: string, key: string): Promise<AWS.S3.GetObjectOutput> {
@@ -70,6 +79,14 @@ export class S3Api {
       Bucket: targetBucket,
       Key: targetKey
     }).promise();
+  }
+
+  getSignedUrl(operation: string, bucket: string, key: string): Promise<string> {
+    const url = this.s3().getSignedUrl(operation, {
+      Bucket: bucket,
+      Key: key
+    });
+    return Promise.resolve(url);
   }
 
 }

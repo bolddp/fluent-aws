@@ -1,3 +1,4 @@
+import * as AWS from 'aws-sdk';
 import { FluentAwsConfig } from "./FluentAwsConfig";
 import { S3 } from './s3/S3';
 import { Ecs } from './ecs/Ecs';
@@ -14,6 +15,7 @@ import { SystemsManager } from "./ssm/SystemsManager";
 import { Kms } from './kms/Kms';
 
 export class FluentAws extends ApiNode {
+  config: FluentAwsConfig;
   promiseChain = new PromiseChain();
   s3Instance: S3;
   ecsInstance: Ecs;
@@ -38,7 +40,19 @@ export class FluentAws extends ApiNode {
     this.kmsInstance = ApiNodeFactory.kms(this);
   }
 
+  sdk(): typeof AWS {
+    AwsApi.configure(this.config);
+    return AWS;
+  }
+
+  /**
+   * Reference to the AWS SDK instance that FluentAws uses. This reference can be used to access the
+   * raw AWS SDK, honoring the configuration that you have performed through the FluentAws API and
+   * allowing for mixing AWS API calls through FluentAws and the raw AWS SDK.
+   */
+
   configure(config: FluentAwsConfig): FluentAws {
+    this.config = config;
     this.promiseChain.addVolatile(async () => {
       const fluentAwsConfig = {
         region: config.region
