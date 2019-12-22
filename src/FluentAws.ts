@@ -41,7 +41,9 @@ export class FluentAws extends ApiNode {
   }
 
   sdk(): typeof AWS {
-    AwsApi.configure(this.config);
+    if (this.config) {
+      AwsApi.configure(this.config);
+    }
     return AWS;
   }
 
