@@ -38,6 +38,10 @@ import { Kms } from '../kms/Kms';
 import { KmsKey } from '../kms/KmsKey';
 import { KmsAliasCollection } from '../kms/KmsAliasCollection';
 import { KmsAlias } from '../kms/KmsAlias';
+import { CognitoIdentity } from 'aws-sdk';
+import { Cognito } from '../cognito/Cognito';
+import { CognitoUserPoolCollection } from '../cognito/CognitoUserPoolCollection';
+import { CognitoUserPoolId, CognitoUserPool } from '../cognito/CognitoUserPool';
 
 export class ApiNodeFactory {
   // IAM
@@ -91,4 +95,9 @@ export class ApiNodeFactory {
   static kmsKey(parent: ApiNode, id: string) { return new KmsKey(parent, id); }
   static kmsAliasCollection(parent: ApiNode) { return new KmsAliasCollection(parent); }
   static kmsAlias(parent: ApiNode, id: string) { return new KmsAlias(parent, id); }
+  // Cognito
+  static cognito(parent: ApiNode) { return new Cognito(parent); }
+  static cognitoUserPoolCollection(parent: ApiNode) { return new CognitoUserPoolCollection(parent); }
+  static cognitoUserPool(parent: ApiNode, id: CognitoUserPoolId) { return new CognitoUserPool(parent, id); }
+
 }

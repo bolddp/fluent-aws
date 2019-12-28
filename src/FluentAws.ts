@@ -13,31 +13,35 @@ import { DynamoDb } from "./dynamoDb/DynamoDb";
 import { CloudFormation } from "./cf/CloudFormation";
 import { SystemsManager } from "./ssm/SystemsManager";
 import { Kms } from './kms/Kms';
+import { Cognito } from './cognito/Cognito';
 
 export class FluentAws extends ApiNode {
   config: FluentAwsConfig;
   promiseChain = new PromiseChain();
-  s3Instance: S3;
-  ecsInstance: Ecs;
-  ec2Instance: Ec2;
+
   autoScalingInstance: AutoScaling;
-  route53Instance: Route53;
-  dynamoDbInstance: DynamoDb;
   cloudFormationInstance: CloudFormation;
-  systemsManagerInstance: SystemsManager;
+  cognitoInstance: Cognito;
+  dynamoDbInstance: DynamoDb;
+  ec2Instance: Ec2;
+  ecsInstance: Ecs;
   kmsInstance: Kms;
+  route53Instance: Route53;
+  s3Instance: S3;
+  systemsManagerInstance: SystemsManager;
 
   constructor() {
     super(undefined);
-    this.s3Instance = ApiNodeFactory.s3(this);;
+    this.autoScalingInstance = ApiNodeFactory.autoScaling(this);
+    this.cloudFormationInstance = ApiNodeFactory.cloudFormation(this);
+    this.cognitoInstance = ApiNodeFactory.cognito(this);
+    this.dynamoDbInstance = ApiNodeFactory.dynamoDb(this);
     this.ecsInstance = ApiNodeFactory.ecs(this);
     this.ec2Instance = ApiNodeFactory.ec2(this);
-    this.autoScalingInstance = ApiNodeFactory.autoScaling(this);
-    this.route53Instance = ApiNodeFactory.route53(this);
-    this.dynamoDbInstance = ApiNodeFactory.dynamoDb(this);
-    this.cloudFormationInstance = ApiNodeFactory.cloudFormation(this);
-    this.systemsManagerInstance = ApiNodeFactory.systemsManager(this);
     this.kmsInstance = ApiNodeFactory.kms(this);
+    this.route53Instance = ApiNodeFactory.route53(this);
+    this.s3Instance = ApiNodeFactory.s3(this);;
+    this.systemsManagerInstance = ApiNodeFactory.systemsManager(this);
   }
 
   sdk(): typeof AWS {
@@ -77,14 +81,15 @@ export class FluentAws extends ApiNode {
   }
 
   autoScaling(): AutoScaling { return this.autoScalingInstance; }
-  s3(): S3 { return this.s3Instance; }
+  cloudFormation(): CloudFormation { return this.cloudFormationInstance; }
+  cognito(): Cognito { return this.cognitoInstance; }
+  dynamoDb(): DynamoDb { return this.dynamoDbInstance; }
   ecs(): Ecs { return this.ecsInstance; }
   ec2(): Ec2 { return this.ec2Instance; }
-  route53(): Route53 { return this.route53Instance; }
-  dynamoDb(): DynamoDb { return this.dynamoDbInstance; }
-  cloudFormation(): CloudFormation { return this.cloudFormationInstance; }
-  systemsManager(): SystemsManager { return this.systemsManagerInstance; }
   kms(): Kms { return this.kmsInstance; }
+  route53(): Route53 { return this.route53Instance; }
+  s3(): S3 { return this.s3Instance; }
+  systemsManager(): SystemsManager { return this.systemsManagerInstance; }
 }
 
 const fluentAwsInstances = new Map<string, FluentAws>();

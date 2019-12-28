@@ -11,6 +11,7 @@ import { FluentAwsConfig } from '../FluentAwsConfig';
 import { DynamoDbApi } from './DynamoDbApi';
 import { StsApi } from './StsApi';
 import { KmsApi } from './KmsApi';
+import { CognitoApi } from './CognitoApi';
 
 const debug = require('debug')('fluentaws:AwsApi');
 
@@ -19,17 +20,18 @@ const debug = require('debug')('fluentaws:AwsApi');
  * that are needed by the module.
  */
 export class AwsApi {
-  static sts: StsApi = new StsApi();
-  static iam: IamApi = new IamApi();
-  static s3: S3Api = new S3Api();
+  static autoScaling: AutoScalingApi = new AutoScalingApi();
+  static cloudFormation: CloudFormationApi = new CloudFormationApi();
+  static cognito: CognitoApi = new CognitoApi();
+  static dynamoDb: DynamoDbApi = new DynamoDbApi();
   static ec2: Ec2Api = new Ec2Api();
   static ecs: EcsApi = new EcsApi();
-  static autoScaling: AutoScalingApi = new AutoScalingApi();
-  static route53: Route53Api = new Route53Api();
-  static dynamoDb: DynamoDbApi = new DynamoDbApi();
-  static cloudFormation: CloudFormationApi = new CloudFormationApi();
-  static systemsManager: SystemsManagerApi = new SystemsManagerApi();
+  static iam: IamApi = new IamApi();
   static kms: KmsApi = new KmsApi();
+  static route53: Route53Api = new Route53Api();
+  static s3: S3Api = new S3Api();
+  static sts: StsApi = new StsApi();
+  static systemsManager: SystemsManagerApi = new SystemsManagerApi();
 
   static configure = (config: FluentAwsConfig): void => {
     debug('applying configuration: %j', config);
