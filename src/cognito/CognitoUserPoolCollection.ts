@@ -13,10 +13,8 @@ export class CognitoUserPoolCollection extends ApiNodeCollection<CognitoUserPool
     }
 
     apiNodeFromId(id: string) {
-      // Id is of format poolId_clientId, and clientId may not be present
-      console.log(`id: ${id}`)
+      // Id is of format poolId/clientId, and clientId may not be present
       const segments = id.split('/');
-      console.log(`id: ${id}, segments: ${JSON.stringify(segments)}`);
       const poolId = segments[0];
       const clientId = segments[1];
       return ApiNodeFactory.cognitoUserPool(this, { poolId, clientId });
