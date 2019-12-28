@@ -81,7 +81,7 @@ export interface CognitoSignupDataAttributes {
   timezone?: string;
   updatedAt?: string;
   website?: string;
-  custom: { [key: string]: string }
+  custom?: { [key: string]: string }
 }
 
 export interface CognitoLoginData {
