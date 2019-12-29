@@ -1,4 +1,5 @@
 import * as AWS from 'aws-sdk';
+import * as fetch from 'node-fetch';
 import { FluentAwsConfig } from "./FluentAwsConfig";
 import { S3 } from './s3/S3';
 import { Ecs } from './ecs/Ecs';
@@ -14,6 +15,8 @@ import { CloudFormation } from "./cf/CloudFormation";
 import { SystemsManager } from "./ssm/SystemsManager";
 import { Kms } from './kms/Kms';
 import { Cognito } from './cognito/Cognito';
+
+(<any> global)['fetch'] = fetch;
 
 export class FluentAws extends ApiNode {
   config: FluentAwsConfig;

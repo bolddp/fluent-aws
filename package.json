@@ -24,6 +24,7 @@
     "@types/debug": "^4.1.4",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.0.10",
+    "@types/node-fetch": "^2.5.4",
     "@types/sinon": "^7.0.13",
     "chai": "^4.2.0",
     "nyc": "^14.1.1",
@@ -36,7 +37,8 @@
     "aws-sdk": "^2.484.0",
     "debug": "^4.1.1",
     "mocha": "^6.1.4",
-    "node": "^12.5.0"
+    "node": "^12.5.0",
+    "node-fetch": "^2.6.0"
   },
   "files": [
     "/dist",
