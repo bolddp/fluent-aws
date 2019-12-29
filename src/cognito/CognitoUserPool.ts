@@ -50,6 +50,11 @@ export class CognitoUserPool extends AwsDataApiNode<AWS.CognitoIdentityServicePr
     return AwsApi.cognito.login(this.id.poolId, this.id.clientId,
       loginData.userName, loginData.password);
   }
+
+  refresh(refreshData: CognitoRefreshData): Promise<AmazonCognitoIdentity.CognitoUserSession> {
+    return AwsApi.cognito.refresh(this.id.poolId, this.id.clientId,
+      refreshData.userName, refreshData.token);
+  }
 }
 
 export interface CognitoUserPoolId {
@@ -87,4 +92,9 @@ export interface CognitoSignupDataAttributes {
 export interface CognitoLoginData {
   userName: string;
   password: string;
+}
+
+export interface CognitoRefreshData {
+  userName: string;
+  token: string;
 }

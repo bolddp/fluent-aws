@@ -1,6 +1,7 @@
 import * as AWS from 'aws-sdk';
-import { CognitoUserAttribute, ISignUpResult, CognitoUserPool, ICognitoUserPoolData, CognitoUserSession, CognitoUser, ICognitoUserData, IAuthenticationDetailsData, AuthenticationDetails } from 'amazon-cognito-identity-js';
+import { CognitoUserAttribute, ISignUpResult, CognitoUserPool, ICognitoUserPoolData, CognitoUserSession, CognitoUser, ICognitoUserData, IAuthenticationDetailsData, AuthenticationDetails, CognitoRefreshToken } from 'amazon-cognito-identity-js';
 import { UserPoolDescriptionType } from 'aws-sdk/clients/cognitoidentityserviceprovider';
+import { userInfo } from 'os';
 
 const debug = require('debug')('fluentaws:CognitoApi');
 
@@ -65,6 +66,19 @@ export class CognitoApi {
       user.authenticateUser(authenticationDetails, {
         onSuccess: (session: CognitoUserSession) => resolve(session),
         onFailure: (err: any) => reject(err)
+      });
+    });
+  }
+
+  async refresh(poolId: string, clientId: string, userName: string, refreshToken: string): Promise<CognitoUserSession> {
+    const user = this.getUser(poolId, clientId, userName);
+    return await new Promise<CognitoUserSession>((resolve, reject) => {
+      user.refreshSession(new CognitoRefreshToken({ RefreshToken: refreshToken }), (err, session) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(session);
+        }
       });
     });
   }
