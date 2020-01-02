@@ -47,10 +47,8 @@ export class FluentAws extends ApiNode {
     this.systemsManagerInstance = ApiNodeFactory.systemsManager(this);
   }
 
-  sdk(): typeof AWS {
-    if (this.config) {
-      AwsApi.configure(this.config);
-    }
+  async sdk(): Promise<typeof AWS> {
+    await this.ensureResolved();
     return AWS;
   }
 
