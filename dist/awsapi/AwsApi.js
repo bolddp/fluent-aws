@@ -22,6 +22,7 @@ const DynamoDbApi_1 = require("./DynamoDbApi");
 const StsApi_1 = require("./StsApi");
 const KmsApi_1 = require("./KmsApi");
 const CognitoApi_1 = require("./CognitoApi");
+const SnsApi_1 = require("./SnsApi");
 const debug = require('debug')('fluentaws:AwsApi');
 /**
  * API for AWS services, using the regular Javascript AWS SDK to wrap requests
@@ -40,6 +41,7 @@ AwsApi.iam = new IamApi_1.IamApi();
 AwsApi.kms = new KmsApi_1.KmsApi();
 AwsApi.route53 = new Route53Api_1.Route53Api();
 AwsApi.s3 = new S3Api_1.S3Api();
+AwsApi.sns = new SnsApi_1.SnsApi();
 AwsApi.sts = new StsApi_1.StsApi();
 AwsApi.systemsManager = new SystemsManagerApi_1.SystemsManagerApi();
 AwsApi.configure = (config) => {

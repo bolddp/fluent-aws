@@ -12,6 +12,7 @@ import { CloudFormation } from "./cf/CloudFormation";
 import { SystemsManager } from "./ssm/SystemsManager";
 import { Kms } from './kms/Kms';
 import { Cognito } from './cognito/Cognito';
+import { Sns } from './sns/Sns';
 export declare class FluentAws extends ApiNode {
     config: FluentAwsConfig;
     promiseChain: PromiseChain;
@@ -24,9 +25,10 @@ export declare class FluentAws extends ApiNode {
     kmsInstance: Kms;
     route53Instance: Route53;
     s3Instance: S3;
+    snsInstance: Sns;
     systemsManagerInstance: SystemsManager;
     constructor();
-    sdk(): typeof AWS;
+    sdk(): Promise<typeof AWS>;
     /**
      * Reference to the AWS SDK instance that FluentAws uses. This reference can be used to access the
      * raw AWS SDK, honoring the configuration that you have performed through the FluentAws API and
@@ -44,6 +46,7 @@ export declare class FluentAws extends ApiNode {
     kms(): Kms;
     route53(): Route53;
     s3(): S3;
+    sns(): Sns;
     systemsManager(): SystemsManager;
 }
 export declare function aws(name?: string): FluentAws;

@@ -29,14 +29,14 @@ class FluentAws extends ApiNode_1.ApiNode {
         this.kmsInstance = ApiNodeFactory_1.ApiNodeFactory.kms(this);
         this.route53Instance = ApiNodeFactory_1.ApiNodeFactory.route53(this);
         this.s3Instance = ApiNodeFactory_1.ApiNodeFactory.s3(this);
-        ;
+        this.snsInstance = ApiNodeFactory_1.ApiNodeFactory.sns(this);
         this.systemsManagerInstance = ApiNodeFactory_1.ApiNodeFactory.systemsManager(this);
     }
     sdk() {
-        if (this.config) {
-            AwsApi_1.AwsApi.configure(this.config);
-        }
-        return AWS;
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.ensureResolved();
+            return AWS;
+        });
     }
     /**
      * Reference to the AWS SDK instance that FluentAws uses. This reference can be used to access the
@@ -72,6 +72,7 @@ class FluentAws extends ApiNode_1.ApiNode {
     kms() { return this.kmsInstance; }
     route53() { return this.route53Instance; }
     s3() { return this.s3Instance; }
+    sns() { return this.snsInstance; }
     systemsManager() { return this.systemsManagerInstance; }
 }
 exports.FluentAws = FluentAws;

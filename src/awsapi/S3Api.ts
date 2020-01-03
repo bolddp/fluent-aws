@@ -1,7 +1,6 @@
 import * as AWS from 'aws-sdk';
 import { Readable } from "stream";
 import { Body } from "aws-sdk/clients/s3";
-import { S3Bucket } from '../s3/S3Bucket';
 
 export class S3Api {
   s3 = () => new AWS.S3();

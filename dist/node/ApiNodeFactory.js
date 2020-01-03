@@ -42,6 +42,9 @@ const KmsAlias_1 = require("../kms/KmsAlias");
 const Cognito_1 = require("../cognito/Cognito");
 const CognitoUserPoolCollection_1 = require("../cognito/CognitoUserPoolCollection");
 const CognitoUserPool_1 = require("../cognito/CognitoUserPool");
+const SnsTopicCollection_1 = require("../sns/SnsTopicCollection");
+const SnsTopic_1 = require("../sns/SnsTopic");
+const Sns_1 = require("../sns/Sns");
 class ApiNodeFactory {
     // IAM
     static iamRole(parent, name) { return new IamRole_1.IamRole(parent, name); }
@@ -98,5 +101,9 @@ class ApiNodeFactory {
     static cognito(parent) { return new Cognito_1.Cognito(parent); }
     static cognitoUserPoolCollection(parent) { return new CognitoUserPoolCollection_1.CognitoUserPoolCollection(parent); }
     static cognitoUserPool(parent, id) { return new CognitoUserPool_1.CognitoUserPool(parent, id); }
+    // SNS
+    static sns(parent) { return new Sns_1.Sns(parent); }
+    static snsTopicCollection(parent) { return new SnsTopicCollection_1.SnsTopicCollection(parent); }
+    static snsTopic(parent, arn) { return new SnsTopic_1.SnsTopic(parent, arn); }
 }
 exports.ApiNodeFactory = ApiNodeFactory;

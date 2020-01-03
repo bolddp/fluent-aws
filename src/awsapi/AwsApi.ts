@@ -12,6 +12,7 @@ import { DynamoDbApi } from './DynamoDbApi';
 import { StsApi } from './StsApi';
 import { KmsApi } from './KmsApi';
 import { CognitoApi } from './CognitoApi';
+import { SnsApi } from './SnsApi';
 
 const debug = require('debug')('fluentaws:AwsApi');
 
@@ -30,6 +31,7 @@ export class AwsApi {
   static kms: KmsApi = new KmsApi();
   static route53: Route53Api = new Route53Api();
   static s3: S3Api = new S3Api();
+  static sns: SnsApi = new SnsApi();
   static sts: StsApi = new StsApi();
   static systemsManager: SystemsManagerApi = new SystemsManagerApi();
 

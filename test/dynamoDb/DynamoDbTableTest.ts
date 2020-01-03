@@ -26,8 +26,7 @@ describe('DynamoDbTable', () => {
     const item = await sut.get({ key: 'key' });
 
     expect(stubs.awsApiStub.calledOnce).to.be.true;
-    expect(stubs.awsApiStub.args[0][0]).to.equal('tableName');
-    expect(stubs.awsApiStub.args[0][1].key).to.equal('key');
+    expect(stubs.awsApiStub.args[0][0]).to.eql({ TableName: 'tableName', Key: { key: 'key' } });
   });
 
   it('will put', async () => {

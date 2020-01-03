@@ -15,6 +15,7 @@ import { CloudFormation } from "./cf/CloudFormation";
 import { SystemsManager } from "./ssm/SystemsManager";
 import { Kms } from './kms/Kms';
 import { Cognito } from './cognito/Cognito';
+import { Sns } from './sns/Sns';
 
 (<any> global)['fetch'] = fetch;
 
@@ -31,6 +32,7 @@ export class FluentAws extends ApiNode {
   kmsInstance: Kms;
   route53Instance: Route53;
   s3Instance: S3;
+  snsInstance: Sns;
   systemsManagerInstance: SystemsManager;
 
   constructor() {
@@ -43,7 +45,8 @@ export class FluentAws extends ApiNode {
     this.ec2Instance = ApiNodeFactory.ec2(this);
     this.kmsInstance = ApiNodeFactory.kms(this);
     this.route53Instance = ApiNodeFactory.route53(this);
-    this.s3Instance = ApiNodeFactory.s3(this);;
+    this.s3Instance = ApiNodeFactory.s3(this);
+    this.snsInstance = ApiNodeFactory.sns(this);
     this.systemsManagerInstance = ApiNodeFactory.systemsManager(this);
   }
 
@@ -90,6 +93,7 @@ export class FluentAws extends ApiNode {
   kms(): Kms { return this.kmsInstance; }
   route53(): Route53 { return this.route53Instance; }
   s3(): S3 { return this.s3Instance; }
+  sns(): Sns { return this.snsInstance; }
   systemsManager(): SystemsManager { return this.systemsManagerInstance; }
 }
 

@@ -42,6 +42,9 @@ import { CognitoIdentity } from 'aws-sdk';
 import { Cognito } from '../cognito/Cognito';
 import { CognitoUserPoolCollection } from '../cognito/CognitoUserPoolCollection';
 import { CognitoUserPoolId, CognitoUserPool } from '../cognito/CognitoUserPool';
+import { SnsTopicCollection } from '../sns/SnsTopicCollection';
+import { SnsTopic } from '../sns/SnsTopic';
+import { Sns } from '../sns/Sns';
 
 export class ApiNodeFactory {
   // IAM
@@ -99,5 +102,8 @@ export class ApiNodeFactory {
   static cognito(parent: ApiNode) { return new Cognito(parent); }
   static cognitoUserPoolCollection(parent: ApiNode) { return new CognitoUserPoolCollection(parent); }
   static cognitoUserPool(parent: ApiNode, id: CognitoUserPoolId) { return new CognitoUserPool(parent, id); }
-
+  // SNS
+  static sns(parent: ApiNode) { return new Sns(parent); }
+  static snsTopicCollection(parent: ApiNode) { return new SnsTopicCollection(parent); }
+  static snsTopic(parent: ApiNode, arn: string) { return new SnsTopic(parent, arn); }
 }

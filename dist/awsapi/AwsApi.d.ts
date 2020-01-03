@@ -11,6 +11,7 @@ import { DynamoDbApi } from './DynamoDbApi';
 import { StsApi } from './StsApi';
 import { KmsApi } from './KmsApi';
 import { CognitoApi } from './CognitoApi';
+import { SnsApi } from './SnsApi';
 /**
  * API for AWS services, using the regular Javascript AWS SDK to wrap requests
  * that are needed by the module.
@@ -26,6 +27,7 @@ export declare class AwsApi {
     static kms: KmsApi;
     static route53: Route53Api;
     static s3: S3Api;
+    static sns: SnsApi;
     static sts: StsApi;
     static systemsManager: SystemsManagerApi;
     static configure: (config: FluentAwsConfig) => void;
