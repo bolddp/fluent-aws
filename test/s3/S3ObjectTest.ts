@@ -4,6 +4,7 @@ import { AwsApi } from '../../src/awsapi/AwsApi';
 import { S3Object } from '../../src/s3/S3Object';
 import { expect } from 'chai';
 import { Readable } from 'stream';
+import { rejects } from 'assert';
 
 describe('S3Object', () => {
   it('will load awsData', async () => {
@@ -17,6 +18,43 @@ describe('S3Object', () => {
     expect(awsApiStub.calledOnce).to.be.true;
     expect(awsApiStub.args[0][0]).to.equal('bucketName');
     expect(awsApiStub.args[0][1]).to.equal('key');
+  });
+
+  it('will check exists', async () => {
+    const stubs = apiNodeCollectionStubs();
+    const awsApiStub = sinon.stub();
+    AwsApi.s3.headObject = awsApiStub;
+
+    const sut = new S3Object(<any>stubs.parentStub, 'bucketName', 'key');
+    const exists = await sut.exists();
+
+    expect(exists).to.be.true;
+    expect(awsApiStub.calledOnce).to.be.true;
+    expect(awsApiStub.args[0][0]).to.equal('bucketName');
+    expect(awsApiStub.args[0][1]).to.equal('key');
+  });
+
+  it('will check exists when not exists', async () => {
+    const stubs = apiNodeCollectionStubs();
+    const awsApiStub = sinon.stub().throws({ statusCode: 404 });
+    AwsApi.s3.headObject = awsApiStub;
+
+    const sut = new S3Object(<any>stubs.parentStub, 'bucketName', 'key');
+    const exists = await sut.exists();
+
+    expect(exists).to.be.false;
+    expect(awsApiStub.calledOnce).to.be.true;
+    expect(awsApiStub.args[0][0]).to.equal('bucketName');
+    expect(awsApiStub.args[0][1]).to.equal('key');
+  });
+
+  it('will throw on other error in exists', async () => {
+    const stubs = apiNodeCollectionStubs();
+    const awsApiStub = sinon.stub().throws({ statusCode: 403, message: 'unauthorized access' });
+    AwsApi.s3.headObject = awsApiStub;
+
+    const sut = new S3Object(<any>stubs.parentStub, 'bucketName', 'key');
+    await rejects(() => sut.exists(), 'unauthorized');
   });
 
   it('will delete', async () => {
@@ -90,6 +128,33 @@ describe('S3Object', () => {
     expect(stubs.awsApiStub.calledOnce).to.be.true;
     expect(stubs.awsApiStub.args[0][0]).to.equal('bucketName');
     expect(stubs.awsApiStub.args[0][1]).to.equal('key');
+  });
 
+  it('will signed get url', async () => {
+    const stubs = apiNodeCollectionStubs();
+    AwsApi.s3.getSignedUrl = stubs.awsApiStub.returns('url');
+
+    const sut = new S3Object(<any>stubs.parentStub, 'bucketName', 'key');
+    const url = await sut.signedGetUrl();
+
+    expect(url).to.equal('url');
+    expect(stubs.awsApiStub.calledOnce).to.be.true;
+    expect(stubs.awsApiStub.args[0][0]).to.equal('getObject');
+    expect(stubs.awsApiStub.args[0][1]).to.equal('bucketName');
+    expect(stubs.awsApiStub.args[0][2]).to.equal('key');
+  });
+
+  it('will signed put url', async () => {
+    const stubs = apiNodeCollectionStubs();
+    AwsApi.s3.getSignedUrl = stubs.awsApiStub.returns('url');
+
+    const sut = new S3Object(<any>stubs.parentStub, 'bucketName', 'key');
+    const url = await sut.signedPutUrl();
+
+    expect(url).to.equal('url');
+    expect(stubs.awsApiStub.calledOnce).to.be.true;
+    expect(stubs.awsApiStub.args[0][0]).to.equal('putObject');
+    expect(stubs.awsApiStub.args[0][1]).to.equal('bucketName');
+    expect(stubs.awsApiStub.args[0][2]).to.equal('key');
   });
 });

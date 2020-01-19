@@ -14,13 +14,41 @@ export class PromiseChain {
   volatileChain: (() => Promise<void>)[] = [];
   resolved: Promise<void>;
 
-  add(link: () => Promise<void>) {
+  add(promise: () => Promise<void>) {
     this.resolved = undefined;
-    this.chain.push(link);
+    this.chain.push(promise);
   }
 
-  addVolatile(link: () => Promise<void>) {
-    this.volatileChain.push(link);
+  addVolatile(promise: () => Promise<void>) {
+    this.volatileChain.push(promise);
+  }
+
+  /**
+   * Replaces a promise in the promise chain and resets the resolve flag, which will cause the
+   * promises in the chain to run again once on next ensureResolve().
+   */
+  replace(currentPromise: () => Promise<void>, newPromise: () => Promise<void>): () => Promise<void> {
+    const index = this.chain.indexOf(currentPromise);
+    if (index >= 0) {
+      this.chain[index] = newPromise;
+    } else {
+      this.chain.push(newPromise);
+    }
+    this.resolved = undefined;
+    return newPromise;
+  }
+
+  /**
+   * Replaces a volatile promise in the promise chain.
+   */
+  replaceVolatile(currentPromise: () => Promise<void>, newPromise: () => Promise<void>): () => Promise<void> {
+    const index = this.volatileChain.indexOf(currentPromise);
+    if (index >= 0) {
+      this.volatileChain[index] = newPromise;
+    } else {
+      this.volatileChain.push(newPromise);
+    }
+    return newPromise;
   }
 
   invalidate() {

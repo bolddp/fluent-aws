@@ -18,6 +18,41 @@ describe('DynamoDbTable', () => {
     expect(awsApiStub.args[0][0]).to.equal('tableName');
   });
 
+  it('will query', async () => {
+    const stubs = apiNodeCollectionStubs();
+    AwsApi.dynamoDb.query = stubs.awsApiStub;
+
+    const sut = new DynamoDbTable(<any>stubs.parentStub, 'tableName');
+    const result = await sut.query({ key: 'key' });
+
+    expect(stubs.awsApiStub.calledOnce).to.be.true;
+    expect(stubs.awsApiStub.args[0][0]).to.eql({
+      TableName: "tableName",
+      KeyConditionExpression: "key = :key",
+      ExpressionAttributeValues: {
+        ':key': "key"
+      }
+    });
+  });
+
+  it('will query by index', async () => {
+    const stubs = apiNodeCollectionStubs();
+    AwsApi.dynamoDb.query = stubs.awsApiStub;
+
+    const sut = new DynamoDbTable(<any>stubs.parentStub, 'tableName');
+    const result = await sut.queryByIndex('index', { key: 'key' });
+
+    expect(stubs.awsApiStub.calledOnce).to.be.true;
+    expect(stubs.awsApiStub.args[0][0]).to.eql({
+      TableName: 'tableName',
+      IndexName: 'index',
+      KeyConditionExpression: 'key = :key',
+      ExpressionAttributeValues: {
+        ':key': 'key'
+      }
+    });
+  });
+
   it('will get', async () => {
     const stubs = apiNodeCollectionStubs();
     AwsApi.dynamoDb.get = stubs.awsApiStub;

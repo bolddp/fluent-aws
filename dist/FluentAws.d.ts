@@ -16,6 +16,9 @@ import { Sns } from './sns/Sns';
 export declare class FluentAws extends ApiNode {
     config: FluentAwsConfig;
     promiseChain: PromiseChain;
+    assumeRolePromise: () => Promise<void>;
+    configurePromise: () => Promise<void>;
+    profilePromise: () => Promise<void>;
     autoScalingInstance: AutoScaling;
     cloudFormationInstance: CloudFormation;
     cognitoInstance: Cognito;
@@ -36,6 +39,10 @@ export declare class FluentAws extends ApiNode {
      */
     configure(config: FluentAwsConfig): FluentAws;
     profile(profile: string): FluentAws;
+    /**
+     * Makes sure that the FluentAws instance assumes a role before attempting to access AWS resources.
+     * The command can be repeated periodically to ensure that the assumed role doesn't expire.
+     */
     assumeRole(roleArn: string, sessionName: string): FluentAws;
     autoScaling(): AutoScaling;
     cloudFormation(): CloudFormation;

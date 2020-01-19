@@ -17,11 +17,14 @@ import { Kms } from './kms/Kms';
 import { Cognito } from './cognito/Cognito';
 import { Sns } from './sns/Sns';
 
-(<any> global)['fetch'] = fetch;
+(<any>global)['fetch'] = fetch;
 
 export class FluentAws extends ApiNode {
   config: FluentAwsConfig;
   promiseChain = new PromiseChain();
+  assumeRolePromise: () => Promise<void>;
+  configurePromise: () => Promise<void>;
+  profilePromise: () => Promise<void>;
 
   autoScalingInstance: AutoScaling;
   cloudFormationInstance: CloudFormation;
@@ -63,24 +66,29 @@ export class FluentAws extends ApiNode {
 
   configure(config: FluentAwsConfig): FluentAws {
     this.config = config;
-    this.promiseChain.addVolatile(async () => {
-      const fluentAwsConfig = {
-        region: config.region
-      };
-      AwsApi.configure(fluentAwsConfig);
-    });
+    this.configurePromise = this.promiseChain.replaceVolatile(this.configurePromise,
+      async () => {
+        const fluentAwsConfig = {
+          region: config.region
+        };
+        AwsApi.configure(fluentAwsConfig);
+      });
     return this;
   }
 
   profile(profile: string): FluentAws {
-    this.promiseChain.add(async () => {
+    this.profilePromise = this.promiseChain.replace(this.profilePromise, async () => {
       AwsApi.profile(profile);
     });
     return this;
   }
 
+  /**
+   * Makes sure that the FluentAws instance assumes a role before attempting to access AWS resources.
+   * The command can be repeated periodically to ensure that the assumed role doesn't expire.
+   */
   assumeRole(roleArn: string, sessionName: string): FluentAws {
-    this.promiseChain.add(() => AwsApi.assumeRole(roleArn, sessionName));
+    this.assumeRolePromise = this.promiseChain.replace(this.assumeRolePromise, () => AwsApi.assumeRole(roleArn, sessionName));
     return this;
   }
 

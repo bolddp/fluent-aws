@@ -16,12 +16,40 @@ class PromiseChain {
         this.chain = [];
         this.volatileChain = [];
     }
-    add(link) {
+    add(promise) {
         this.resolved = undefined;
-        this.chain.push(link);
+        this.chain.push(promise);
     }
-    addVolatile(link) {
-        this.volatileChain.push(link);
+    addVolatile(promise) {
+        this.volatileChain.push(promise);
+    }
+    /**
+     * Replaces a promise in the promise chain and resets the resolve flag, which will cause the
+     * promises in the chain to run again once on next ensureResolve().
+     */
+    replace(currentPromise, newPromise) {
+        const index = this.chain.indexOf(currentPromise);
+        if (index >= 0) {
+            this.chain[index] = newPromise;
+        }
+        else {
+            this.chain.push(newPromise);
+        }
+        this.resolved = undefined;
+        return newPromise;
+    }
+    /**
+     * Replaces a volatile promise in the promise chain.
+     */
+    replaceVolatile(currentPromise, newPromise) {
+        const index = this.volatileChain.indexOf(currentPromise);
+        if (index >= 0) {
+            this.volatileChain[index] = newPromise;
+        }
+        else {
+            this.volatileChain.push(newPromise);
+        }
+        return newPromise;
     }
     invalidate() {
         this.resolved = undefined;

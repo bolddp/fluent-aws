@@ -7,7 +7,7 @@ export declare class CognitoUserPool extends AwsDataApiNode<AWS.CognitoIdentityS
     };
     id: CognitoUserPoolId;
     constructor(parent: ApiNode, id: CognitoUserPoolId);
-    protected loadAwsData(): Promise<AWS.CognitoIdentityServiceProvider.UserPoolDescriptionType>;
+    loadAwsData(): Promise<AWS.CognitoIdentityServiceProvider.UserPoolDescriptionType>;
     signup(signupData: CognitoSignupData): Promise<AmazonCognitoIdentity.ISignUpResult>;
     login(loginData: CognitoLoginData): Promise<AmazonCognitoIdentity.CognitoUserSession>;
     refresh(refreshData: CognitoRefreshData): Promise<AmazonCognitoIdentity.CognitoUserSession>;

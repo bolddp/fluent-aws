@@ -13,8 +13,17 @@ export declare class PromiseChain {
     chain: (() => Promise<void>)[];
     volatileChain: (() => Promise<void>)[];
     resolved: Promise<void>;
-    add(link: () => Promise<void>): void;
-    addVolatile(link: () => Promise<void>): void;
+    add(promise: () => Promise<void>): void;
+    addVolatile(promise: () => Promise<void>): void;
+    /**
+     * Replaces a promise in the promise chain and resets the resolve flag, which will cause the
+     * promises in the chain to run again once on next ensureResolve().
+     */
+    replace(currentPromise: () => Promise<void>, newPromise: () => Promise<void>): () => Promise<void>;
+    /**
+     * Replaces a volatile promise in the promise chain.
+     */
+    replaceVolatile(currentPromise: () => Promise<void>, newPromise: () => Promise<void>): () => Promise<void>;
     invalidate(): void;
     resolve(): Promise<void>;
 }

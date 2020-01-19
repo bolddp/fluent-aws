@@ -1,15 +1,15 @@
-import { expect } from 'chai';
-import { ApiNodeFactory } from '../../src/node/ApiNodeFactory';
-import { S3BucketCollection } from '../../src/s3/S3BucketCollection';
 import { apiNodeCollectionStubs } from "../utils/stubs";
+import { ApiNodeFactory } from "../../src/node/ApiNodeFactory";
+import { expect } from "chai";
+import { SnsTopicCollection } from '../../src/sns/SnsTopicCollection';
 import { AwsApi } from '../../src/awsapi/AwsApi';
 
-describe('S3BucketCollection', () => {
+describe('SnsTopicCollection', () => {
   it('will create from id', async () => {
     const stubs = apiNodeCollectionStubs();
-    ApiNodeFactory.s3Bucket = stubs.factoryStub;
+    ApiNodeFactory.snsTopic = stubs.factoryStub;
 
-    const sut = new S3BucketCollection(<any>stubs.parentStub);
+    const sut = new SnsTopicCollection(<any>stubs.parentStub);
 
     sut.apiNodeFromId('id');
 
@@ -20,25 +20,25 @@ describe('S3BucketCollection', () => {
 
   it('will create from AWS data', async () => {
     const stubs = apiNodeCollectionStubs();
-    ApiNodeFactory.s3Bucket = stubs.factoryStub;
-    const awsData: AWS.S3.Bucket = {
-      Name: 'bucketName'
+    ApiNodeFactory.snsTopic = stubs.factoryStub;
+    const awsData: AWS.SNS.Topic = {
+      TopicArn: 'topicArn'
     }
 
-    const sut = new S3BucketCollection(<any>stubs.parentStub);
+    const sut = new SnsTopicCollection(<any>stubs.parentStub);
 
     sut.apiNodeFromAwsData(awsData);
 
     expect(stubs.factoryStub.calledOnce).to.be.true;
     expect(stubs.factoryStub.args[0][0]).to.equal(sut);
-    expect(stubs.factoryStub.args[0][1]).to.equal('bucketName');
-  })
+    expect(stubs.factoryStub.args[0][1]).to.equal('topicArn');
+  });
 
   it('will load', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.s3.listBuckets = stubs.awsApiStub.returns([{ BucketName: 'bucket01' }, { BucketName: 'bucket02' }]);
+    AwsApi.sns.listTopics = stubs.awsApiStub.returns([{ TopicArn: 'topicArn01' }, { TopicArn: 'topicArn02' }]);
 
-    const sut = new S3BucketCollection(<any>stubs.parentStub);
+    const sut = new SnsTopicCollection(<any>stubs.parentStub);
     await sut.load();
 
     expect(stubs.awsApiStub.calledOnce).to.be.true;

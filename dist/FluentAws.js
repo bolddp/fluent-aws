@@ -1,10 +1,9 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -45,7 +44,7 @@ class FluentAws extends ApiNode_1.ApiNode {
      */
     configure(config) {
         this.config = config;
-        this.promiseChain.addVolatile(() => __awaiter(this, void 0, void 0, function* () {
+        this.configurePromise = this.promiseChain.replaceVolatile(this.configurePromise, () => __awaiter(this, void 0, void 0, function* () {
             const fluentAwsConfig = {
                 region: config.region
             };
@@ -54,13 +53,17 @@ class FluentAws extends ApiNode_1.ApiNode {
         return this;
     }
     profile(profile) {
-        this.promiseChain.add(() => __awaiter(this, void 0, void 0, function* () {
+        this.profilePromise = this.promiseChain.replace(this.profilePromise, () => __awaiter(this, void 0, void 0, function* () {
             AwsApi_1.AwsApi.profile(profile);
         }));
         return this;
     }
+    /**
+     * Makes sure that the FluentAws instance assumes a role before attempting to access AWS resources.
+     * The command can be repeated periodically to ensure that the assumed role doesn't expire.
+     */
     assumeRole(roleArn, sessionName) {
-        this.promiseChain.add(() => AwsApi_1.AwsApi.assumeRole(roleArn, sessionName));
+        this.assumeRolePromise = this.promiseChain.replace(this.assumeRolePromise, () => AwsApi_1.AwsApi.assumeRole(roleArn, sessionName));
         return this;
     }
     autoScaling() { return this.autoScalingInstance; }

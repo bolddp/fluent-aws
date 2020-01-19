@@ -17,11 +17,12 @@ export class CognitoUserPool extends AwsDataApiNode<AWS.CognitoIdentityServicePr
     this.id = id;
   }
 
-  protected loadAwsData(): Promise<AWS.CognitoIdentityServiceProvider.UserPoolDescriptionType> {
+  loadAwsData(): Promise<AWS.CognitoIdentityServiceProvider.UserPoolDescriptionType> {
     return AwsApi.cognito.describeUserPool(this.id.poolId);
   }
 
-  signup(signupData: CognitoSignupData): Promise<AmazonCognitoIdentity.ISignUpResult> {
+  async signup(signupData: CognitoSignupData): Promise<AmazonCognitoIdentity.ISignUpResult> {
+    await this.ensureResolved();
     const attributeList: AmazonCognitoIdentity.CognitoUserAttribute[] = [];
     // First map the standard attributes
     for (const key of Object.keys(signupData.attributes)) {
@@ -46,12 +47,14 @@ export class CognitoUserPool extends AwsDataApiNode<AWS.CognitoIdentityServicePr
       signupData.userName, signupData.password, attributeList);
   }
 
-  login(loginData: CognitoLoginData): Promise<AmazonCognitoIdentity.CognitoUserSession> {
+  async login(loginData: CognitoLoginData): Promise<AmazonCognitoIdentity.CognitoUserSession> {
+    await this.ensureResolved();
     return AwsApi.cognito.login(this.id.poolId, this.id.clientId,
       loginData.userName, loginData.password);
   }
 
-  refresh(refreshData: CognitoRefreshData): Promise<AmazonCognitoIdentity.CognitoUserSession> {
+  async refresh(refreshData: CognitoRefreshData): Promise<AmazonCognitoIdentity.CognitoUserSession> {
+    await this.ensureResolved();
     return AwsApi.cognito.refresh(this.id.poolId, this.id.clientId,
       refreshData.userName, refreshData.token);
   }
