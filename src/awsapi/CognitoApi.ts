@@ -1,7 +1,6 @@
 import * as AWS from 'aws-sdk';
 import { CognitoUserAttribute, ISignUpResult, CognitoUserPool, ICognitoUserPoolData, CognitoUserSession, CognitoUser, ICognitoUserData, IAuthenticationDetailsData, AuthenticationDetails, CognitoRefreshToken } from 'amazon-cognito-identity-js';
 import { UserPoolDescriptionType } from 'aws-sdk/clients/cognitoidentityserviceprovider';
-import { userInfo } from 'os';
 
 const debug = require('debug')('fluentaws:CognitoApi');
 
@@ -34,7 +33,9 @@ export class CognitoApi {
 
   async describeUserPool(poolId: string): Promise<UserPoolDescriptionType> {
     debug('describing user pool: %s', poolId);
-    const response = await this.cognitoSp().describeUserPool().promise();
+    const response = await this.cognitoSp().describeUserPool({
+      UserPoolId: poolId
+    }).promise();
     debug('described user pool');
     return response.UserPool;
   }
@@ -80,6 +81,27 @@ export class CognitoApi {
           resolve(session);
         }
       });
+    });
+  }
+
+  async forgotPassword(poolId: string, clientId: string, userName: string): Promise<any> {
+    const user = this.getUser(poolId, clientId, userName);
+    return await new Promise<any>((resolve, reject) => {
+      user.forgotPassword({
+        onSuccess: rsp => resolve(rsp),
+        onFailure: error => reject(error)
+      });
+    });
+  }
+
+  async confirmPassword(poolId: string, clientId: string, userName: string,
+    verificationCode: string, newPassword: string): Promise<void> {
+    const user = this.getUser(poolId, clientId, userName);
+    await new Promise<void>((resolve, reject) => {
+      user.confirmPassword(verificationCode, newPassword, {
+        onSuccess: () => resolve(),
+        onFailure: (error) => reject(error)
+      })
     });
   }
 }

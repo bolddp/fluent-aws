@@ -10,4 +10,6 @@ export declare class CognitoApi {
     signup(poolId: string, clientId: string, userName: string, password: string, attributeList: CognitoUserAttribute[]): Promise<ISignUpResult>;
     login(poolId: string, clientId: string, userName: string, password: string): Promise<CognitoUserSession>;
     refresh(poolId: string, clientId: string, userName: string, refreshToken: string): Promise<CognitoUserSession>;
+    forgotPassword(poolId: string, clientId: string, userName: string): Promise<any>;
+    confirmPassword(poolId: string, clientId: string, userName: string, verificationCode: string, newPassword: string): Promise<void>;
 }

@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -29,6 +30,7 @@ const debug = require('debug')('fluentaws:AwsApi');
  */
 class AwsApi {
 }
+exports.AwsApi = AwsApi;
 AwsApi.autoScaling = new AutoScalingApi_1.AutoScalingApi();
 AwsApi.cloudFormation = new CloudFormationApi_1.CloudFormationApi();
 AwsApi.cognito = new CognitoApi_1.CognitoApi();
@@ -51,9 +53,8 @@ AwsApi.profile = (profile) => {
     var credentials = new AWS.SharedIniFileCredentials({ profile });
     AWS.config.credentials = credentials;
 };
-AwsApi.assumeRole = (roleArn, sessionName) => __awaiter(this, void 0, void 0, function* () {
+AwsApi.assumeRole = (roleArn, sessionName) => __awaiter(void 0, void 0, void 0, function* () {
     debug('assuming role: %s, session name: %s', roleArn, sessionName);
     yield AwsApi.sts.assumeRole(roleArn, sessionName);
     debug('assumed role: %s, session name: %s', roleArn, sessionName);
 });
-exports.AwsApi = AwsApi;

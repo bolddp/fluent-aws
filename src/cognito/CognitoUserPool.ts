@@ -58,6 +58,27 @@ export class CognitoUserPool extends AwsDataApiNode<AWS.CognitoIdentityServicePr
     return AwsApi.cognito.refresh(this.id.poolId, this.id.clientId,
       refreshData.userName, refreshData.token);
   }
+
+  /**
+   * Requests a verification code for a user with a specific email address. This verification code then
+   * needs to be used together with a new password to perform the reset. This is done through the
+   * {@link #resetPassword} function.
+   */
+  async requestForgotPasswordCode(email: string): Promise<void> {
+    await this.ensureResolved();
+    await AwsApi.cognito.forgotPassword(this.id.poolId, this.id.clientId, email);
+  }
+
+  /**
+   * Sets a new password for a user.
+   * @param email the email of the user whose password should be reset
+   * @param verificationCode the verification code
+   * @param password the new password
+   */
+  async setNewUserPassword(email: string, verificationCode: string, password: string): Promise<void> {
+    await this.ensureResolved();
+    await AwsApi.cognito.confirmPassword(this.id.poolId, this.id.clientId, email, verificationCode, password);
+  }
 }
 
 export interface CognitoUserPoolId {
