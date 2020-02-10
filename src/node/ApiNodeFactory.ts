@@ -45,6 +45,8 @@ import { CognitoUserPoolId, CognitoUserPool } from '../cognito/CognitoUserPool';
 import { SnsTopicCollection } from '../sns/SnsTopicCollection';
 import { SnsTopic } from '../sns/SnsTopic';
 import { Sns } from '../sns/Sns';
+import { CognitoUser } from '../cognito/CognitoUser';
+import { CognitoUserCollection } from '../cognito/CognitoUserCollection';
 
 export class ApiNodeFactory {
   // IAM
@@ -102,6 +104,8 @@ export class ApiNodeFactory {
   static cognito(parent: ApiNode) { return new Cognito(parent); }
   static cognitoUserPoolCollection(parent: ApiNode) { return new CognitoUserPoolCollection(parent); }
   static cognitoUserPool(parent: ApiNode, id: CognitoUserPoolId) { return new CognitoUserPool(parent, id); }
+  static cognitoUserCollection(parent: ApiNode, poolId: CognitoUserPoolId) { return new CognitoUserCollection(parent, poolId); }
+  static cognitoUser(parent: ApiNode, userName: string, poolId: CognitoUserPoolId) { return new CognitoUser(parent, userName, poolId); }
   // SNS
   static sns(parent: ApiNode) { return new Sns(parent); }
   static snsTopicCollection(parent: ApiNode) { return new SnsTopicCollection(parent); }

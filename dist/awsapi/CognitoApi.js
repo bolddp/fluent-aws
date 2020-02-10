@@ -49,11 +49,30 @@ class CognitoApi {
             return response.UserPool;
         });
     }
+    listUsers(poolId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            debug('listing users');
+            let result = [];
+            const recursiveFunction = (paginationToken) => __awaiter(this, void 0, void 0, function* () {
+                const response = yield this.cognitoSp().listUsers({
+                    UserPoolId: poolId,
+                    PaginationToken: paginationToken
+                }).promise();
+                result = result.concat(response.Users);
+                if (response.PaginationToken) {
+                    yield recursiveFunction(response.PaginationToken);
+                }
+            });
+            yield recursiveFunction();
+            debug('listed users');
+            return result;
+        });
+    }
     signup(poolId, clientId, userName, password, attributeList) {
         return __awaiter(this, void 0, void 0, function* () {
             debug('signing up: %s, clientId: %s, userName: %s, attr: %j', poolId, clientId, userName, attributeList);
-            const poolData = this.getPoolData(poolId, clientId);
             return new Promise((resolve, reject) => {
+                const poolData = this.getPoolData(poolId, clientId);
                 poolData.signUp(userName, password, attributeList, null, (err, result) => {
                     if (err) {
                         reject(err);
@@ -73,8 +92,8 @@ class CognitoApi {
                 Password: password
             };
             const authenticationDetails = new amazon_cognito_identity_js_1.AuthenticationDetails(authenticationData);
-            const user = this.getUser(poolId, clientId, userName);
             return yield new Promise((resolve, reject) => {
+                const user = this.getUser(poolId, clientId, userName);
                 user.authenticateUser(authenticationDetails, {
                     onSuccess: (session) => resolve(session),
                     onFailure: (err) => reject(err)
@@ -84,8 +103,8 @@ class CognitoApi {
     }
     refresh(poolId, clientId, userName, refreshToken) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = this.getUser(poolId, clientId, userName);
             return yield new Promise((resolve, reject) => {
+                const user = this.getUser(poolId, clientId, userName);
                 user.refreshSession(new amazon_cognito_identity_js_1.CognitoRefreshToken({ RefreshToken: refreshToken }), (err, session) => {
                     if (err) {
                         reject(err);
@@ -99,8 +118,8 @@ class CognitoApi {
     }
     forgotPassword(poolId, clientId, userName) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = this.getUser(poolId, clientId, userName);
             return yield new Promise((resolve, reject) => {
+                const user = this.getUser(poolId, clientId, userName);
                 user.forgotPassword({
                     onSuccess: rsp => resolve(rsp),
                     onFailure: error => reject(error)
@@ -110,13 +129,55 @@ class CognitoApi {
     }
     confirmPassword(poolId, clientId, userName, verificationCode, newPassword) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = this.getUser(poolId, clientId, userName);
             yield new Promise((resolve, reject) => {
+                const user = this.getUser(poolId, clientId, userName);
                 user.confirmPassword(verificationCode, newPassword, {
                     onSuccess: () => resolve(),
                     onFailure: (error) => reject(error)
                 });
             });
+        });
+    }
+    deleteUser(poolId, userName) {
+        return __awaiter(this, void 0, void 0, function* () {
+            debug('deleting user: %s, poolId: %s', userName, poolId);
+            yield this.cognitoSp().adminDeleteUser({
+                UserPoolId: poolId,
+                Username: userName
+            }).promise();
+            debug('deleted user');
+        });
+    }
+    addUserToGroup(poolId, userName, groupName) {
+        return __awaiter(this, void 0, void 0, function* () {
+            debug('adding user to group: %s, poolId: %s, group: %s', userName, poolId, groupName);
+            yield this.cognitoSp().adminAddUserToGroup({
+                UserPoolId: poolId,
+                Username: userName,
+                GroupName: groupName
+            }).promise();
+            debug('added user to group');
+        });
+    }
+    removeUserFromGroup(poolId, userName, groupName) {
+        return __awaiter(this, void 0, void 0, function* () {
+            debug('removing user from group: %s, poolId: %s, group: %s', userName, poolId, groupName);
+            yield this.cognitoSp().adminRemoveUserFromGroup({
+                UserPoolId: poolId,
+                Username: userName,
+                GroupName: groupName
+            }).promise();
+            debug('removed user from group');
+        });
+    }
+    globalSignOut(poolId, userName) {
+        return __awaiter(this, void 0, void 0, function* () {
+            debug('globally signing out user: %s, poolId:', userName, poolId);
+            yield this.cognitoSp().adminUserGlobalSignOut({
+                UserPoolId: poolId,
+                Username: userName
+            }).promise();
+            debug('globally signed out user');
         });
     }
 }

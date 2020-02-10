@@ -10,6 +10,8 @@ __export(require("./cf/CloudFormation"));
 __export(require("./cf/CloudFormationStack"));
 __export(require("./cf/CloudFormationStackCollection"));
 __export(require("./cognito/Cognito"));
+__export(require("./cognito/CognitoUser"));
+__export(require("./cognito/CognitoUserCollection"));
 __export(require("./cognito/CognitoUserPool"));
 __export(require("./cognito/CognitoUserPoolCollection"));
 __export(require("./dynamoDb/DynamoDb"));

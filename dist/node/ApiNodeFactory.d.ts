@@ -44,6 +44,8 @@ import { CognitoUserPoolId, CognitoUserPool } from '../cognito/CognitoUserPool';
 import { SnsTopicCollection } from '../sns/SnsTopicCollection';
 import { SnsTopic } from '../sns/SnsTopic';
 import { Sns } from '../sns/Sns';
+import { CognitoUser } from '../cognito/CognitoUser';
+import { CognitoUserCollection } from '../cognito/CognitoUserCollection';
 export declare class ApiNodeFactory {
     static iamRole(parent: ApiNode, name: string): IamRole;
     static autoScaling(parent: ApiNode): AutoScaling;
@@ -87,6 +89,8 @@ export declare class ApiNodeFactory {
     static cognito(parent: ApiNode): Cognito;
     static cognitoUserPoolCollection(parent: ApiNode): CognitoUserPoolCollection;
     static cognitoUserPool(parent: ApiNode, id: CognitoUserPoolId): CognitoUserPool;
+    static cognitoUserCollection(parent: ApiNode, poolId: CognitoUserPoolId): CognitoUserCollection;
+    static cognitoUser(parent: ApiNode, userName: string, poolId: CognitoUserPoolId): CognitoUser;
     static sns(parent: ApiNode): Sns;
     static snsTopicCollection(parent: ApiNode): SnsTopicCollection;
     static snsTopic(parent: ApiNode, arn: string): SnsTopic;

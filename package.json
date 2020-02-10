@@ -1,6 +1,6 @@
 {
   "name": "fluent-aws",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Fluent AWS API, written in Typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

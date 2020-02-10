@@ -2,6 +2,9 @@ import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 import { AwsDataApiNode } from '../node/AwsDataApiNode';
 import { AwsApi } from '../awsapi/AwsApi';
 import { ApiNode } from '../node/ApiNode';
+import { CognitoUser } from './CognitoUser';
+import { CognitoUserCollection } from './CognitoUserCollection';
+import { ApiNodeFactory } from '../node/ApiNodeFactory';
 
 export class CognitoUserPool extends AwsDataApiNode<AWS.CognitoIdentityServiceProvider.UserPoolDescriptionType> {
   static cognitoAttrIdMap: { [key: string]: string } = {
@@ -11,14 +14,24 @@ export class CognitoUserPool extends AwsDataApiNode<AWS.CognitoIdentityServicePr
   }
 
   id: CognitoUserPoolId;
+  userCollection: CognitoUserCollection;
 
   constructor(parent: ApiNode, id: CognitoUserPoolId) {
     super(parent);
     this.id = id;
+    this.userCollection = ApiNodeFactory.cognitoUserCollection(this, this.id);
   }
 
   loadAwsData(): Promise<AWS.CognitoIdentityServiceProvider.UserPoolDescriptionType> {
     return AwsApi.cognito.describeUserPool(this.id.poolId);
+  }
+
+  users(): CognitoUserCollection {
+    return this.userCollection;
+  }
+
+  user(userName: string): CognitoUser {
+    return this.userCollection.getById(userName);
   }
 
   async signup(signupData: CognitoSignupData): Promise<AmazonCognitoIdentity.ISignUpResult> {
@@ -45,18 +58,6 @@ export class CognitoUserPool extends AwsDataApiNode<AWS.CognitoIdentityServicePr
     }
     return AwsApi.cognito.signup(this.id.poolId, this.id.clientId,
       signupData.userName, signupData.password, attributeList);
-  }
-
-  async login(loginData: CognitoLoginData): Promise<AmazonCognitoIdentity.CognitoUserSession> {
-    await this.ensureResolved();
-    return AwsApi.cognito.login(this.id.poolId, this.id.clientId,
-      loginData.userName, loginData.password);
-  }
-
-  async refresh(refreshData: CognitoRefreshData): Promise<AmazonCognitoIdentity.CognitoUserSession> {
-    await this.ensureResolved();
-    return AwsApi.cognito.refresh(this.id.poolId, this.id.clientId,
-      refreshData.userName, refreshData.token);
   }
 
   /**
@@ -111,14 +112,4 @@ export interface CognitoSignupDataAttributes {
   updatedAt?: string;
   website?: string;
   custom?: { [key: string]: string }
-}
-
-export interface CognitoLoginData {
-  userName: string;
-  password: string;
-}
-
-export interface CognitoRefreshData {
-  userName: string;
-  token: string;
 }

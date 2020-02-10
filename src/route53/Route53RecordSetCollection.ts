@@ -1,6 +1,5 @@
 import { ApiNode } from './../node/ApiNode';
 import { AwsApi } from '../awsapi/AwsApi';
-import { ApiNodeFactory } from '../node/ApiNodeFactory';
 import { AwsDataApiNode } from '../node/AwsDataApiNode';
 
 export class Route53RecordSetCollection extends AwsDataApiNode<AWS.Route53.ResourceRecordSet[]> {

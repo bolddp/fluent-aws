@@ -7,6 +7,8 @@ export * from './cf/CloudFormationStack';
 export * from './cf/CloudFormationStackCollection';
 
 export * from './cognito/Cognito';
+export * from './cognito/CognitoUser';
+export * from './cognito/CognitoUserCollection';
 export * from './cognito/CognitoUserPool';
 export * from './cognito/CognitoUserPoolCollection';
 

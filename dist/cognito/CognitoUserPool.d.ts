@@ -1,16 +1,19 @@
 import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 import { AwsDataApiNode } from '../node/AwsDataApiNode';
 import { ApiNode } from '../node/ApiNode';
+import { CognitoUser } from './CognitoUser';
+import { CognitoUserCollection } from './CognitoUserCollection';
 export declare class CognitoUserPool extends AwsDataApiNode<AWS.CognitoIdentityServiceProvider.UserPoolDescriptionType> {
     static cognitoAttrIdMap: {
         [key: string]: string;
     };
     id: CognitoUserPoolId;
+    userCollection: CognitoUserCollection;
     constructor(parent: ApiNode, id: CognitoUserPoolId);
     loadAwsData(): Promise<AWS.CognitoIdentityServiceProvider.UserPoolDescriptionType>;
+    users(): CognitoUserCollection;
+    user(userName: string): CognitoUser;
     signup(signupData: CognitoSignupData): Promise<AmazonCognitoIdentity.ISignUpResult>;
-    login(loginData: CognitoLoginData): Promise<AmazonCognitoIdentity.CognitoUserSession>;
-    refresh(refreshData: CognitoRefreshData): Promise<AmazonCognitoIdentity.CognitoUserSession>;
     /**
      * Requests a verification code for a user with a specific email address. This verification code then
      * needs to be used together with a new password to perform the reset. This is done through the
@@ -55,12 +58,4 @@ export interface CognitoSignupDataAttributes {
     custom?: {
         [key: string]: string;
     };
-}
-export interface CognitoLoginData {
-    userName: string;
-    password: string;
-}
-export interface CognitoRefreshData {
-    userName: string;
-    token: string;
 }

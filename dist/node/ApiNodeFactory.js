@@ -45,6 +45,8 @@ const CognitoUserPool_1 = require("../cognito/CognitoUserPool");
 const SnsTopicCollection_1 = require("../sns/SnsTopicCollection");
 const SnsTopic_1 = require("../sns/SnsTopic");
 const Sns_1 = require("../sns/Sns");
+const CognitoUser_1 = require("../cognito/CognitoUser");
+const CognitoUserCollection_1 = require("../cognito/CognitoUserCollection");
 class ApiNodeFactory {
     // IAM
     static iamRole(parent, name) { return new IamRole_1.IamRole(parent, name); }
@@ -101,6 +103,8 @@ class ApiNodeFactory {
     static cognito(parent) { return new Cognito_1.Cognito(parent); }
     static cognitoUserPoolCollection(parent) { return new CognitoUserPoolCollection_1.CognitoUserPoolCollection(parent); }
     static cognitoUserPool(parent, id) { return new CognitoUserPool_1.CognitoUserPool(parent, id); }
+    static cognitoUserCollection(parent, poolId) { return new CognitoUserCollection_1.CognitoUserCollection(parent, poolId); }
+    static cognitoUser(parent, userName, poolId) { return new CognitoUser_1.CognitoUser(parent, userName, poolId); }
     // SNS
     static sns(parent) { return new Sns_1.Sns(parent); }
     static snsTopicCollection(parent) { return new SnsTopicCollection_1.SnsTopicCollection(parent); }

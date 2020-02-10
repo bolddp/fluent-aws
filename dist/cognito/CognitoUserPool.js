@@ -12,13 +12,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const AmazonCognitoIdentity = require("amazon-cognito-identity-js");
 const AwsDataApiNode_1 = require("../node/AwsDataApiNode");
 const AwsApi_1 = require("../awsapi/AwsApi");
+const ApiNodeFactory_1 = require("../node/ApiNodeFactory");
 class CognitoUserPool extends AwsDataApiNode_1.AwsDataApiNode {
     constructor(parent, id) {
         super(parent);
         this.id = id;
+        this.userCollection = ApiNodeFactory_1.ApiNodeFactory.cognitoUserCollection(this, this.id);
     }
     loadAwsData() {
         return AwsApi_1.AwsApi.cognito.describeUserPool(this.id.poolId);
+    }
+    users() {
+        return this.userCollection;
+    }
+    user(userName) {
+        return this.userCollection.getById(userName);
     }
     signup(signupData) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -44,18 +52,6 @@ class CognitoUserPool extends AwsDataApiNode_1.AwsDataApiNode {
                 }
             }
             return AwsApi_1.AwsApi.cognito.signup(this.id.poolId, this.id.clientId, signupData.userName, signupData.password, attributeList);
-        });
-    }
-    login(loginData) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.ensureResolved();
-            return AwsApi_1.AwsApi.cognito.login(this.id.poolId, this.id.clientId, loginData.userName, loginData.password);
-        });
-    }
-    refresh(refreshData) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.ensureResolved();
-            return AwsApi_1.AwsApi.cognito.refresh(this.id.poolId, this.id.clientId, refreshData.userName, refreshData.token);
         });
     }
     /**
