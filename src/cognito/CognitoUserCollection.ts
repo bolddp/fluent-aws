@@ -14,15 +14,15 @@ export class CognitoUserCollection extends ApiNodeCollection<CognitoUser, UserTy
     this.poolId = poolId;
   }
 
-  protected load(): Promise<UserType[]> {
+  load(): Promise<UserType[]> {
     return AwsApi.cognito.listUsers(this.poolId.poolId);
   }
 
-  protected apiNodeFromAwsData(data: UserType): CognitoUser {
+  apiNodeFromAwsData(data: UserType): CognitoUser {
     return ApiNodeFactory.cognitoUser(this, data.Username, this.poolId);
   }
 
-  protected apiNodeFromId(id: string): CognitoUser {
+  apiNodeFromId(id: string): CognitoUser {
     return ApiNodeFactory.cognitoUser(this, id, this.poolId);
   }
 }
