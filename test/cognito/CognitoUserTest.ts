@@ -1,9 +1,26 @@
+import * as sinon from "sinon";
 import { expect } from "chai";
 import { CognitoUser } from "../../src/cognito/CognitoUser";
 import { apiNodeCollectionStubs } from "../utils/stubs";
 import { AwsApi } from "../../src/awsapi/AwsApi";
 
 describe('CognitoUser', () => {
+  it('will load awsData', async () => {
+    const stubs = apiNodeCollectionStubs();
+    const awsApiStub = sinon.stub().returns({});
+    AwsApi.cognito.getUser = awsApiStub;
+
+    const sut = new CognitoUser(<any>stubs.parentStub, 'userName', {
+      poolId: 'poolId',
+      clientId: 'clientId'
+    });
+    const user = await sut.loadAwsData();
+
+    expect(awsApiStub.calledOnce).to.be.true;
+    expect(awsApiStub.args[0][0]).to.equal('poolId');
+    expect(awsApiStub.args[0][1]).to.equal('userName');
+  });
+
   it('will login', async () => {
     const stubs = apiNodeCollectionStubs();
     AwsApi.cognito.login = stubs.awsApiStub;

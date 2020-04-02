@@ -2,8 +2,10 @@ import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 import { CognitoUserPoolId } from './CognitoUserPool';
 import { AwsApi } from '../awsapi/AwsApi';
 import { ApiNode } from '../node/ApiNode';
+import { AwsDataApiNode } from '../node/AwsDataApiNode';
+import { AdminGetUserResponse } from 'aws-sdk/clients/cognitoidentityserviceprovider';
 
-export class CognitoUser extends ApiNode {
+export class CognitoUser extends AwsDataApiNode<AdminGetUserResponse> {
   userName: string;
   poolId: CognitoUserPoolId;
 
@@ -13,9 +15,13 @@ export class CognitoUser extends ApiNode {
     this.poolId = poolId;
   }
 
+  async loadAwsData(): Promise<AdminGetUserResponse> {
+    return await AwsApi.cognito.getUser(this.poolId.poolId, this.userName);
+  }
+
   async login(password: string): Promise<AmazonCognitoIdentity.CognitoUserSession> {
     await this.ensureResolved();
-    return AwsApi.cognito.login(this.poolId.poolId, this.poolId.clientId,
+    return await AwsApi.cognito.login(this.poolId.poolId, this.poolId.clientId,
       this.userName, password);
   }
 

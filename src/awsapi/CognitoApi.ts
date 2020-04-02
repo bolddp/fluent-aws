@@ -1,8 +1,10 @@
 import * as AWS from 'aws-sdk';
-import { CognitoUserAttribute, ISignUpResult, CognitoUserPool, ICognitoUserPoolData,
+import {
+  CognitoUserAttribute, ISignUpResult, CognitoUserPool, ICognitoUserPoolData,
   CognitoUserSession, CognitoUser, ICognitoUserData, IAuthenticationDetailsData,
-  AuthenticationDetails, CognitoRefreshToken } from 'amazon-cognito-identity-js';
-import { UserPoolDescriptionType, UserType } from 'aws-sdk/clients/cognitoidentityserviceprovider';
+  AuthenticationDetails, CognitoRefreshToken
+} from 'amazon-cognito-identity-js';
+import { UserPoolDescriptionType, UserType, AdminGetUserResponse, AttributeType } from 'aws-sdk/clients/cognitoidentityserviceprovider';
 
 const debug = require('debug')('fluentaws:CognitoApi');
 
@@ -17,7 +19,7 @@ export class CognitoApi {
     return new CognitoUserPool(poolData);
   }
 
-  private getUser(poolId: string, clientId: string, userName: string): CognitoUser {
+  private getCognitoUser(poolId: string, clientId: string, userName: string): CognitoUser {
     const pool = this.getPoolData(poolId, clientId);
     const userData: ICognitoUserData = {
       Username: userName,
@@ -60,19 +62,50 @@ export class CognitoApi {
     return result;
   }
 
-  async signup(poolId: string, clientId: string, userName: string, password: string, attributeList: CognitoUserAttribute[]): Promise<ISignUpResult> {
-    debug('signing up: %s, clientId: %s, userName: %s, attr: %j', poolId, clientId, userName, attributeList);
-    return new Promise((resolve, reject) => {
-      const poolData = this.getPoolData(poolId, clientId);
-      poolData.signUp(userName, password, attributeList, null, (err, result) => {
-        if (err) {
-          reject(err);
-        } else {
-          debug('signed up');
-          resolve(result);
-        }
-      });
-    })
+  async signup(poolId: string, clientId: string, userName: string, password: string,
+    attributeList: CognitoUserAttribute[], skipVerification: boolean = false): Promise<ISignUpResult> {
+    if (!skipVerification) {
+      debug('signing up: %s, clientId: %s, userName: %s, attr: %j', poolId, clientId, userName, attributeList);
+      return new Promise((resolve, reject) => {
+        const poolData = this.getPoolData(poolId, clientId);
+        poolData.signUp(userName, password, attributeList, null, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            debug('signed up');
+            resolve(result);
+          }
+        });
+      })
+    } else {
+      debug('admin create user: %s, clientId: %s, userName: %s, attr: %j', poolId, clientId, userName, attributeList);
+      const rsp = await this.cognitoSp().adminCreateUser({
+        UserPoolId: poolId,
+        Username: userName,
+        DesiredDeliveryMediums: ['EMAIL'],
+        ForceAliasCreation: false,
+        MessageAction: 'SUPPRESS',
+        TemporaryPassword: '!ItIsTemp01',
+        UserAttributes: attributeList.map(a => {
+          return { Name: a.getName(), Value: a.getValue() }
+        })
+      }).promise();
+      debug('admin created user');
+      debug('admin set user password: %s, clientId: %s, userName: %s', poolId, clientId, userName);
+      await this.cognitoSp().adminSetUserPassword({
+        UserPoolId: poolId,
+        Username: rsp.User.Username,
+        Password: password,
+        Permanent: true
+      }).promise();
+      debug('admin did set user password');
+      return {
+        user: this.getCognitoUser(poolId, clientId, userName),
+        userConfirmed: true,
+        userSub: rsp.User.Username,
+        codeDeliveryDetails: undefined
+      }
+    }
   }
 
   async login(poolId: string, clientId: string, userName: string, password: string): Promise<CognitoUserSession> {
@@ -83,7 +116,7 @@ export class CognitoApi {
     const authenticationDetails = new AuthenticationDetails(authenticationData);
 
     return await new Promise<CognitoUserSession>((resolve, reject) => {
-      const user = this.getUser(poolId, clientId, userName);
+      const user = this.getCognitoUser(poolId, clientId, userName);
       user.authenticateUser(authenticationDetails, {
         onSuccess: (session: CognitoUserSession) => resolve(session),
         onFailure: (err: any) => reject(err)
@@ -93,7 +126,7 @@ export class CognitoApi {
 
   async refresh(poolId: string, clientId: string, userName: string, refreshToken: string): Promise<CognitoUserSession> {
     return await new Promise<CognitoUserSession>((resolve, reject) => {
-      const user = this.getUser(poolId, clientId, userName);
+      const user = this.getCognitoUser(poolId, clientId, userName);
       user.refreshSession(new CognitoRefreshToken({ RefreshToken: refreshToken }), (err, session) => {
         if (err) {
           reject(err);
@@ -104,9 +137,16 @@ export class CognitoApi {
     });
   }
 
+  async getUser(poolId: string, userName: string): Promise<AdminGetUserResponse> {
+    return await this.cognitoSp().adminGetUser({
+      UserPoolId: poolId,
+      Username: userName
+    }).promise();
+  }
+
   async forgotPassword(poolId: string, clientId: string, userName: string): Promise<any> {
     return await new Promise<any>((resolve, reject) => {
-      const user = this.getUser(poolId, clientId, userName);
+      const user = this.getCognitoUser(poolId, clientId, userName);
       user.forgotPassword({
         onSuccess: rsp => resolve(rsp),
         onFailure: error => reject(error)
@@ -117,7 +157,7 @@ export class CognitoApi {
   async confirmPassword(poolId: string, clientId: string, userName: string,
     verificationCode: string, newPassword: string): Promise<void> {
     await new Promise<void>((resolve, reject) => {
-      const user = this.getUser(poolId, clientId, userName);
+      const user = this.getCognitoUser(poolId, clientId, userName);
       user.confirmPassword(verificationCode, newPassword, {
         onSuccess: () => resolve(),
         onFailure: (error) => reject(error)

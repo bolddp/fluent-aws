@@ -50,7 +50,7 @@ class CognitoUserPool extends AwsDataApiNode_1.AwsDataApiNode {
                     }));
                 }
             }
-            return AwsApi_1.AwsApi.cognito.signup(this.id.poolId, this.id.clientId, signupData.userName, signupData.password, attributeList);
+            return yield AwsApi_1.AwsApi.cognito.signup(this.id.poolId, this.id.clientId, signupData.userName, signupData.password, attributeList, signupData.skipVerification);
         });
     }
     /**

@@ -36,6 +36,7 @@ export interface CognitoSignupData {
     userName: string;
     password: string;
     attributes: CognitoSignupDataAttributes;
+    skipVerification?: boolean;
 }
 export interface CognitoSignupDataAttributes {
     address?: string;

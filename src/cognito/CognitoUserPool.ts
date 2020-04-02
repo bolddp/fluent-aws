@@ -56,8 +56,8 @@ export class CognitoUserPool extends AwsDataApiNode<AWS.CognitoIdentityServicePr
         }));
       }
     }
-    return AwsApi.cognito.signup(this.id.poolId, this.id.clientId,
-      signupData.userName, signupData.password, attributeList);
+    return await AwsApi.cognito.signup(this.id.poolId, this.id.clientId,
+      signupData.userName, signupData.password, attributeList, signupData.skipVerification);
   }
 
   /**
@@ -91,6 +91,7 @@ export interface CognitoSignupData {
   userName: string;
   password: string;
   attributes: CognitoSignupDataAttributes;
+  skipVerification?: boolean
 }
 
 export interface CognitoSignupDataAttributes {

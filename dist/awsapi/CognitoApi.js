@@ -22,7 +22,7 @@ class CognitoApi {
         };
         return new amazon_cognito_identity_js_1.CognitoUserPool(poolData);
     }
-    getUser(poolId, clientId, userName) {
+    getCognitoUser(poolId, clientId, userName) {
         const pool = this.getPoolData(poolId, clientId);
         const userData = {
             Username: userName,
@@ -67,21 +67,52 @@ class CognitoApi {
             return result;
         });
     }
-    signup(poolId, clientId, userName, password, attributeList) {
+    signup(poolId, clientId, userName, password, attributeList, skipVerification = false) {
         return __awaiter(this, void 0, void 0, function* () {
-            debug('signing up: %s, clientId: %s, userName: %s, attr: %j', poolId, clientId, userName, attributeList);
-            return new Promise((resolve, reject) => {
-                const poolData = this.getPoolData(poolId, clientId);
-                poolData.signUp(userName, password, attributeList, null, (err, result) => {
-                    if (err) {
-                        reject(err);
-                    }
-                    else {
-                        debug('signed up');
-                        resolve(result);
-                    }
+            if (!skipVerification) {
+                debug('signing up: %s, clientId: %s, userName: %s, attr: %j', poolId, clientId, userName, attributeList);
+                return new Promise((resolve, reject) => {
+                    const poolData = this.getPoolData(poolId, clientId);
+                    poolData.signUp(userName, password, attributeList, null, (err, result) => {
+                        if (err) {
+                            reject(err);
+                        }
+                        else {
+                            debug('signed up');
+                            resolve(result);
+                        }
+                    });
                 });
-            });
+            }
+            else {
+                debug('admin create user: %s, clientId: %s, userName: %s, attr: %j', poolId, clientId, userName, attributeList);
+                const rsp = yield this.cognitoSp().adminCreateUser({
+                    UserPoolId: poolId,
+                    Username: userName,
+                    DesiredDeliveryMediums: ['EMAIL'],
+                    ForceAliasCreation: false,
+                    MessageAction: 'SUPPRESS',
+                    TemporaryPassword: '!ItIsTemp01',
+                    UserAttributes: attributeList.map(a => {
+                        return { Name: a.getName(), Value: a.getValue() };
+                    })
+                }).promise();
+                debug('admin created user');
+                debug('admin set user password: %s, clientId: %s, userName: %s', poolId, clientId, userName);
+                yield this.cognitoSp().adminSetUserPassword({
+                    UserPoolId: poolId,
+                    Username: rsp.User.Username,
+                    Password: password,
+                    Permanent: true
+                }).promise();
+                debug('admin did set user password');
+                return {
+                    user: this.getCognitoUser(poolId, clientId, userName),
+                    userConfirmed: true,
+                    userSub: rsp.User.Username,
+                    codeDeliveryDetails: undefined
+                };
+            }
         });
     }
     login(poolId, clientId, userName, password) {
@@ -92,7 +123,7 @@ class CognitoApi {
             };
             const authenticationDetails = new amazon_cognito_identity_js_1.AuthenticationDetails(authenticationData);
             return yield new Promise((resolve, reject) => {
-                const user = this.getUser(poolId, clientId, userName);
+                const user = this.getCognitoUser(poolId, clientId, userName);
                 user.authenticateUser(authenticationDetails, {
                     onSuccess: (session) => resolve(session),
                     onFailure: (err) => reject(err)
@@ -103,7 +134,7 @@ class CognitoApi {
     refresh(poolId, clientId, userName, refreshToken) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield new Promise((resolve, reject) => {
-                const user = this.getUser(poolId, clientId, userName);
+                const user = this.getCognitoUser(poolId, clientId, userName);
                 user.refreshSession(new amazon_cognito_identity_js_1.CognitoRefreshToken({ RefreshToken: refreshToken }), (err, session) => {
                     if (err) {
                         reject(err);
@@ -115,10 +146,18 @@ class CognitoApi {
             });
         });
     }
+    getUser(poolId, userName) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.cognitoSp().adminGetUser({
+                UserPoolId: poolId,
+                Username: userName
+            }).promise();
+        });
+    }
     forgotPassword(poolId, clientId, userName) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield new Promise((resolve, reject) => {
-                const user = this.getUser(poolId, clientId, userName);
+                const user = this.getCognitoUser(poolId, clientId, userName);
                 user.forgotPassword({
                     onSuccess: rsp => resolve(rsp),
                     onFailure: error => reject(error)
@@ -129,7 +168,7 @@ class CognitoApi {
     confirmPassword(poolId, clientId, userName, verificationCode, newPassword) {
         return __awaiter(this, void 0, void 0, function* () {
             yield new Promise((resolve, reject) => {
-                const user = this.getUser(poolId, clientId, userName);
+                const user = this.getCognitoUser(poolId, clientId, userName);
                 user.confirmPassword(verificationCode, newPassword, {
                     onSuccess: () => resolve(),
                     onFailure: (error) => reject(error)
