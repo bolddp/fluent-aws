@@ -89,12 +89,13 @@ class S3Api {
             }).promise();
         });
     }
-    copyObject(sourceBucket, sourceKey, targetBucket, targetKey) {
+    copyObject(sourceBucket, sourceKey, targetBucket, targetKey, acl) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.s3().copyObject({
                 CopySource: `/${sourceBucket}/${sourceKey}`,
                 Bucket: targetBucket,
-                Key: targetKey
+                Key: targetKey,
+                ACL: acl
             }).promise();
         });
     }

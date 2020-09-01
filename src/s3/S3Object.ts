@@ -42,9 +42,9 @@ export class S3Object extends AwsDataApiNode<AWS.S3.GetObjectOutput> {
     await AwsApi.s3.deleteObject(this.bucketName, this.key);
   }
 
-  async writeS3Object(s3Object: S3Object): Promise<S3Object> {
+  async writeS3Object(s3Object: S3Object, acl?: string): Promise<S3Object> {
     await this.ensureResolved();
-    await AwsApi.s3.copyObject(s3Object.bucketName, s3Object.key, this.bucketName, this.key);
+    await AwsApi.s3.copyObject(s3Object.bucketName, s3Object.key, this.bucketName, this.key, acl);
     return s3Object;
   }
 

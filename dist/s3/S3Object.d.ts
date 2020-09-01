@@ -12,7 +12,7 @@ export declare class S3Object extends AwsDataApiNode<AWS.S3.GetObjectOutput> {
      */
     exists(): Promise<boolean>;
     delete(): Promise<void>;
-    writeS3Object(s3Object: S3Object): Promise<S3Object>;
+    writeS3Object(s3Object: S3Object, acl?: string): Promise<S3Object>;
     writeString(contents: string): Promise<void>;
     readString(): Promise<string>;
     readStream(): Promise<Readable>;

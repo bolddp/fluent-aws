@@ -46,10 +46,10 @@ class S3Object extends AwsDataApiNode_1.AwsDataApiNode {
             yield AwsApi_1.AwsApi.s3.deleteObject(this.bucketName, this.key);
         });
     }
-    writeS3Object(s3Object) {
+    writeS3Object(s3Object, acl) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            yield AwsApi_1.AwsApi.s3.copyObject(s3Object.bucketName, s3Object.key, this.bucketName, this.key);
+            yield AwsApi_1.AwsApi.s3.copyObject(s3Object.bucketName, s3Object.key, this.bucketName, this.key, acl);
             return s3Object;
         });
     }

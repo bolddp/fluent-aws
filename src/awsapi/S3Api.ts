@@ -72,11 +72,12 @@ export class S3Api {
     }).promise();
   }
 
-  async copyObject(sourceBucket: string, sourceKey: string, targetBucket: string, targetKey: string): Promise<void> {
+  async copyObject(sourceBucket: string, sourceKey: string, targetBucket: string, targetKey: string, acl?: string): Promise<void> {
     await this.s3().copyObject({
       CopySource: `/${sourceBucket}/${sourceKey}`,
       Bucket: targetBucket,
-      Key: targetKey
+      Key: targetKey,
+      ACL: acl
     }).promise();
   }
 
