@@ -17,5 +17,6 @@ export declare class CognitoApi {
     deleteUser(poolId: string, userName: string): Promise<void>;
     addUserToGroup(poolId: string, userName: string, groupName: string): Promise<void>;
     removeUserFromGroup(poolId: string, userName: string, groupName: string): Promise<void>;
+    listGroupsForUser(poolId: string, userName: string): Promise<string[]>;
     globalSignOut(poolId: string, userName: string): Promise<void>;
 }

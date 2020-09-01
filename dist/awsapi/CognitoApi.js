@@ -208,6 +208,16 @@ class CognitoApi {
             debug('removed user from group');
         });
     }
+    listGroupsForUser(poolId, userName) {
+        return __awaiter(this, void 0, void 0, function* () {
+            debug('listing groups for user: %s, poolId: %s', userName, poolId);
+            const response = yield this.cognitoSp().adminListGroupsForUser({
+                UserPoolId: poolId,
+                Username: userName
+            }).promise();
+            return response.Groups.map(g => g.GroupName);
+        });
+    }
     globalSignOut(poolId, userName) {
         return __awaiter(this, void 0, void 0, function* () {
             debug('globally signing out user: %s, poolId:', userName, poolId);

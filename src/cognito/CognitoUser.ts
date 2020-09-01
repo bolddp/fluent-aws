@@ -41,6 +41,14 @@ export class CognitoUser extends AwsDataApiNode<AdminGetUserResponse> {
     return await AwsApi.cognito.removeUserFromGroup(this.poolId.poolId, this.userName, groupName);
   }
 
+  /**
+   * Returns a string array containing the groups that this user belongs to.
+   */
+  async listGroups(): Promise<string[]> {
+    await this.ensureResolved();
+    return await AwsApi.cognito.listGroupsForUser(this.poolId.poolId, this.userName);
+  }
+
   async globalSignOut(): Promise<void> {
     await this.ensureResolved();
     return await AwsApi.cognito.globalSignOut(this.poolId.poolId, this.userName);

@@ -12,6 +12,10 @@ export declare class CognitoUser extends AwsDataApiNode<AdminGetUserResponse> {
     refresh(refreshToken: string): Promise<AmazonCognitoIdentity.CognitoUserSession>;
     addToGroup(groupName: string): Promise<void>;
     removeFromGroup(groupName: string): Promise<void>;
+    /**
+     * Returns a string array containing the groups that this user belongs to.
+     */
+    listGroups(): Promise<string[]>;
     globalSignOut(): Promise<void>;
     delete(): Promise<void>;
 }

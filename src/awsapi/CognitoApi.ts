@@ -194,6 +194,15 @@ export class CognitoApi {
     debug('removed user from group');
   }
 
+  async listGroupsForUser(poolId: string, userName: string): Promise<string[]> {
+    debug('listing groups for user: %s, poolId: %s', userName, poolId);
+    const response = await this.cognitoSp().adminListGroupsForUser({
+      UserPoolId: poolId,
+      Username: userName
+    }).promise();
+    return response.Groups.map(g => g.GroupName);
+  }
+
   async globalSignOut(poolId: string, userName: string): Promise<void> {
     debug('globally signing out user: %s, poolId:', userName, poolId);
     await this.cognitoSp().adminUserGlobalSignOut({

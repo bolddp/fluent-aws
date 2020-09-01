@@ -45,6 +45,15 @@ class CognitoUser extends AwsDataApiNode_1.AwsDataApiNode {
             return yield AwsApi_1.AwsApi.cognito.removeUserFromGroup(this.poolId.poolId, this.userName, groupName);
         });
     }
+    /**
+     * Returns a string array containing the groups that this user belongs to.
+     */
+    listGroups() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.ensureResolved();
+            return yield AwsApi_1.AwsApi.cognito.listGroupsForUser(this.poolId.poolId, this.userName);
+        });
+    }
     globalSignOut() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
