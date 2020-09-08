@@ -32,9 +32,18 @@ export class DynamoDbApi {
 
   async query(input: AWS.DynamoDB.QueryInput): Promise<AWS.DynamoDB.AttributeMap[]> {
     debug('querying: %j', input);
-    const response = await this.docClient().query(input).promise();
+    let result: AWS.DynamoDB.AttributeMap[] = [];
+    const fnc = async (fncInput: AWS.DynamoDB.QueryInput) => {
+      const response = await this.docClient().query(input).promise();
+      result = result.concat(response.Items || []);
+      if (response.LastEvaluatedKey) {
+        debug('queries recursive: %s', response.LastEvaluatedKey);
+        await fnc({ ...fncInput, ExclusiveStartKey: response.LastEvaluatedKey });
+      }
+    }
+    await fnc(input);
     debug('queried');
-    return response.Items;
+    return result;
   }
 
   async put(tableName: string, item: DynamoDbItem): Promise<void> {
