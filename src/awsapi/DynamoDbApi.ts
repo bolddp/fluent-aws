@@ -34,11 +34,13 @@ export class DynamoDbApi {
     debug('querying: %j', input);
     let result: AWS.DynamoDB.AttributeMap[] = [];
     const fnc = async (fncInput: AWS.DynamoDB.QueryInput) => {
-      const response = await this.docClient().query(input).promise();
+      const response = await this.docClient().query(fncInput).promise();
       result = result.concat(response.Items || []);
+      debug('#items: %d', response.Items.length);
       if (response.LastEvaluatedKey) {
-        debug('queries recursive: %s', response.LastEvaluatedKey);
-        await fnc({ ...fncInput, ExclusiveStartKey: response.LastEvaluatedKey });
+        const newInput = { ...fncInput, ExclusiveStartKey: response.LastEvaluatedKey }
+        debug('queries recursive: %j', newInput);
+        await fnc(newInput);
       }
     }
     await fnc(input);

@@ -46,11 +46,13 @@ class DynamoDbApi {
             debug('querying: %j', input);
             let result = [];
             const fnc = (fncInput) => __awaiter(this, void 0, void 0, function* () {
-                const response = yield this.docClient().query(input).promise();
+                const response = yield this.docClient().query(fncInput).promise();
                 result = result.concat(response.Items || []);
+                debug('#items: %d', response.Items.length);
                 if (response.LastEvaluatedKey) {
-                    debug('queries recursive: %s', response.LastEvaluatedKey);
-                    yield fnc(Object.assign({}, fncInput, { ExclusiveStartKey: response.LastEvaluatedKey }));
+                    const newInput = Object.assign({}, fncInput, { ExclusiveStartKey: response.LastEvaluatedKey });
+                    debug('queries recursive: %j', newInput);
+                    yield fnc(newInput);
                 }
             });
             yield fnc(input);
