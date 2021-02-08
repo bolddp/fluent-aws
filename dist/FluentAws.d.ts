@@ -44,6 +44,10 @@ export declare class FluentAws extends ApiNode {
      * The command can be repeated periodically to ensure that the assumed role doesn't expire.
      */
     assumeRole(roleArn: string, sessionName: string): FluentAws;
+    /**
+     * Makes the FluentAws instance assume a chain of roles before attempting to access AWS resources.
+     */
+    assumeRoles(roleArns: string[], sessionNamePrefix: string): FluentAws;
     autoScaling(): AutoScaling;
     cloudFormation(): CloudFormation;
     cognito(): Cognito;

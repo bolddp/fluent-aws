@@ -92,6 +92,20 @@ export class FluentAws extends ApiNode {
     return this;
   }
 
+  /**
+   * Makes the FluentAws instance assume a chain of roles before attempting to access AWS resources.
+   */
+  assumeRoles(roleArns: string[], sessionNamePrefix: string): FluentAws {
+    this.assumeRolePromise = this.promiseChain.replace(this.assumeRolePromise, async () => {
+      let index = 1;
+      for (const arn of roleArns) {
+        await AwsApi.assumeRole(arn, `${sessionNamePrefix}-${index}`);
+        index += 1;
+      }
+    });
+    return this;
+  }
+
   autoScaling(): AutoScaling { return this.autoScalingInstance; }
   cloudFormation(): CloudFormation { return this.cloudFormationInstance; }
   cognito(): Cognito { return this.cognitoInstance; }
