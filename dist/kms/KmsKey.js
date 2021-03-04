@@ -8,7 +8,7 @@ class KmsKey extends AwsDataApiNode_1.AwsDataApiNode {
         this.id = id;
     }
     loadAwsData() {
-        return AwsApi_1.AwsApi.kms.describeKey(this.id);
+        return AwsApi_1.AwsApi.kms(this.config()).describeKey(this.id);
     }
 }
 exports.KmsKey = KmsKey;

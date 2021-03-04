@@ -21,7 +21,7 @@ export class EcsServiceCollection extends ApiNodeCollection<EcsService, AWS.ECS.
   }
 
   async load(): Promise<AWS.ECS.Service[]> {
-    const serviceArns = await AwsApi.ecs.listServices(this.clusterId);
-    return AwsApi.ecs.describeServices(this.clusterId, serviceArns);
+    const serviceArns = await AwsApi.ecs(this.config()).listServices(this.clusterId);
+    return AwsApi.ecs(this.config()).describeServices(this.clusterId, serviceArns);
   }
 }

@@ -16,12 +16,12 @@ class Route53HealthCheck extends AwsDataApiNode_1.AwsDataApiNode {
         this.id = id;
     }
     loadAwsData() {
-        return AwsApi_1.AwsApi.route53.getHealthCheck(this.id);
+        return AwsApi_1.AwsApi.route53(this.config()).getHealthCheck(this.id);
     }
     delete() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            yield AwsApi_1.AwsApi.route53.deleteHealthCheck(this.id);
+            yield AwsApi_1.AwsApi.route53(this.config()).deleteHealthCheck(this.id);
         });
     }
 }

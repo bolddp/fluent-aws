@@ -24,7 +24,7 @@ export class Ec2 extends ApiNode {
 
   async accountAttributes(): Promise<Ec2AccountAttributes> {
     await this.ensureResolved();
-    const awsData = await AwsApi.ec2.describeAccountAttributes();
+    const awsData = await AwsApi.ec2(this.config()).describeAccountAttributes();
     return Ec2AccountAttributesMapper.fromAwsData(awsData);
   }
 }

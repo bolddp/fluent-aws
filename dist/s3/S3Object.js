@@ -18,7 +18,7 @@ class S3Object extends AwsDataApiNode_1.AwsDataApiNode {
         this.key = key;
     }
     loadAwsData() {
-        return AwsApi_1.AwsApi.s3.getObject(this.bucketName, this.key);
+        return AwsApi_1.AwsApi.s3(this.config()).getObject(this.bucketName, this.key);
     }
     /**
      * Indicates whether the bucket exists or not.
@@ -27,7 +27,7 @@ class S3Object extends AwsDataApiNode_1.AwsDataApiNode {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 debug('checking object exists... bucket: %s, key: %s', this.bucketName, this.key);
-                yield AwsApi_1.AwsApi.s3.headObject(this.bucketName, this.key);
+                yield AwsApi_1.AwsApi.s3(this.config()).headObject(this.bucketName, this.key);
                 debug('checked object exists = true... bucket: %s, key: %s', this.bucketName, this.key);
                 return true;
             }
@@ -43,20 +43,20 @@ class S3Object extends AwsDataApiNode_1.AwsDataApiNode {
     delete() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            yield AwsApi_1.AwsApi.s3.deleteObject(this.bucketName, this.key);
+            yield AwsApi_1.AwsApi.s3(this.config()).deleteObject(this.bucketName, this.key);
         });
     }
     writeS3Object(s3Object, acl) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            yield AwsApi_1.AwsApi.s3.copyObject(s3Object.bucketName, s3Object.key, this.bucketName, this.key, acl);
+            yield AwsApi_1.AwsApi.s3(this.config()).copyObject(s3Object.bucketName, s3Object.key, this.bucketName, this.key, acl);
             return s3Object;
         });
     }
     writeString(contents) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            yield AwsApi_1.AwsApi.s3.putObject(this.bucketName, this.key, contents);
+            yield AwsApi_1.AwsApi.s3(this.config()).putObject(this.bucketName, this.key, contents);
         });
     }
     readString() {
@@ -68,17 +68,7 @@ class S3Object extends AwsDataApiNode_1.AwsDataApiNode {
     readStream() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            return AwsApi_1.AwsApi.s3.getObjectStream(this.bucketName, this.key);
-        });
-    }
-    signedGetUrl() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield AwsApi_1.AwsApi.s3.getSignedUrl('getObject', this.bucketName, this.key);
-        });
-    }
-    signedPutUrl() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield AwsApi_1.AwsApi.s3.getSignedUrl('putObject', this.bucketName, this.key);
+            return AwsApi_1.AwsApi.s3(this.config()).getObjectStream(this.bucketName, this.key);
         });
     }
 }

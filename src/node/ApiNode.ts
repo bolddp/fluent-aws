@@ -1,3 +1,4 @@
+import { FluentAwsConfig } from "../FluentAwsConfig";
 import { PromiseChain } from "./PromiseChain";
 
 const debug = require('debug')('fluentaws:ApiNode');
@@ -15,6 +16,10 @@ export class ApiNode {
   constructor(parent: ApiNode) {
     this.parent = parent;
     this.promiseChain = new PromiseChain();
+  }
+
+  config(): FluentAwsConfig {
+    return this.parent.config();
   }
 
   /**

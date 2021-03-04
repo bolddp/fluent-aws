@@ -38,7 +38,9 @@ describe('S3ObjectCollection', () => {
 
   it('will load', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.s3.listObjects = stubs.awsApiStub.returns([{ ObjectName: 'bucket01' }, { ObjectName: 'bucket02' }]);
+    AwsApi.s3 = () => (<any>{
+      listObjects: stubs.awsApiStub.returns([{ ObjectName: 'bucket01' }, { ObjectName: 'bucket02' }])
+    });
 
     const sut = new S3ObjectCollection(<any>stubs.parentStub, 'bucketName');
     await sut.load();

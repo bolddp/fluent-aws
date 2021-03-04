@@ -15,7 +15,7 @@ export class Route53HostedZone extends AwsDataApiNode<AWS.Route53.HostedZone> {
   }
 
   loadAwsData() {
-    return AwsApi.route53.getHostedZone(this.id);
+    return AwsApi.route53(this.config()).getHostedZone(this.id);
   }
 
   recordSets(): Route53RecordSetCollection {

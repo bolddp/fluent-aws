@@ -36,7 +36,9 @@ describe('Ec2InstanceCollection', () => {
 
   it('will load', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.ec2.describeInstances = stubs.awsApiStub.returns([{ InstanceId: 'instanceId01' }, { InstanceId: 'instanceId02' }]);
+    AwsApi.ec2 = () => (<any>{
+      describeInstances: stubs.awsApiStub.returns([{ InstanceId: 'instanceId01' }, { InstanceId: 'instanceId02' }])
+    });
 
     const sut = new Ec2InstanceCollection(<any>stubs.parentStub);
     await sut.load();
@@ -46,7 +48,9 @@ describe('Ec2InstanceCollection', () => {
 
   it('will load with predefined ids', async () => {
     const stubs01 = apiNodeCollectionStubs();
-    AwsApi.ec2.describeInstances = stubs01.awsApiStub.returns([{ InstanceId: 'instanceId01' }, { InstanceId: 'instanceId02' }]);
+    AwsApi.ec2 = () => (<any>{
+      describeInstances: stubs01.awsApiStub.returns([{ InstanceId: 'instanceId01' }, { InstanceId: 'instanceId02' }])
+    });
 
     const sut = new Ec2InstanceCollection(<any>stubs01.parentStub);
     sut.instanceIds = ['instanceId01', 'instanceId02'];

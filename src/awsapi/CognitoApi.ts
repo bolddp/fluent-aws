@@ -5,11 +5,17 @@ import {
   AuthenticationDetails, CognitoRefreshToken
 } from 'amazon-cognito-identity-js';
 import { UserPoolDescriptionType, UserType, AdminGetUserResponse, AttributeType } from 'aws-sdk/clients/cognitoidentityserviceprovider';
+import { FluentAwsConfig } from '../FluentAwsConfig';
 
 const debug = require('debug')('fluentaws:CognitoApi');
 
 export class CognitoApi {
-  cognitoSp = () => new AWS.CognitoIdentityServiceProvider();
+  config: FluentAwsConfig;
+  cognitoSp = () => new AWS.CognitoIdentityServiceProvider(this.config);
+
+  constructor(config: FluentAwsConfig) {
+    this.config = config;
+  }
 
   private getPoolData(poolId: string, clientId: string): CognitoUserPool {
     const poolData: ICognitoUserPoolData = {

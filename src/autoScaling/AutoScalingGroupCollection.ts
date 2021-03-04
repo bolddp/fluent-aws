@@ -13,6 +13,6 @@ export class AutoScalingGroupCollection extends ApiNodeCollection<AutoScalingGro
   }
 
   async load() : Promise<AWS.AutoScaling.AutoScalingGroup[]> {
-    return await AwsApi.autoScaling.describeGroups();
+    return await AwsApi.autoScaling(this.config()).describeGroups();
   }
 }

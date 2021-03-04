@@ -19,7 +19,7 @@ class SystemsManagerParameter extends AwsDataApiNode_1.AwsDataApiNode {
         this.parameterName = parameterName;
     }
     loadAwsData() {
-        return AwsApi_1.AwsApi.systemsManager.getParameter(this.parameterName);
+        return AwsApi_1.AwsApi.systemsManager(this.config()).getParameter(this.parameterName);
     }
     /**
      * Returns the metadata for this parameter.
@@ -27,7 +27,7 @@ class SystemsManagerParameter extends AwsDataApiNode_1.AwsDataApiNode {
     metaData() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            return AwsApi_1.AwsApi.systemsManager.describeParameter(this.parameterName);
+            return AwsApi_1.AwsApi.systemsManager(this.config()).describeParameter(this.parameterName);
         });
     }
 }

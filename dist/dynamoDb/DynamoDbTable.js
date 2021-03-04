@@ -16,12 +16,12 @@ class DynamoDbTable extends AwsDataApiNode_1.AwsDataApiNode {
         this.tableName = tableName;
     }
     loadAwsData() {
-        return AwsApi_1.AwsApi.dynamoDb.describeTable(this.tableName);
+        return AwsApi_1.AwsApi.dynamoDb(this.config()).describeTable(this.tableName);
     }
     get(key) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            return AwsApi_1.AwsApi.dynamoDb.get({
+            return AwsApi_1.AwsApi.dynamoDb(this.config()).get({
                 TableName: this.tableName,
                 Key: key
             });
@@ -33,7 +33,7 @@ class DynamoDbTable extends AwsDataApiNode_1.AwsDataApiNode {
             const keyConditionExpression = Object.keys(key).map(k => `${k} = :${k.toLowerCase()}`).join(' and ');
             const expressionAttributeValues = {};
             Object.keys(key).forEach(k => expressionAttributeValues[`:${k.toLowerCase()}`] = key[k]);
-            return AwsApi_1.AwsApi.dynamoDb.query({
+            return AwsApi_1.AwsApi.dynamoDb(this.config()).query({
                 TableName: this.tableName,
                 KeyConditionExpression: keyConditionExpression,
                 ExpressionAttributeValues: expressionAttributeValues
@@ -46,7 +46,7 @@ class DynamoDbTable extends AwsDataApiNode_1.AwsDataApiNode {
             const keyConditionExpression = Object.keys(key).map(k => `${k} = :${k.toLowerCase()}`).join(' and ');
             const expressionAttributeValues = {};
             Object.keys(key).forEach(k => expressionAttributeValues[`:${k.toLowerCase()}`] = key[k]);
-            return AwsApi_1.AwsApi.dynamoDb.query({
+            return AwsApi_1.AwsApi.dynamoDb(this.config()).query({
                 TableName: this.tableName,
                 IndexName: indexName,
                 KeyConditionExpression: keyConditionExpression,
@@ -57,13 +57,13 @@ class DynamoDbTable extends AwsDataApiNode_1.AwsDataApiNode {
     put(item) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            return AwsApi_1.AwsApi.dynamoDb.put(this.tableName, item);
+            return AwsApi_1.AwsApi.dynamoDb(this.config()).put(this.tableName, item);
         });
     }
     delete(key) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            return AwsApi_1.AwsApi.dynamoDb.delete(this.tableName, key);
+            return AwsApi_1.AwsApi.dynamoDb(this.config()).delete(this.tableName, key);
         });
     }
 }

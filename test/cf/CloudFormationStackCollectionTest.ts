@@ -21,7 +21,7 @@ describe('CloudFormationStackCollection', () => {
   it('will create from AWS data', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.cloudFormationStack = stubs.factoryStub;
-    const awsData: AWS.CloudFormation.Stack = <any> <unknown> {
+    const awsData: AWS.CloudFormation.Stack = <any><unknown>{
       StackName: 'stackName'
     }
 
@@ -36,7 +36,9 @@ describe('CloudFormationStackCollection', () => {
 
   it('will load', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.cloudFormation.describeStacks = stubs.awsApiStub.returns([{ StackName: 'stack01' }, { StackName: 'stack02' }]);
+    AwsApi.cloudFormation = () => (<any>{
+      describeStacks: stubs.awsApiStub.returns([{ StackName: 'stack01' }, { StackName: 'stack02' }])
+    });
 
     const sut = new CloudFormationStackCollection(<any>stubs.parentStub);
     await sut.load();

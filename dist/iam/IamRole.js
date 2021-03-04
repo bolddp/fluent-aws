@@ -8,7 +8,7 @@ class IamRole extends AwsDataApiNode_1.AwsDataApiNode {
         this.name = name;
     }
     loadAwsData() {
-        return AwsApi_1.AwsApi.iam.getRole(this.name);
+        return AwsApi_1.AwsApi.iam(this.config()).getRole(this.name);
     }
 }
 exports.IamRole = IamRole;

@@ -20,11 +20,11 @@ class SystemsManagerParameterCollection extends ApiNodeCollection_1.ApiNodeColle
         return __awaiter(this, void 0, void 0, function* () {
             // We need to first load all parameter metadata and then iterate over the parameter names,
             // downloading 10 at a time, so this may take some time
-            const parameters = yield AwsApi_1.AwsApi.systemsManager.describeParameters();
+            const parameters = yield AwsApi_1.AwsApi.systemsManager(this.config()).describeParameters();
             const parameterNames = parameters.map(x => x.Name);
             let result = [];
             const recursiveFunction = (names) => __awaiter(this, void 0, void 0, function* () {
-                const response = yield AwsApi_1.AwsApi.systemsManager.getParameters(names);
+                const response = yield AwsApi_1.AwsApi.systemsManager(this.config()).getParameters(names);
                 result = result.concat(response);
                 if (parameterNames.length > 0) {
                     yield recursiveFunction(parameterNames.splice(0, 10));
@@ -46,7 +46,7 @@ class SystemsManagerParameterCollection extends ApiNodeCollection_1.ApiNodeColle
     metaData() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            return yield AwsApi_1.AwsApi.systemsManager.describeParameters();
+            return yield AwsApi_1.AwsApi.systemsManager(this.config()).describeParameters();
         });
     }
     /**
@@ -55,7 +55,7 @@ class SystemsManagerParameterCollection extends ApiNodeCollection_1.ApiNodeColle
     put(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            yield AwsApi_1.AwsApi.systemsManager.putParameter(request);
+            yield AwsApi_1.AwsApi.systemsManager(this.config()).putParameter(request);
         });
     }
 }

@@ -8,7 +8,9 @@ describe('IamRole', () => {
   it('will load awsData', async () => {
     const stubs = apiNodeCollectionStubs();
     const awsApiStub = sinon.stub().returns({});
-    AwsApi.iam.getRole = awsApiStub;
+    AwsApi.iam = () => (<any>{
+      getRole: awsApiStub
+    });
 
     const sut = new IamRole(<any>stubs.parentStub, 'roleName');
     await sut.loadAwsData();

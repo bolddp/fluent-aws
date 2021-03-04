@@ -11,7 +11,7 @@ export class SnsTopic extends ApiNode {
 
   async publishJson(obj: any): Promise<void> {
     await this.ensureResolved();
-    await AwsApi.sns.publish({
+    await AwsApi.sns(this.config()).publish({
       TopicArn: this.arn,
       Message: JSON.stringify(obj)
     });

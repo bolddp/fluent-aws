@@ -14,7 +14,7 @@ export class SystemsManagerParameter extends AwsDataApiNode<AWS.SSM.Parameter> {
   }
 
   loadAwsData() {
-    return AwsApi.systemsManager.getParameter(this.parameterName);
+    return AwsApi.systemsManager(this.config()).getParameter(this.parameterName);
   }
 
   /**
@@ -22,6 +22,6 @@ export class SystemsManagerParameter extends AwsDataApiNode<AWS.SSM.Parameter> {
    */
   async metaData(): Promise<AWS.SSM.ParameterMetadata> {
     await this.ensureResolved();
-    return AwsApi.systemsManager.describeParameter(this.parameterName);
+    return AwsApi.systemsManager(this.config()).describeParameter(this.parameterName);
   }
 }

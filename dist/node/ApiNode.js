@@ -21,6 +21,9 @@ class ApiNode {
         this.parent = parent;
         this.promiseChain = new PromiseChain_1.PromiseChain();
     }
+    config() {
+        return this.parent.config();
+    }
     /**
      * Ensures that the API node is resolved, which means that the promise chains of itself and
      * all its parents are executed to make sure any deferred actions are carried out before

@@ -11,7 +11,7 @@ class EcsCluster extends AwsDataApiNode_1.AwsDataApiNode {
         this.taskCollection = ApiNodeFactory_1.ApiNodeFactory.ecsTaskCollection(this, this.idOrArn);
     }
     loadAwsData() {
-        return AwsApi_1.AwsApi.ecs.describeCluster(this.idOrArn);
+        return AwsApi_1.AwsApi.ecs(this.config()).describeCluster(this.idOrArn);
     }
     task(id) {
         return this.taskCollection.getById(id);

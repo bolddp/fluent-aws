@@ -14,13 +14,12 @@ Documentation: https://github.com/bolddp/fluent-aws/wiki/Documentation
 
 Configure and assume role
 ```ts
-aws().configure({
-  region: 'eu-west-1'
-})
-.assumeRole({  // Handy during development on dev computer
-  roleArn: 'roleArn',
-  sessionName: 'sessionName'
-});
+aws()
+  .region('eu-west-1')
+  .assumeRole({  // Handy during development on dev computer
+    roleArn: 'roleArn',
+    sessionName: 'sessionName'
+  });
 ```
 
 Fluent access across AWS services

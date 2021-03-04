@@ -11,6 +11,6 @@ export class KmsKey extends AwsDataApiNode<AWS.KMS.KeyMetadata> {
   }
 
   loadAwsData() {
-    return AwsApi.kms.describeKey(this.id);
+    return AwsApi.kms(this.config()).describeKey(this.id);
   }
 }

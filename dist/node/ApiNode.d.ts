@@ -1,3 +1,4 @@
+import { FluentAwsConfig } from "../FluentAwsConfig";
 import { PromiseChain } from "./PromiseChain";
 /**
  * A node in the fluent API hierarchy. The responsibility of a node in the
@@ -9,6 +10,7 @@ export declare class ApiNode {
     promiseChain: PromiseChain;
     parent: ApiNode;
     constructor(parent: ApiNode);
+    config(): FluentAwsConfig;
     /**
      * Ensures that the API node is resolved, which means that the promise chains of itself and
      * all its parents are executed to make sure any deferred actions are carried out before

@@ -1,9 +1,15 @@
 import * as AWS from 'aws-sdk';
+import { FluentAwsConfig } from '../FluentAwsConfig';
 
 const debug = require('debug')('fluentaws:Route53Api');
 
 export class Route53Api {
-  route53 = () => new AWS.Route53();
+  config: FluentAwsConfig;
+  route53 = () => new AWS.Route53(this.config);
+
+  constructor(config: FluentAwsConfig) {
+    this.config = config;
+  }
 
   async listHealthChecks(): Promise<AWS.Route53.HealthCheck[]> {
     debug('getting all health checks');

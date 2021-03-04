@@ -9,9 +9,11 @@ describe('EcsCluster', () => {
   it('will load awsData', async () => {
     const stubs = apiNodeCollectionStubs();
     const awsApiStub = sinon.stub().returns({});
-    AwsApi.ecs.describeCluster = awsApiStub;
+    AwsApi.ecs = () => (<any>{
+      describeCluster: awsApiStub
+    });
 
-    const sut = new EcsCluster(<any> stubs.parentStub, 'clusterId');
+    const sut = new EcsCluster(<any>stubs.parentStub, 'clusterId');
 
     await sut.loadAwsData();
 
@@ -22,7 +24,7 @@ describe('EcsCluster', () => {
   it('will provide access to tasks', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.ecsTaskCollection = stubs.factoryStub;
-    const sut = new EcsCluster(<any> stubs.parentStub, 'clusterId');
+    const sut = new EcsCluster(<any>stubs.parentStub, 'clusterId');
 
     await sut.tasks().ensureResolved();
     expect(stubs.factoryStub.calledOnce).to.be.true;
@@ -32,7 +34,7 @@ describe('EcsCluster', () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.ecsTaskCollection = stubs.factoryStub;
 
-    const sut = new EcsCluster(<any> stubs.parentStub, 'clusterId');
+    const sut = new EcsCluster(<any>stubs.parentStub, 'clusterId');
 
     await sut.task('taskId').ensureResolved();
 
@@ -45,7 +47,7 @@ describe('EcsCluster', () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.ecsServiceCollection = stubs.factoryStub;
 
-    const sut = new EcsCluster(<any> stubs.parentStub, 'clusterId');
+    const sut = new EcsCluster(<any>stubs.parentStub, 'clusterId');
 
     await sut.services().ensureResolved();
     expect(stubs.factoryStub.calledOnce).to.be.true;
@@ -55,7 +57,7 @@ describe('EcsCluster', () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.ecsServiceCollection = stubs.factoryStub;
 
-    const sut = new EcsCluster(<any> stubs.parentStub, 'clusterId');
+    const sut = new EcsCluster(<any>stubs.parentStub, 'clusterId');
 
     await sut.service('serviceId').ensureResolved();
 

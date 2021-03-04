@@ -20,7 +20,7 @@ class AutoScalingGroupCollection extends ApiNodeCollection_1.ApiNodeCollection {
     }
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield AwsApi_1.AwsApi.autoScaling.describeGroups();
+            return yield AwsApi_1.AwsApi.autoScaling(this.config()).describeGroups();
         });
     }
 }

@@ -1,9 +1,15 @@
 import * as AWS from 'aws-sdk';
+import { FluentAwsConfig } from '../FluentAwsConfig';
 
 const debug = require('debug')('fluentaws:SystemsManagerApi');
 
 export class SystemsManagerApi {
-  ssm = () => new AWS.SSM();
+  config: FluentAwsConfig;
+  ssm = () => new AWS.SSM(this.config);
+
+  constructor(config: FluentAwsConfig) {
+    this.config = config;
+  }
 
   async describeParameters(): Promise<AWS.SSM.ParameterMetadata[]> {
     debug('describing parameters');

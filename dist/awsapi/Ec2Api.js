@@ -11,8 +11,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const AWS = require("aws-sdk");
 const debug = require('debug')('fluentaws:Ec2Api');
 class Ec2Api {
-    constructor() {
-        this.ec2 = () => new AWS.EC2();
+    constructor(config) {
+        this.ec2 = () => new AWS.EC2(this.config);
+        this.config = config;
     }
     describeInstances(instanceIds) {
         return __awaiter(this, void 0, void 0, function* () {

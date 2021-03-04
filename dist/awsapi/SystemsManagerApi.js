@@ -11,8 +11,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const AWS = require("aws-sdk");
 const debug = require('debug')('fluentaws:SystemsManagerApi');
 class SystemsManagerApi {
-    constructor() {
-        this.ssm = () => new AWS.SSM();
+    constructor(config) {
+        this.ssm = () => new AWS.SSM(this.config);
+        this.config = config;
     }
     describeParameters() {
         return __awaiter(this, void 0, void 0, function* () {

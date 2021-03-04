@@ -11,8 +11,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const AWS = require("aws-sdk");
 const debug = require('debug')('fluentaws:IamApi');
 class IamApi {
-    constructor() {
-        this.iam = () => new AWS.IAM();
+    constructor(config) {
+        this.iam = () => new AWS.IAM(this.config);
+        this.config = config;
     }
     getRole(name) {
         return __awaiter(this, void 0, void 0, function* () {

@@ -10,8 +10,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const AWS = require("aws-sdk");
 class S3Api {
-    constructor() {
-        this.s3 = () => new AWS.S3();
+    constructor(config) {
+        this.s3 = () => new AWS.S3({
+            region: this.config.region,
+            credentials: this.config.credentials
+        });
+        this.config = config;
     }
     headBucket(bucketName) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -23,10 +27,11 @@ class S3Api {
             yield this.s3().createBucket({ Bucket: bucketName }).promise();
         });
     }
-    listObjects(bucketName) {
+    listObjects(bucketName, prefix) {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield this.s3().listObjects({
-                Bucket: bucketName
+                Bucket: bucketName,
+                Prefix: prefix
             }).promise();
             return response.Contents;
         });

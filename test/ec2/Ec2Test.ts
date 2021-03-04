@@ -9,7 +9,7 @@ describe('Ec2', () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.ec2InstanceCollection = stubs.factoryStub;
 
-    const sut = new Ec2(<any> stubs.parentStub);
+    const sut = new Ec2(<any>stubs.parentStub);
 
     await sut.instances().ensureResolved();
     expect(stubs.factoryStub.calledOnce).to.be.true;
@@ -19,7 +19,7 @@ describe('Ec2', () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.ec2InstanceCollection = stubs.factoryStub;
 
-    const sut = new Ec2(<any> stubs.parentStub);
+    const sut = new Ec2(<any>stubs.parentStub);
 
     await sut.instance('instanceId').ensureResolved();
 
@@ -30,12 +30,14 @@ describe('Ec2', () => {
 
   it('will get account attributes', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.ec2.describeAccountAttributes = stubs.awsApiStub.returns([
-      { AttributeName: 'max-instances', AttributeValues: [ { AttributeValue: '42' }]},
-      { AttributeName: 'default-vpc', AttributeValues: [ { AttributeValue: 'default_vpc' }]}
-    ]);
+    AwsApi.ec2 = () => (<any>{
+      describeAccountAttributes: stubs.awsApiStub.returns([
+        { AttributeName: 'max-instances', AttributeValues: [{ AttributeValue: '42' }] },
+        { AttributeName: 'default-vpc', AttributeValues: [{ AttributeValue: 'default_vpc' }] }
+      ])
+    });
 
-    const sut = new Ec2(<any> stubs.parentStub);
+    const sut = new Ec2(<any>stubs.parentStub);
 
     const attributes = await sut.accountAttributes();
     expect(stubs.awsApiStub.calledOnce).to.be.true;

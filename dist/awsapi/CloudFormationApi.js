@@ -11,8 +11,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const AWS = require("aws-sdk");
 const debug = require('debug')('fluentaws:CloudFormationApi');
 class CloudFormationApi {
-    constructor() {
-        this.cf = () => new AWS.CloudFormation();
+    constructor(config) {
+        this.cf = () => new AWS.CloudFormation(this.config);
+        this.config = config;
     }
     describeStacks() {
         return __awaiter(this, void 0, void 0, function* () {

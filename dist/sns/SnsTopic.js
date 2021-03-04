@@ -18,7 +18,7 @@ class SnsTopic extends ApiNode_1.ApiNode {
     publishJson(obj) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            yield AwsApi_1.AwsApi.sns.publish({
+            yield AwsApi_1.AwsApi.sns(this.config()).publish({
                 TopicArn: this.arn,
                 Message: JSON.stringify(obj)
             });

@@ -24,8 +24,8 @@ class EcsServiceCollection extends ApiNodeCollection_1.ApiNodeCollection {
     }
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            const serviceArns = yield AwsApi_1.AwsApi.ecs.listServices(this.clusterId);
-            return AwsApi_1.AwsApi.ecs.describeServices(this.clusterId, serviceArns);
+            const serviceArns = yield AwsApi_1.AwsApi.ecs(this.config()).listServices(this.clusterId);
+            return AwsApi_1.AwsApi.ecs(this.config()).describeServices(this.clusterId, serviceArns);
         });
     }
 }

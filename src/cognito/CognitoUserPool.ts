@@ -23,7 +23,7 @@ export class CognitoUserPool extends AwsDataApiNode<AWS.CognitoIdentityServicePr
   }
 
   loadAwsData(): Promise<AWS.CognitoIdentityServiceProvider.UserPoolDescriptionType> {
-    return AwsApi.cognito.describeUserPool(this.id.poolId);
+    return AwsApi.cognito(this.config()).describeUserPool(this.id.poolId);
   }
 
   users(): CognitoUserCollection {
@@ -56,7 +56,7 @@ export class CognitoUserPool extends AwsDataApiNode<AWS.CognitoIdentityServicePr
         }));
       }
     }
-    return await AwsApi.cognito.signup(this.id.poolId, this.id.clientId,
+    return await AwsApi.cognito(this.config()).signup(this.id.poolId, this.id.clientId,
       signupData.userName, signupData.password, attributeList, signupData.skipVerification);
   }
 
@@ -67,7 +67,7 @@ export class CognitoUserPool extends AwsDataApiNode<AWS.CognitoIdentityServicePr
    */
   async requestForgotPasswordCode(email: string): Promise<void> {
     await this.ensureResolved();
-    await AwsApi.cognito.forgotPassword(this.id.poolId, this.id.clientId, email);
+    await AwsApi.cognito(this.config()).forgotPassword(this.id.poolId, this.id.clientId, email);
   }
 
   /**
@@ -78,7 +78,7 @@ export class CognitoUserPool extends AwsDataApiNode<AWS.CognitoIdentityServicePr
    */
   async setNewUserPassword(email: string, verificationCode: string, password: string): Promise<void> {
     await this.ensureResolved();
-    await AwsApi.cognito.confirmPassword(this.id.poolId, this.id.clientId, email, verificationCode, password);
+    await AwsApi.cognito(this.config()).confirmPassword(this.id.poolId, this.id.clientId, email, verificationCode, password);
   }
 }
 

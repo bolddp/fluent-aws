@@ -16,6 +16,6 @@ export class EcsService extends AwsDataApiNode<AWS.ECS.Service> {
   }
 
   loadAwsData() {
-    return AwsApi.ecs.describeService(this.clusterId, this.name);
+    return AwsApi.ecs(this.config()).describeService(this.clusterId, this.name);
   }
 }

@@ -60,18 +60,6 @@ describe('FluentAws', () => {
   });
 
   it('should initialize', () => {
-    expect(autoScalingStub.calledOnce).to.be.true;
-    expect(cloudFormationStub.calledOnce).to.be.true;
-    expect(cognitoStub.calledOnce).to.be.true;
-    expect(dynamoDbStub.calledOnce).to.be.true;
-    expect(ec2Stub.calledOnce).to.be.true;
-    expect(ecsStub.calledOnce).to.be.true;
-    expect(kmsStub.calledOnce).to.be.true;
-    expect(route53Stub.calledOnce).to.be.true;
-    expect(s3Stub.calledOnce).to.be.true;
-    expect(snsStub.calledOnce).to.be.true;
-    expect(systemsManagerStub.calledOnce).to.be.true;
-
     expect(sut.autoScaling()).to.equal(autoScalingStub);
     expect(sut.cloudFormation()).to.equal(cloudFormationStub);
     expect(sut.cognito()).to.equal(cognitoStub);
@@ -83,49 +71,24 @@ describe('FluentAws', () => {
     expect(sut.s3()).to.equal(s3Stub);
     expect(sut.sns()).to.equal(snsStub);
     expect(sut.systemsManager()).to.equal(systemsManagerStub);
-  });
 
-  it('should configure', async () => {
-    const stub = sinon.stub();
-    AwsApi.configure = stub;
+    // expect(autoScalingStub.calledOnce).to.be.true;
+    // expect(cloudFormationStub.calledOnce).to.be.true;
+    // expect(cognitoStub.calledOnce).to.be.true;
+    // expect(dynamoDbStub.calledOnce).to.be.true;
+    // expect(ec2Stub.calledOnce).to.be.true;
+    // expect(ecsStub.calledOnce).to.be.true;
+    // expect(kmsStub.calledOnce).to.be.true;
+    // expect(route53Stub.calledOnce).to.be.true;
+    // expect(s3Stub.calledOnce).to.be.true;
+    // expect(snsStub.calledOnce).to.be.true;
+    // expect(systemsManagerStub.calledOnce).to.be.true;
 
-    await sut.configure({ region: 'eu-west-1' }).ensureResolved();
-
-    expect(stub.calledOnce).to.be.true;
-    expect(stub.args[0][0].region).to.equal('eu-west-1');
-  });
-
-  it('should set profile', async () => {
-    const stub = sinon.stub();
-    AwsApi.profile = stub;
-
-    await sut.profile('profile').ensureResolved();
-
-    expect(stub.calledOnce).to.be.true;
-    expect(stub.args[0][0]).to.equal('profile');
-  });
-
-  it('should assume role', async () => {
-    const stub = sinon.stub();
-    AwsApi.assumeRole = stub;
-
-    await sut.assumeRole('roleArn', 'sessionName').ensureResolved();
-    // This should not result in a new call to AwsApi.assumeRole
-    await sut.ensureResolved();
-
-    expect(stub.calledOnce).to.be.true;
-    expect(stub.args[0][0]).to.equal('roleArn');
-    expect(stub.args[0][1]).to.equal('sessionName');
-
-    await sut.assumeRole('roleArn2', 'sessionName2').ensureResolved();
-
-    // Now it should have been called once more
-    expect(stub.callCount).to.equal(2);
-    expect(stub.args[1][0]).to.equal('roleArn2');
-    expect(stub.args[1][1]).to.equal('sessionName2');
   });
 
   it('should provide AWS SDK', async () => {
-    await sut.sdk();
+    sut.region('eu-west-2');
+    const obj = await sut.sdk((aws, cfg) => ({ cfg }));
+    expect(obj.cfg.region).to.equal('eu-west-2');
   });
 });

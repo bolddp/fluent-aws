@@ -20,7 +20,7 @@ class DynamoDbTableCollection extends ApiNodeCollection_1.ApiNodeCollection {
     }
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield AwsApi_1.AwsApi.dynamoDb.listTableNames();
+            return yield AwsApi_1.AwsApi.dynamoDb(this.config()).listTableNames();
         });
     }
 }

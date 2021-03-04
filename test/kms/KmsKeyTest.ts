@@ -7,7 +7,9 @@ describe('KmsKey', () => {
   it('will load awsData', async () => {
     const stubs = apiNodeCollectionStubs();
     const awsApiStub = sinon.stub().returns({});
-    AwsApi.kms.describeKey = awsApiStub;
+    AwsApi.kms = () => (<any>{
+      describeKey: awsApiStub
+    });
 
     const sut = new KmsKey(<any>stubs.parentStub, 'keyId');
     await sut.loadAwsData();

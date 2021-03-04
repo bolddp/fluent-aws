@@ -16,7 +16,7 @@ export class S3Object extends AwsDataApiNode<AWS.S3.GetObjectOutput> {
   }
 
   loadAwsData() {
-    return AwsApi.s3.getObject(this.bucketName, this.key);
+    return AwsApi.s3(this.config()).getObject(this.bucketName, this.key);
   }
 
   /**
@@ -25,7 +25,7 @@ export class S3Object extends AwsDataApiNode<AWS.S3.GetObjectOutput> {
   async exists(): Promise<boolean> {
     try {
       debug('checking object exists... bucket: %s, key: %s', this.bucketName, this.key);
-      await AwsApi.s3.headObject(this.bucketName, this.key);
+      await AwsApi.s3(this.config()).headObject(this.bucketName, this.key);
       debug('checked object exists = true... bucket: %s, key: %s', this.bucketName, this.key);
       return true;
     } catch (error) {
@@ -39,18 +39,18 @@ export class S3Object extends AwsDataApiNode<AWS.S3.GetObjectOutput> {
 
   async delete(): Promise<void> {
     await this.ensureResolved();
-    await AwsApi.s3.deleteObject(this.bucketName, this.key);
+    await AwsApi.s3(this.config()).deleteObject(this.bucketName, this.key);
   }
 
   async writeS3Object(s3Object: S3Object, acl?: string): Promise<S3Object> {
     await this.ensureResolved();
-    await AwsApi.s3.copyObject(s3Object.bucketName, s3Object.key, this.bucketName, this.key, acl);
+    await AwsApi.s3(this.config()).copyObject(s3Object.bucketName, s3Object.key, this.bucketName, this.key, acl);
     return s3Object;
   }
 
   async writeString(contents: string): Promise<void> {
     await this.ensureResolved();
-    await AwsApi.s3.putObject(this.bucketName, this.key, contents);
+    await AwsApi.s3(this.config()).putObject(this.bucketName, this.key, contents);
   }
 
   async readString(): Promise<string> {
@@ -60,14 +60,6 @@ export class S3Object extends AwsDataApiNode<AWS.S3.GetObjectOutput> {
 
   async readStream(): Promise<Readable> {
     await this.ensureResolved();
-    return AwsApi.s3.getObjectStream(this.bucketName, this.key);
-  }
-
-  async signedGetUrl(): Promise<string> {
-    return await AwsApi.s3.getSignedUrl('getObject', this.bucketName, this.key);
-  }
-
-  async signedPutUrl(): Promise<string> {
-    return await AwsApi.s3.getSignedUrl('putObject', this.bucketName, this.key);
+    return AwsApi.s3(this.config()).getObjectStream(this.bucketName, this.key);
   }
 }

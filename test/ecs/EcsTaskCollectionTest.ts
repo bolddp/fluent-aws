@@ -39,8 +39,10 @@ describe('EcsTaskCollection', () => {
   it('will load', async () => {
     const stubs01 = apiNodeCollectionStubs();
     const stubs02 = apiNodeCollectionStubs();
-    AwsApi.ecs.listTasks = stubs01.awsApiStub.returns(['taskArn01', 'taskArn02']);
-    AwsApi.ecs.describeTasks = stubs02.awsApiStub.returns([{ taskArn: 'arn01' }, { taskArn: 'arn02' }]);
+    AwsApi.ecs = () => (<any>{
+      listTasks: stubs01.awsApiStub.returns(['taskArn01', 'taskArn02']),
+      describeTasks: stubs02.awsApiStub.returns([{ taskArn: 'arn01' }, { taskArn: 'arn02' }])
+    });
 
     const sut = new EcsTaskCollection(<any>stubs01.parentStub, 'clusterId');
 

@@ -17,7 +17,7 @@ export class EcsTask extends AwsDataApiNode<AWS.ECS.Task> {
   }
 
   loadAwsData() {
-    return AwsApi.ecs.describeTask(this.clusterId, this.idOrArn);
+    return AwsApi.ecs(this.config()).describeTask(this.clusterId, this.idOrArn);
   }
 
   /**
@@ -29,7 +29,7 @@ export class EcsTask extends AwsDataApiNode<AWS.ECS.Task> {
       // We add a promise that will look up the EC2 instance id and feed it to the Ec2Instance
       this.promiseChain.add(async () => {
         const awsData = await this.loadAwsData();
-        const containerInstance = await AwsApi.ecs.describeContainerInstance(this.clusterId, awsData.containerInstanceArn);
+        const containerInstance = await AwsApi.ecs(this.config()).describeContainerInstance(this.clusterId, awsData.containerInstanceArn);
         this.ec2InstanceInstance.instanceId = containerInstance.ec2InstanceId;
       });
     }

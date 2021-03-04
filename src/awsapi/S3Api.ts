@@ -1,9 +1,18 @@
 import * as AWS from 'aws-sdk';
 import { Readable } from "stream";
 import { Body } from "aws-sdk/clients/s3";
+import { FluentAwsConfig } from '../FluentAwsConfig';
 
 export class S3Api {
-  s3 = () => new AWS.S3();
+  config: FluentAwsConfig;
+  s3 = () => new AWS.S3({
+    region: this.config.region,
+    credentials: this.config.credentials
+  });
+
+  constructor(config: FluentAwsConfig) {
+    this.config = config;
+  }
 
   async headBucket(bucketName: string): Promise<void> {
     await this.s3().headBucket({ Bucket: bucketName }).promise();
@@ -13,9 +22,10 @@ export class S3Api {
     await this.s3().createBucket({ Bucket: bucketName }).promise();
   }
 
-  async listObjects(bucketName: string): Promise<AWS.S3.Object[]> {
+  async listObjects(bucketName: string, prefix?: string): Promise<AWS.S3.Object[]> {
     const response = await this.s3().listObjects({
-      Bucket: bucketName
+      Bucket: bucketName,
+      Prefix: prefix
     }).promise();
     return response.Contents;
   }

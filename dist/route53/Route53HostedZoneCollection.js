@@ -11,7 +11,7 @@ class Route53HostedZoneCollection extends ApiNodeCollection_1.ApiNodeCollection 
         return ApiNodeFactory_1.ApiNodeFactory.route53HostedZone(this, id);
     }
     load() {
-        return AwsApi_1.AwsApi.route53.listHostedZones();
+        return AwsApi_1.AwsApi.route53(this.config()).listHostedZones();
     }
 }
 exports.Route53HostedZoneCollection = Route53HostedZoneCollection;

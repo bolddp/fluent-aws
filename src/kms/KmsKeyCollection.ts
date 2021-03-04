@@ -5,10 +5,10 @@ import { AwsApi } from '../awsapi/AwsApi';
 
 export class KmsKeyCollection extends ApiNodeCollection<KmsKey, AWS.KMS.KeyMetadata> {
   public async load(): Promise<AWS.KMS.KeyMetadata[]> {
-    const allKeys = await AwsApi.kms.listKeys();
+    const allKeys = await AwsApi.kms(this.config()).listKeys();
     let result: AWS.KMS.KeyMetadata[] = [];
     for (const key of allKeys) {
-      const metaData = await AwsApi.kms.describeKey(key.KeyId);
+      const metaData = await AwsApi.kms(this.config()).describeKey(key.KeyId);
       result.push(metaData);
     }
     return result;

@@ -13,6 +13,6 @@ export class S3BucketCollection extends ApiNodeCollection<S3Bucket, AWS.S3.Bucke
   }
 
   async load(): Promise<AWS.S3.Bucket[]> {
-    return await AwsApi.s3.listBuckets();
+    return await AwsApi.s3(this.config()).listBuckets();
   }
 }

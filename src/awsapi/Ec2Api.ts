@@ -1,9 +1,15 @@
 import * as AWS from 'aws-sdk';
+import { FluentAwsConfig } from '../FluentAwsConfig';
 
 const debug = require('debug')('fluentaws:Ec2Api');
 
 export class Ec2Api {
-  ec2 = () => new AWS.EC2();
+  config: FluentAwsConfig;
+  ec2 = () => new AWS.EC2(this.config);
+
+  constructor(config: FluentAwsConfig) {
+    this.config = config;
+  }
 
   async describeInstances(instanceIds?: string[]): Promise<AWS.EC2.Instance[]> {
     debug('describing instances: %j', instanceIds || {});

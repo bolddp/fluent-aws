@@ -36,7 +36,9 @@ describe('AutoScalingGroupCollection', () => {
 
   it('will load', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.autoScaling.describeGroups = stubs.awsApiStub;
+    AwsApi.autoScaling = () => (<any>{
+      describeGroups: stubs.awsApiStub
+    });
 
     const sut = new AutoScalingGroupCollection(<any>stubs.parentStub);
 

@@ -13,10 +13,12 @@ describe('KmsAlias', () => {
     const key = new KmsKey(sut, undefined);
     ApiNodeFactory.kmsKey = stubs.factoryStub.returns(key);
 
-    AwsApi.kms.listAliases = stubs.awsApiStub.returns([
-      { AliasName: 'aliasName', TargetKeyId: '123' },
-      { AliasName: 'alias02', TargetKeyId: '456' }
-    ]);
+    AwsApi.kms = () => (<any>{
+      listAliases: stubs.awsApiStub.returns([
+        { AliasName: 'aliasName', TargetKeyId: '123' },
+        { AliasName: 'alias02', TargetKeyId: '456' }
+      ])
+    });
 
     await sut.key().ensureResolved();
     expect(sut.kmsKeyInstance.id).to.equal('123');
@@ -29,10 +31,12 @@ describe('KmsAlias', () => {
     const key = new KmsKey(sut, undefined);
     ApiNodeFactory.kmsKey = stubs.factoryStub.returns(key);
 
-    AwsApi.kms.listAliases = stubs.awsApiStub.returns([
-      { AliasName: 'aliasName', TargetKeyId: '123' },
-      { AliasName: 'alias02', TargetKeyId: '456' }
-    ]);
+    AwsApi.kms = () => (<any>{
+      listAliases: stubs.awsApiStub.returns([
+        { AliasName: 'aliasName', TargetKeyId: '123' },
+        { AliasName: 'alias02', TargetKeyId: '456' }
+      ])
+    });
 
     let thrownError: Error;
     await sut.key().ensureResolved()
@@ -48,10 +52,12 @@ describe('KmsAlias', () => {
     const key = new KmsKey(sut, undefined);
     ApiNodeFactory.kmsKey = stubs.factoryStub.returns(key);
 
-    AwsApi.kms.listAliases = stubs.awsApiStub.returns([
-      { AliasName: 'aliasName' },
-      { AliasName: 'alias02', TargetKeyId: '456' }
-    ]);
+    AwsApi.kms = () => (<any>{
+      listAliases: stubs.awsApiStub.returns([
+        { AliasName: 'aliasName' },
+        { AliasName: 'alias02', TargetKeyId: '456' }
+      ])
+    });
 
     let thrownError: Error;
     await sut.key().ensureResolved()

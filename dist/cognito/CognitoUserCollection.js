@@ -9,7 +9,7 @@ class CognitoUserCollection extends ApiNodeCollection_1.ApiNodeCollection {
         this.poolId = poolId;
     }
     load() {
-        return AwsApi_1.AwsApi.cognito.listUsers(this.poolId.poolId);
+        return AwsApi_1.AwsApi.cognito(this.config()).listUsers(this.poolId.poolId);
     }
     apiNodeFromAwsData(data) {
         return ApiNodeFactory_1.ApiNodeFactory.cognitoUser(this, data.Username, this.poolId);

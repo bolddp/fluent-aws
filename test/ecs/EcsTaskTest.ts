@@ -10,7 +10,9 @@ describe('EcsTask', () => {
   it('will load awsData', async () => {
     const stubs = apiNodeCollectionStubs();
     const awsApiStub = sinon.stub().returns({});
-    AwsApi.ecs.describeTask = awsApiStub;
+    AwsApi.ecs = () => (<any>{
+      describeTask: awsApiStub
+    });
 
     const sut = new EcsTask(<any>stubs.parentStub, 'clusterId', 'taskId');
     await sut.loadAwsData();
@@ -21,19 +23,19 @@ describe('EcsTask', () => {
 
   it('will provide EC2 instance', async () => {
     const stubs = apiNodeCollectionStubs();
+    const stubs02 = apiNodeCollectionStubs();
     const sut = new EcsTask(<any>stubs.parentStub, 'clusterId', 'taskId');
+
+    AwsApi.ec2 = () => (<any>{
+      describeInstance: () => {}
+    });
+    AwsApi.ecs = () => (<any>{
+      describeTask: stubs.awsApiStub.returns({ containerInstanceArn: 'containerInstanceArn' }),
+      describeContainerInstance: stubs02.awsApiStub.returns({ ec2InstanceId: 'instanceId' })
+    });
 
     const ec2Instance = new Ec2Instance(sut, undefined);
     ApiNodeFactory.ec2Instance = stubs.factoryStub.returns(ec2Instance);
-
-    AwsApi.ecs.describeTask = stubs.awsApiStub.returns({
-      containerInstanceArn: 'containerInstanceArn'
-    })
-
-    const stubs02 = apiNodeCollectionStubs();
-    AwsApi.ecs.describeContainerInstance = stubs02.awsApiStub.returns({
-      ec2InstanceId: 'instanceId'
-    })
 
     await sut.ec2Instance().awsData();
     expect(ec2Instance.instanceId).to.equal('instanceId');

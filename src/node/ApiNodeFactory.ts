@@ -60,7 +60,7 @@ export class ApiNodeFactory {
   static s3Bucket(parent: ApiNode, name: string) { return new S3Bucket(parent, name); }
   static s3BucketCollection(parent: ApiNode) { return new S3BucketCollection(parent); }
   static s3Object(parent: ApiNode, bucketName: string, key: string) { return new S3Object(parent, bucketName, key); }
-  static s3ObjectCollection(parent: ApiNode, bucketName: string) { return new S3ObjectCollection(parent, bucketName); }
+  static s3ObjectCollection(parent: ApiNode, bucketName: string, prefix: string) { return new S3ObjectCollection(parent, bucketName, prefix); }
   // ECS
   static ecs(parent: ApiNode) { return new Ecs(parent); }
   static ecsCluster(parent: ApiNode, idOrArn: string) { return new EcsCluster(parent, idOrArn); }

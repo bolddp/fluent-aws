@@ -11,11 +11,11 @@ export class Route53HealthCheck extends AwsDataApiNode<AWS.Route53.HealthCheck> 
   }
 
   loadAwsData() {
-    return AwsApi.route53.getHealthCheck(this.id);
+    return AwsApi.route53(this.config()).getHealthCheck(this.id);
   }
 
   async delete(): Promise<void> {
     await this.ensureResolved();
-    await AwsApi.route53.deleteHealthCheck(this.id);
+    await AwsApi.route53(this.config()).deleteHealthCheck(this.id);
   }
 }

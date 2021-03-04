@@ -16,6 +16,4 @@ export declare class S3Object extends AwsDataApiNode<AWS.S3.GetObjectOutput> {
     writeString(contents: string): Promise<void>;
     readString(): Promise<string>;
     readStream(): Promise<Readable>;
-    signedGetUrl(): Promise<string>;
-    signedPutUrl(): Promise<string>;
 }

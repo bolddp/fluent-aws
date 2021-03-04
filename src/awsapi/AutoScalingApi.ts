@@ -1,9 +1,15 @@
 import * as AWS from 'aws-sdk';
+import { FluentAwsConfig } from '../FluentAwsConfig';
 
 const debug = require('debug')('fluentaws:AutoScalingApi');
 
 export class AutoScalingApi {
-  autoScaling = () => new AWS.AutoScaling();
+  config: FluentAwsConfig;
+  autoScaling = () => new AWS.AutoScaling(this.config);
+
+  constructor(config: FluentAwsConfig) {
+    this.config = config;
+  }
 
   async describeGroups(idOrArns?: string[]): Promise<AWS.AutoScaling.AutoScalingGroup[]> {
     debug('describing auto scaling groups: %j', idOrArns || {});

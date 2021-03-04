@@ -20,8 +20,8 @@ class EcsClusterCollection extends ApiNodeCollection_1.ApiNodeCollection {
     }
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            const clusterArns = yield AwsApi_1.AwsApi.ecs.listClusters();
-            return yield AwsApi_1.AwsApi.ecs.describeClusters(clusterArns);
+            const clusterArns = yield AwsApi_1.AwsApi.ecs(this.config()).listClusters();
+            return yield AwsApi_1.AwsApi.ecs(this.config()).describeClusters(clusterArns);
         });
     }
 }

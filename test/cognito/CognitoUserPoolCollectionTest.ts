@@ -35,7 +35,9 @@ describe('CognitoUserPoolCollection', () => {
 
   it('will load', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.cognito.listUserPools = stubs.awsApiStub;
+    AwsApi.cognito = () => (<any>{
+      listUserPools: stubs.awsApiStub
+    })
 
     const sut = new CognitoUserPoolCollection(<any>stubs.parentStub);
     await sut.load();

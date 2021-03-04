@@ -11,7 +11,7 @@ class CloudFormationStackCollection extends ApiNodeCollection_1.ApiNodeCollectio
         return ApiNodeFactory_1.ApiNodeFactory.cloudFormationStack(this, id);
     }
     load() {
-        return AwsApi_1.AwsApi.cloudFormation.describeStacks();
+        return AwsApi_1.AwsApi.cloudFormation(this.config()).describeStacks();
     }
 }
 exports.CloudFormationStackCollection = CloudFormationStackCollection;

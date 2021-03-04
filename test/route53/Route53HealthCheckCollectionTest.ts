@@ -21,7 +21,7 @@ describe('Route53HealthCheckCollection', () => {
   it('will create from AWS data', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.route53HealthCheck = stubs.factoryStub;
-    const awsData: AWS.Route53.HealthCheck = <any> {
+    const awsData: AWS.Route53.HealthCheck = <any>{
       Id: 'healthCheckId'
     }
 
@@ -36,7 +36,9 @@ describe('Route53HealthCheckCollection', () => {
 
   it('will load', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.route53.listHealthChecks = stubs.awsApiStub;
+    AwsApi.route53 = () => (<any>{
+      listHealthChecks: stubs.awsApiStub
+    });
 
     const sut = new Route53HealthCheckCollection(<any>stubs.parentStub);
 
@@ -47,15 +49,17 @@ describe('Route53HealthCheckCollection', () => {
 
   it('will create health check', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.route53.createHealthCheck = stubs.awsApiStub.returns({
-      Id: 'healthCheckId'
+    AwsApi.route53 = () => (<any>{
+      createHealthCheck: stubs.awsApiStub.returns({
+        Id: 'healthCheckId'
+      })
     });
     ApiNodeFactory.route53HealthCheck = stubs.factoryStub.returns({
       id: 'healthCheck'
     })
 
     const sut = new Route53HealthCheckCollection(<any>stubs.parentStub);
-    await sut.create(<any> { Id: 'testdata' });
+    await sut.create(<any>{ Id: 'testdata' });
 
     expect(stubs.awsApiStub.calledOnce).to.be.true;
     expect(stubs.awsApiStub.args[0][0].Id).to.equal('testdata');

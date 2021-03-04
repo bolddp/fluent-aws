@@ -12,11 +12,11 @@ export class SystemsManagerParameterCollection extends ApiNodeCollection<Systems
   public async load(): Promise<AWS.SSM.Parameter[]> {
     // We need to first load all parameter metadata and then iterate over the parameter names,
     // downloading 10 at a time, so this may take some time
-    const parameters = await AwsApi.systemsManager.describeParameters();
+    const parameters = await AwsApi.systemsManager(this.config()).describeParameters();
     const parameterNames = parameters.map(x => x.Name);
     let result: AWS.SSM.Parameter[] = [];
     const recursiveFunction = async (names: string[]) => {
-      const response = await AwsApi.systemsManager.getParameters(names);
+      const response = await AwsApi.systemsManager(this.config()).getParameters(names);
       result = result.concat(response);
       if (parameterNames.length > 0) {
         await recursiveFunction(parameterNames.splice(0, 10))
@@ -39,7 +39,7 @@ export class SystemsManagerParameterCollection extends ApiNodeCollection<Systems
    */
   async metaData(): Promise<AWS.SSM.ParameterMetadata[]> {
     await this.ensureResolved();
-    return await AwsApi.systemsManager.describeParameters();
+    return await AwsApi.systemsManager(this.config()).describeParameters();
   }
 
   /**
@@ -47,6 +47,6 @@ export class SystemsManagerParameterCollection extends ApiNodeCollection<Systems
    */
   async put(request: AWS.SSM.PutParameterRequest): Promise<void> {
     await this.ensureResolved();
-    await AwsApi.systemsManager.putParameter(request);
+    await AwsApi.systemsManager(this.config()).putParameter(request);
   }
 }

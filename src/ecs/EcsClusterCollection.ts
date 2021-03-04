@@ -13,7 +13,7 @@ export class EcsClusterCollection extends ApiNodeCollection<EcsCluster, AWS.ECS.
   }
 
   async load(): Promise<AWS.ECS.Cluster[]> {
-    const clusterArns = await AwsApi.ecs.listClusters();
-    return await AwsApi.ecs.describeClusters(clusterArns);
+    const clusterArns = await AwsApi.ecs(this.config()).listClusters();
+    return await AwsApi.ecs(this.config()).describeClusters(clusterArns);
   }
 }

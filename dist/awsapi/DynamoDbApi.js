@@ -11,9 +11,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const AWS = require("aws-sdk");
 const debug = require('debug')('fluentaws:DynamoDbApi');
 class DynamoDbApi {
-    constructor() {
-        this.dynamoDb = () => new AWS.DynamoDB();
-        this.docClient = () => new AWS.DynamoDB.DocumentClient();
+    constructor(config) {
+        this.dynamoDb = () => new AWS.DynamoDB(this.config);
+        this.docClient = () => new AWS.DynamoDB.DocumentClient(this.config);
+        this.config = config;
     }
     listTableNames() {
         return __awaiter(this, void 0, void 0, function* () {

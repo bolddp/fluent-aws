@@ -19,14 +19,14 @@ class Route53HealthCheckCollection extends ApiNodeCollection_1.ApiNodeCollection
         return ApiNodeFactory_1.ApiNodeFactory.route53HealthCheck(this, id);
     }
     load() {
-        return AwsApi_1.AwsApi.route53.listHealthChecks();
+        return AwsApi_1.AwsApi.route53(this.config()).listHealthChecks();
     }
     /**
      * Creates a new health check and returns its AWS data on success.
      */
     create(request) {
         return __awaiter(this, void 0, void 0, function* () {
-            const healthCheck = yield AwsApi_1.AwsApi.route53.createHealthCheck(request);
+            const healthCheck = yield AwsApi_1.AwsApi.route53(this.config()).createHealthCheck(request);
             const apiNode = ApiNodeFactory_1.ApiNodeFactory.route53HealthCheck(this, healthCheck.Id);
             this.nodeMap.set(healthCheck.Id, apiNode);
             return apiNode;

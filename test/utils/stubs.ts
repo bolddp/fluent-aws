@@ -3,6 +3,7 @@ import { ApiNode } from '../../src/node/ApiNode';
 
 export const apiNodeCollectionStubs = () => {
   const parentStub = {
+    config: () => {},
     ensureResolved: sinon.stub().returns(Promise.resolve())
   }
   const getByIdStub = sinon.stub().returns({

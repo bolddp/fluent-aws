@@ -8,7 +8,9 @@ describe('CognitoUser', () => {
   it('will load awsData', async () => {
     const stubs = apiNodeCollectionStubs();
     const awsApiStub = sinon.stub().returns({});
-    AwsApi.cognito.getUser = awsApiStub;
+    AwsApi.cognito = () => (<any>{
+      getUser: awsApiStub
+    });
 
     const sut = new CognitoUser(<any>stubs.parentStub, 'userName', {
       poolId: 'poolId',
@@ -23,7 +25,9 @@ describe('CognitoUser', () => {
 
   it('will login', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.cognito.login = stubs.awsApiStub;
+    AwsApi.cognito = () => (<any>{
+      login: stubs.awsApiStub
+    });
 
     const sut = new CognitoUser(<any>stubs.parentStub, 'userName', {
       poolId: 'poolId',
@@ -41,7 +45,9 @@ describe('CognitoUser', () => {
 
   it('will refresh', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.cognito.refresh = stubs.awsApiStub;
+    AwsApi.cognito = () => (<any>{
+      refresh: stubs.awsApiStub
+    });
 
     const sut = new CognitoUser(<any>stubs.parentStub, 'userName', {
       poolId: 'poolId',
@@ -59,7 +65,9 @@ describe('CognitoUser', () => {
 
   it('will add to group', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.cognito.addUserToGroup = stubs.awsApiStub;
+    AwsApi.cognito = () => (<any>{
+      addUserToGroup: stubs.awsApiStub
+    });
 
     const sut = new CognitoUser(<any>stubs.parentStub, 'userName', {
       poolId: 'poolId',
@@ -76,7 +84,9 @@ describe('CognitoUser', () => {
 
   it('will remove from group', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.cognito.removeUserFromGroup = stubs.awsApiStub;
+    AwsApi.cognito = () => (<any>{
+      removeUserFromGroup: stubs.awsApiStub
+    });
 
     const sut = new CognitoUser(<any>stubs.parentStub, 'userName', {
       poolId: 'poolId',
@@ -93,7 +103,9 @@ describe('CognitoUser', () => {
 
   it('will global sign out', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.cognito.globalSignOut = stubs.awsApiStub;
+    AwsApi.cognito = () => (<any>{
+      globalSignOut: stubs.awsApiStub
+    });
 
     const sut = new CognitoUser(<any>stubs.parentStub, 'userName', {
       poolId: 'poolId',
@@ -109,7 +121,9 @@ describe('CognitoUser', () => {
 
   it('will delete', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.cognito.deleteUser = stubs.awsApiStub;
+    AwsApi.cognito = () => (<any>{
+      deleteUser: stubs.awsApiStub
+    });
 
     const sut = new CognitoUser(<any>stubs.parentStub, 'userName', {
       poolId: 'poolId',

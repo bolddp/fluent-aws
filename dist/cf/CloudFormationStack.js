@@ -17,7 +17,7 @@ class CloudFormationStack extends AwsDataApiNode_1.AwsDataApiNode {
         this.stackName = stackName;
     }
     loadAwsData() {
-        return AwsApi_1.AwsApi.cloudFormation.describeStack(this.stackName);
+        return AwsApi_1.AwsApi.cloudFormation(this.config()).describeStack(this.stackName);
     }
     /**
      * Returns summaries of all resources in the stack.
@@ -25,7 +25,7 @@ class CloudFormationStack extends AwsDataApiNode_1.AwsDataApiNode {
     resources() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            return yield AwsApi_1.AwsApi.cloudFormation.listStackResources(this.stackName);
+            return yield AwsApi_1.AwsApi.cloudFormation(this.config()).listStackResources(this.stackName);
         });
     }
     /**
@@ -34,7 +34,7 @@ class CloudFormationStack extends AwsDataApiNode_1.AwsDataApiNode {
     template() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            return yield AwsApi_1.AwsApi.cloudFormation.getTemplate(this.stackName);
+            return yield AwsApi_1.AwsApi.cloudFormation(this.config()).getTemplate(this.stackName);
         });
     }
     /**
@@ -45,17 +45,17 @@ class CloudFormationStack extends AwsDataApiNode_1.AwsDataApiNode {
     checkDrift(pauseMilliseconds = 10000) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            const driftDetectionId = yield AwsApi_1.AwsApi.cloudFormation.detectStackDrift(this.stackName);
+            const driftDetectionId = yield AwsApi_1.AwsApi.cloudFormation(this.config()).detectStackDrift(this.stackName);
             while (true) {
                 // Pause for 10 seconds
                 yield new Promise((resolve) => setTimeout(() => resolve(), pauseMilliseconds));
-                const status = yield AwsApi_1.AwsApi.cloudFormation.describeStackDriftDetectionStatus(driftDetectionId);
+                const status = yield AwsApi_1.AwsApi.cloudFormation(this.config()).describeStackDriftDetectionStatus(driftDetectionId);
                 switch (status) {
                     case 'DETECTION_FAILED':
-                        const drifts = yield AwsApi_1.AwsApi.cloudFormation.describeStackResourceDrifts(this.stackName);
+                        const drifts = yield AwsApi_1.AwsApi.cloudFormation(this.config()).describeStackResourceDrifts(this.stackName);
                         throw new Error(`Drift detection failed! Available drift info: ${JSON.stringify(drifts)}`);
                     case 'DETECTION_COMPLETE':
-                        return yield AwsApi_1.AwsApi.cloudFormation.describeStackResourceDrifts(this.stackName);
+                        return yield AwsApi_1.AwsApi.cloudFormation(this.config()).describeStackResourceDrifts(this.stackName);
                 }
             }
         });
