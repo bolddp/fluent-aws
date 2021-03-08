@@ -17,7 +17,7 @@ class Ec2Instance extends AwsDataApiNode_1.AwsDataApiNode {
         this.instanceId = instanceId;
     }
     loadAwsData() {
-        return AwsApi_1.AwsApi.ec2.describeInstance(this.instanceId);
+        return AwsApi_1.AwsApi.ec2(this.config()).describeInstance(this.instanceId);
     }
     iamRole() {
         if (!this.iamRoleInstance) {
@@ -28,7 +28,7 @@ class Ec2Instance extends AwsDataApiNode_1.AwsDataApiNode {
                 if (!awsData.IamInstanceProfile) {
                     throw new Error('EC2 instance has no IAM role');
                 }
-                const instanceProfile = yield AwsApi_1.AwsApi.iam.getInstanceProfile(awsData.IamInstanceProfile.Arn.split('/')[1]);
+                const instanceProfile = yield AwsApi_1.AwsApi.iam(this.config()).getInstanceProfile(awsData.IamInstanceProfile.Arn.split('/')[1]);
                 if (instanceProfile.Roles.length == 0) {
                     throw new Error(`No role in EC2 instance profile (profile ARN: ${awsData.IamInstanceProfile.Arn})`);
                 }

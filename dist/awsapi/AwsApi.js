@@ -1,16 +1,7 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const SystemsManagerApi_1 = require("./SystemsManagerApi");
 const CloudFormationApi_1 = require("./CloudFormationApi");
-const AWS = require("aws-sdk");
 const S3Api_1 = require("./S3Api");
 const Ec2Api_1 = require("./Ec2Api");
 const AutoScalingApi_1 = require("./AutoScalingApi");
@@ -29,31 +20,17 @@ const debug = require('debug')('fluentaws:AwsApi');
  */
 class AwsApi {
 }
-AwsApi.autoScaling = new AutoScalingApi_1.AutoScalingApi();
-AwsApi.cloudFormation = new CloudFormationApi_1.CloudFormationApi();
-AwsApi.cognito = new CognitoApi_1.CognitoApi();
-AwsApi.dynamoDb = new DynamoDbApi_1.DynamoDbApi();
-AwsApi.ec2 = new Ec2Api_1.Ec2Api();
-AwsApi.ecs = new EcsApi_1.EcsApi();
-AwsApi.iam = new IamApi_1.IamApi();
-AwsApi.kms = new KmsApi_1.KmsApi();
-AwsApi.route53 = new Route53Api_1.Route53Api();
-AwsApi.s3 = new S3Api_1.S3Api();
-AwsApi.sns = new SnsApi_1.SnsApi();
-AwsApi.sts = new StsApi_1.StsApi();
-AwsApi.systemsManager = new SystemsManagerApi_1.SystemsManagerApi();
-AwsApi.configure = (config) => {
-    debug('applying configuration: %j', config);
-    AWS.config.update(config);
-};
-AwsApi.profile = (profile) => {
-    debug('applying profile: %s', profile);
-    var credentials = new AWS.SharedIniFileCredentials({ profile });
-    AWS.config.credentials = credentials;
-};
-AwsApi.assumeRole = (roleArn, sessionName) => __awaiter(this, void 0, void 0, function* () {
-    debug('assuming role: %s, session name: %s', roleArn, sessionName);
-    yield AwsApi.sts.assumeRole(roleArn, sessionName);
-    debug('assumed role: %s, session name: %s', roleArn, sessionName);
-});
+AwsApi.autoScaling = (config) => new AutoScalingApi_1.AutoScalingApi(config);
+AwsApi.cloudFormation = (config) => new CloudFormationApi_1.CloudFormationApi(config);
+AwsApi.cognito = (config) => new CognitoApi_1.CognitoApi(config);
+AwsApi.dynamoDb = (config) => new DynamoDbApi_1.DynamoDbApi(config);
+AwsApi.ec2 = (config) => new Ec2Api_1.Ec2Api(config);
+AwsApi.ecs = (config) => new EcsApi_1.EcsApi(config);
+AwsApi.iam = (config) => new IamApi_1.IamApi(config);
+AwsApi.kms = (config) => new KmsApi_1.KmsApi(config);
+AwsApi.route53 = (config) => new Route53Api_1.Route53Api(config);
+AwsApi.s3 = (config) => new S3Api_1.S3Api(config);
+AwsApi.sns = (config) => new SnsApi_1.SnsApi(config);
+AwsApi.sts = (config) => new StsApi_1.StsApi(config);
+AwsApi.systemsManager = (config) => new SystemsManagerApi_1.SystemsManagerApi(config);
 exports.AwsApi = AwsApi;

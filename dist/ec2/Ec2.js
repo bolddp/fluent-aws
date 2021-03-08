@@ -26,7 +26,7 @@ class Ec2 extends ApiNode_1.ApiNode {
     accountAttributes() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            const awsData = yield AwsApi_1.AwsApi.ec2.describeAccountAttributes();
+            const awsData = yield AwsApi_1.AwsApi.ec2(this.config()).describeAccountAttributes();
             return Ec2AccountAttributes_1.Ec2AccountAttributesMapper.fromAwsData(awsData);
         });
     }

@@ -1,6 +1,9 @@
 import * as AWS from 'aws-sdk';
+import { FluentAwsConfig } from '../FluentAwsConfig';
 export declare class Route53Api {
+    config: FluentAwsConfig;
     route53: () => AWS.Route53;
+    constructor(config: FluentAwsConfig);
     listHealthChecks(): Promise<AWS.Route53.HealthCheck[]>;
     getHealthCheck(id: string): Promise<AWS.Route53.HealthCheck>;
     createHealthCheck(request: AWS.Route53.CreateHealthCheckRequest): Promise<AWS.Route53.HealthCheck>;

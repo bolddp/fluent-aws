@@ -1,11 +1,17 @@
 import { DynamoDbItem } from './../dynamoDb/DynamoDbTable';
 import * as AWS from 'aws-sdk';
+import { FluentAwsConfig } from '../FluentAwsConfig';
 
 const debug = require('debug')('fluentaws:DynamoDbApi');
 
 export class DynamoDbApi {
-  dynamoDb = () => new AWS.DynamoDB();
-  docClient = () => new AWS.DynamoDB.DocumentClient();
+  config: FluentAwsConfig;
+  dynamoDb = () => new AWS.DynamoDB(this.config);
+  docClient = () => new AWS.DynamoDB.DocumentClient(this.config);
+
+  constructor(config: FluentAwsConfig) {
+    this.config = config;
+  }
 
   async listTableNames(): Promise<string[]> {
     debug('listing tables');

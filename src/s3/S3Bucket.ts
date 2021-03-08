@@ -7,13 +7,20 @@ import { AwsApi } from '../awsapi/AwsApi';
 const debug = require('debug')('fluentaws:S3Bucket');
 
 export class S3Bucket extends ApiNode {
+  objectCollectionPrefix: string;
   objectCollection: S3ObjectCollection;
   name: string;
 
   constructor(parent: ApiNode, name: string) {
     super(parent);
     this.name = name;
-    this.objectCollection = ApiNodeFactory.s3ObjectCollection(this, this.name);
+  }
+
+  private getObjectCollection(prefix: string = ''): S3ObjectCollection {
+    if (this.objectCollectionPrefix != prefix || !this.objectCollection) {
+      this.objectCollection = ApiNodeFactory.s3ObjectCollection(this, this.name, prefix);
+    }
+    return this.objectCollection;
   }
 
   /**
@@ -22,7 +29,7 @@ export class S3Bucket extends ApiNode {
   async exists(): Promise<boolean> {
     try {
       debug('checking exists: %s', this.name);
-      await AwsApi.s3.headBucket(this.name);
+      await AwsApi.s3(this.config()).headBucket(this.name);
       debug('checked exists: %s = true', this.name);
       return true;
     } catch (error) {
@@ -42,18 +49,18 @@ export class S3Bucket extends ApiNode {
       const exists = await this.exists();
       if (!exists) {
         debug('create bucket: %s', this.name);
-        await AwsApi.s3.createBucket(this.name);
+        await AwsApi.s3(this.config()).createBucket(this.name);
         debug('created bucket: %s', this.name);
       }
     });
     return this;
   }
 
-  objects(): S3ObjectCollection {
-    return this.objectCollection;
+  objects(prefix?: string): S3ObjectCollection {
+    return this.getObjectCollection(prefix);
   }
 
   object(key: string): S3Object {
-    return this.objectCollection.getById(key);
+    return this.getObjectCollection().getById(key);
   }
 }

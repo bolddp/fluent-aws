@@ -6,7 +6,9 @@ import { SnsTopic } from '../../src/sns/SnsTopic';
 describe('SnsTopic', () => {
   it('will publish JSON', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.sns.publish = stubs.awsApiStub;
+    AwsApi.sns = () => (<any>{
+      publish: stubs.awsApiStub
+    });
 
     const sut = new SnsTopic(<any>stubs.parentStub, 'topicArn');
     await sut.publishJson({ thisIsTopicData: true });

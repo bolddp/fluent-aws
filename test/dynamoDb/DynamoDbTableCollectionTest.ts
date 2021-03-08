@@ -33,7 +33,9 @@ describe('DynamoDbTableCollection', () => {
 
   it('will load', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.dynamoDb.listTableNames = stubs.awsApiStub;
+    AwsApi.dynamoDb = () => (<any>{
+      listTableNames: stubs.awsApiStub
+    });
 
     const sut = new DynamoDbTableCollection(<any>stubs.parentStub);
 

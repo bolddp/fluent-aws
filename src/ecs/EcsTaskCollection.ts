@@ -22,7 +22,7 @@ export class EcsTaskCollection extends ApiNodeCollection<EcsTask, AWS.ECS.Task> 
   }
 
   async load(): Promise<AWS.ECS.Task[]> {
-    const taskArns = await AwsApi.ecs.listTasks(this.clusterId);
-    return AwsApi.ecs.describeTasks(this.clusterId, taskArns);
+    const taskArns = await AwsApi.ecs(this.config()).listTasks(this.clusterId);
+    return AwsApi.ecs(this.config()).describeTasks(this.clusterId, taskArns);
   }
 }

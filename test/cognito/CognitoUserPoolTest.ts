@@ -6,7 +6,9 @@ import { ApiNodeFactory } from '../../src/node/ApiNodeFactory';
 describe('CognitoUserPool', () => {
   it('will load awsData', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.cognito.describeUserPool = stubs.awsApiStub;
+    AwsApi.cognito = () => (<any>{
+      describeUserPool: stubs.awsApiStub
+    });
 
     const sut = new CognitoUserPool(<any>stubs.parentStub, { poolId: 'poolId', clientId: 'clientId' });
     await sut.loadAwsData();
@@ -17,7 +19,9 @@ describe('CognitoUserPool', () => {
 
   it('will signup', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.cognito.signup = stubs.awsApiStub;
+    AwsApi.cognito = () => (<any>{
+      signup: stubs.awsApiStub
+    });
 
     const sut = new CognitoUserPool(<any>stubs.parentStub, { poolId: 'poolId', clientId: 'clientId' });
     await sut.signup({
@@ -72,7 +76,9 @@ describe('CognitoUserPool', () => {
 
   it('will request forgotten password code', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.cognito.forgotPassword = stubs.awsApiStub;
+    AwsApi.cognito = () => (<any>{
+      forgotPassword: stubs.awsApiStub
+    });
 
     const sut = new CognitoUserPool(<any> stubs.parentStub, {
       poolId: 'poolId',
@@ -80,7 +86,7 @@ describe('CognitoUserPool', () => {
     });
 
     await sut.requestForgotPasswordCode('email');
-    
+
     expect(stubs.awsApiStub.calledOnce).to.be.true;
     expect(stubs.awsApiStub.args[0][0]).to.equal('poolId');
     expect(stubs.awsApiStub.args[0][1]).to.equal('clientId');
@@ -89,7 +95,9 @@ describe('CognitoUserPool', () => {
 
   it('will set new password', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.cognito.confirmPassword = stubs.awsApiStub;
+    AwsApi.cognito = () => (<any>{
+      confirmPassword: stubs.awsApiStub
+    });
 
     const sut = new CognitoUserPool(<any> stubs.parentStub, {
       poolId: 'poolId',
@@ -105,34 +113,4 @@ describe('CognitoUserPool', () => {
     expect(stubs.awsApiStub.args[0][3]).to.equal('verificationCode');
     expect(stubs.awsApiStub.args[0][4]).to.equal('password');
   });
-
-  // it('will login', async () => {
-  //   const stubs = apiNodeCollectionStubs();
-  //   AwsApi.cognito.login = stubs.awsApiStub;
-
-  //   const sut = new CognitoUserPool(<any>stubs.parentStub, { poolId: 'poolId', clientId: 'clientId' });
-  //   await sut.login({ userName: 'userName', password: 'password' });
-
-  //   expect(stubs.parentStub.ensureResolved.calledOnce).to.be.true;
-  //   expect(stubs.awsApiStub.calledOnce).to.be.true;
-  //   expect(stubs.awsApiStub.args[0][0]).to.equal('poolId');
-  //   expect(stubs.awsApiStub.args[0][1]).to.equal('clientId');
-  //   expect(stubs.awsApiStub.args[0][2]).to.equal('userName');
-  //   expect(stubs.awsApiStub.args[0][3]).to.equal('password');
-  // });
-
-  // it('will refresh', async () => {
-  //   const stubs = apiNodeCollectionStubs();
-  //   AwsApi.cognito.refresh = stubs.awsApiStub;
-
-  //   const sut = new CognitoUserPool(<any>stubs.parentStub, { poolId: 'poolId', clientId: 'clientId' });
-  //   await sut.refresh({ userName: 'userName', token: 'token' });
-
-  //   expect(stubs.parentStub.ensureResolved.calledOnce).to.be.true;
-  //   expect(stubs.awsApiStub.calledOnce).to.be.true;
-  //   expect(stubs.awsApiStub.args[0][0]).to.equal('poolId');
-  //   expect(stubs.awsApiStub.args[0][1]).to.equal('clientId');
-  //   expect(stubs.awsApiStub.args[0][2]).to.equal('userName');
-  //   expect(stubs.awsApiStub.args[0][3]).to.equal('token');
-  // });
 });

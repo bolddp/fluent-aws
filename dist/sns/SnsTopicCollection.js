@@ -5,7 +5,7 @@ const AwsApi_1 = require("../awsapi/AwsApi");
 const ApiNodeFactory_1 = require("../node/ApiNodeFactory");
 class SnsTopicCollection extends ApiNodeCollection_1.ApiNodeCollection {
     load() {
-        return AwsApi_1.AwsApi.sns.listTopics();
+        return AwsApi_1.AwsApi.sns(this.config()).listTopics();
     }
     apiNodeFromAwsData(data) {
         return ApiNodeFactory_1.ApiNodeFactory.snsTopic(this, data.TopicArn);

@@ -5,7 +5,9 @@ import { expect } from 'chai';
 describe('SystemsManagerParameter', () => {
   it('will load AWS data', async() => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.systemsManager.getParameter = stubs.awsApiStub;
+    AwsApi.systemsManager = () => (<any>{
+      getParameter: stubs.awsApiStub
+    });
 
     const sut = new SystemsManagerParameter(<any> stubs.parentStub, 'parameterName');
     await sut.loadAwsData();
@@ -16,7 +18,9 @@ describe('SystemsManagerParameter', () => {
 
   it('will provide metadata', async() => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.systemsManager.describeParameter = stubs.awsApiStub;
+    AwsApi.systemsManager = () => (<any>{
+      describeParameter: stubs.awsApiStub
+    });
 
     const sut = new SystemsManagerParameter(<any> stubs.parentStub, 'parameterName');
     await sut.metaData();

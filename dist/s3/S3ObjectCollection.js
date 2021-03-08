@@ -12,9 +12,10 @@ const ApiNodeCollection_1 = require("../node/ApiNodeCollection");
 const ApiNodeFactory_1 = require("../node/ApiNodeFactory");
 const AwsApi_1 = require("../awsapi/AwsApi");
 class S3ObjectCollection extends ApiNodeCollection_1.ApiNodeCollection {
-    constructor(parent, bucketName) {
+    constructor(parent, bucketName, prefix) {
         super(parent);
         this.bucketName = bucketName;
+        this.prefix = prefix;
     }
     apiNodeFromAwsData(awsData) {
         return ApiNodeFactory_1.ApiNodeFactory.s3Object(this, this.bucketName, awsData.Key);
@@ -24,7 +25,7 @@ class S3ObjectCollection extends ApiNodeCollection_1.ApiNodeCollection {
     }
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            return AwsApi_1.AwsApi.s3.listObjects(this.bucketName);
+            return AwsApi_1.AwsApi.s3(this.config()).listObjects(this.bucketName, this.prefix);
         });
     }
 }

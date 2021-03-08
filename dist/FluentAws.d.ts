@@ -1,5 +1,4 @@
 import * as AWS from 'aws-sdk';
-import { FluentAwsConfig } from "./FluentAwsConfig";
 import { S3 } from './s3/S3';
 import { Ecs } from './ecs/Ecs';
 import { Ec2 } from './ec2/Ec2';
@@ -13,32 +12,22 @@ import { SystemsManager } from "./ssm/SystemsManager";
 import { Kms } from './kms/Kms';
 import { Cognito } from './cognito/Cognito';
 import { Sns } from './sns/Sns';
+import { FluentAwsConfig } from './FluentAwsConfig';
 export declare class FluentAws extends ApiNode {
-    config: FluentAwsConfig;
+    configInstance: FluentAwsConfig;
     promiseChain: PromiseChain;
     assumeRolePromise: () => Promise<void>;
-    configurePromise: () => Promise<void>;
-    profilePromise: () => Promise<void>;
-    autoScalingInstance: AutoScaling;
-    cloudFormationInstance: CloudFormation;
-    cognitoInstance: Cognito;
-    dynamoDbInstance: DynamoDb;
-    ec2Instance: Ec2;
-    ecsInstance: Ecs;
-    kmsInstance: Kms;
-    route53Instance: Route53;
-    s3Instance: S3;
-    snsInstance: Sns;
-    systemsManagerInstance: SystemsManager;
     constructor();
-    sdk(): Promise<typeof AWS>;
+    sdk<T>(fnc: (aws: typeof AWS, cfg: FluentAwsConfig) => T): Promise<T>;
+    config(): FluentAwsConfig;
     /**
      * Reference to the AWS SDK instance that FluentAws uses. This reference can be used to access the
      * raw AWS SDK, honoring the configuration that you have performed through the FluentAws API and
      * allowing for mixing AWS API calls through FluentAws and the raw AWS SDK.
      */
-    configure(config: FluentAwsConfig): FluentAws;
+    region(region: string): FluentAws;
     profile(profile: string): FluentAws;
+    credentials(accessKeyId: string, secretAccessKey: string): FluentAws;
     /**
      * Makes sure that the FluentAws instance assumes a role before attempting to access AWS resources.
      * The command can be repeated periodically to ensure that the assumed role doesn't expire.

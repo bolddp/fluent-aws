@@ -16,7 +16,12 @@ class S3Bucket extends ApiNode_1.ApiNode {
     constructor(parent, name) {
         super(parent);
         this.name = name;
-        this.objectCollection = ApiNodeFactory_1.ApiNodeFactory.s3ObjectCollection(this, this.name);
+    }
+    getObjectCollection(prefix = '') {
+        if (this.objectCollectionPrefix != prefix || !this.objectCollection) {
+            this.objectCollection = ApiNodeFactory_1.ApiNodeFactory.s3ObjectCollection(this, this.name, prefix);
+        }
+        return this.objectCollection;
     }
     /**
      * Indicates whether the bucket exists or not.
@@ -25,7 +30,7 @@ class S3Bucket extends ApiNode_1.ApiNode {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 debug('checking exists: %s', this.name);
-                yield AwsApi_1.AwsApi.s3.headBucket(this.name);
+                yield AwsApi_1.AwsApi.s3(this.config()).headBucket(this.name);
                 debug('checked exists: %s = true', this.name);
                 return true;
             }
@@ -46,17 +51,17 @@ class S3Bucket extends ApiNode_1.ApiNode {
             const exists = yield this.exists();
             if (!exists) {
                 debug('create bucket: %s', this.name);
-                yield AwsApi_1.AwsApi.s3.createBucket(this.name);
+                yield AwsApi_1.AwsApi.s3(this.config()).createBucket(this.name);
                 debug('created bucket: %s', this.name);
             }
         }));
         return this;
     }
-    objects() {
-        return this.objectCollection;
+    objects(prefix) {
+        return this.getObjectCollection(prefix);
     }
     object(key) {
-        return this.objectCollection.getById(key);
+        return this.getObjectCollection().getById(key);
     }
 }
 exports.S3Bucket = S3Bucket;

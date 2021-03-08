@@ -15,7 +15,7 @@ export class CognitoUserCollection extends ApiNodeCollection<CognitoUser, UserTy
   }
 
   load(): Promise<UserType[]> {
-    return AwsApi.cognito.listUsers(this.poolId.poolId);
+    return AwsApi.cognito(this.config()).listUsers(this.poolId.poolId);
   }
 
   apiNodeFromAwsData(data: UserType): CognitoUser {

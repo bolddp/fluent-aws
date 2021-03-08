@@ -10,8 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const AWS = require("aws-sdk");
 class StsApi {
-    constructor() {
-        this.sts = () => new AWS.STS();
+    constructor(config) {
+        this.sts = () => new AWS.STS(this.config);
+        this.config = config;
     }
     assumeRole(roleArn, sessionName) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -22,7 +23,7 @@ class StsApi {
                 RoleSessionName: sessionName
             };
             const assumed = yield this.sts().assumeRole(params).promise();
-            AWS.config.update({
+            return new AWS.Credentials({
                 accessKeyId: assumed.Credentials.AccessKeyId,
                 secretAccessKey: assumed.Credentials.SecretAccessKey,
                 sessionToken: assumed.Credentials.SessionToken

@@ -9,7 +9,9 @@ describe('DynamoDbTable', () => {
   it('will load awsData', async () => {
     const stubs = apiNodeCollectionStubs();
     const awsApiStub = sinon.stub().returns({});
-    AwsApi.dynamoDb.describeTable = awsApiStub;
+    AwsApi.dynamoDb = () => (<any>{
+      describeTable: awsApiStub
+    });
 
     const sut = new DynamoDbTable(<any>stubs.parentStub, 'tableName');
     await sut.loadAwsData();
@@ -20,7 +22,9 @@ describe('DynamoDbTable', () => {
 
   it('will query', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.dynamoDb.query = stubs.awsApiStub;
+    AwsApi.dynamoDb = () => (<any>{
+      query: stubs.awsApiStub
+    });
 
     const sut = new DynamoDbTable(<any>stubs.parentStub, 'tableName');
     const result = await sut.query({ key: 'key' });
@@ -37,7 +41,9 @@ describe('DynamoDbTable', () => {
 
   it('will query by index', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.dynamoDb.query = stubs.awsApiStub;
+    AwsApi.dynamoDb = () => (<any>{
+      query: stubs.awsApiStub
+    });
 
     const sut = new DynamoDbTable(<any>stubs.parentStub, 'tableName');
     const result = await sut.queryByIndex('index', { key: 'key' });
@@ -55,7 +61,9 @@ describe('DynamoDbTable', () => {
 
   it('will get', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.dynamoDb.get = stubs.awsApiStub;
+    AwsApi.dynamoDb = () => (<any>{
+      get: stubs.awsApiStub
+    });
 
     const sut = new DynamoDbTable(<any>stubs.parentStub, 'tableName');
     const item = await sut.get({ key: 'key' });
@@ -66,7 +74,9 @@ describe('DynamoDbTable', () => {
 
   it('will put', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.dynamoDb.put = stubs.awsApiStub;
+    AwsApi.dynamoDb = () => (<any>{
+      put: stubs.awsApiStub
+    });
 
     const sut = new DynamoDbTable(<any>stubs.parentStub, 'tableName');
     await sut.put({ key: 'key' });
@@ -78,7 +88,9 @@ describe('DynamoDbTable', () => {
 
   it('will delete', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.dynamoDb.delete = stubs.awsApiStub;
+    AwsApi.dynamoDb = () => (<any>{
+      delete: stubs.awsApiStub
+    });
 
     const sut = new DynamoDbTable(<any>stubs.parentStub, 'tableName');
     await sut.delete({ key: 'key' });

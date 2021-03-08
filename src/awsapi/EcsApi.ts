@@ -1,9 +1,15 @@
 import * as AWS from 'aws-sdk';
+import { FluentAwsConfig } from '../FluentAwsConfig';
 
 const debug = require('debug')('fluentaws:EcsApi');
 
 export class EcsApi {
-  ecs = () => new AWS.ECS();
+  config: FluentAwsConfig;
+  ecs = () => new AWS.ECS(this.config);
+
+  constructor(config: FluentAwsConfig) {
+    this.config = config;
+  }
 
   async listClusters(): Promise<string[]> {
     debug('listing ECS clusters');

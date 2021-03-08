@@ -1,9 +1,15 @@
 import * as AWS from 'aws-sdk';
+import { FluentAwsConfig } from '../FluentAwsConfig';
 
 const debug = require('debug')('fluentaws:SnsApi');
 
 export class SnsApi {
-  sns = () => new AWS.SNS();
+  config: FluentAwsConfig;
+  sns = () => new AWS.SNS(this.config);
+
+  constructor(config: FluentAwsConfig) {
+    this.config = config;
+  }
 
   async listTopics(): Promise<AWS.SNS.Topic[]> {
     debug('listing topics');

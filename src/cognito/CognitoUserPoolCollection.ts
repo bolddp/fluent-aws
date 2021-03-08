@@ -21,6 +21,6 @@ export class CognitoUserPoolCollection extends ApiNodeCollection<CognitoUserPool
     }
 
     load(): Promise<UserPoolDescriptionType[]> {
-      return AwsApi.cognito.listUserPools();
+      return AwsApi.cognito(this.config()).listUserPools();
     }
 }

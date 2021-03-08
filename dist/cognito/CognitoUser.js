@@ -18,31 +18,31 @@ class CognitoUser extends AwsDataApiNode_1.AwsDataApiNode {
     }
     loadAwsData() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield AwsApi_1.AwsApi.cognito.getUser(this.poolId.poolId, this.userName);
+            return yield AwsApi_1.AwsApi.cognito(this.config()).getUser(this.poolId.poolId, this.userName);
         });
     }
     login(password) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            return yield AwsApi_1.AwsApi.cognito.login(this.poolId.poolId, this.poolId.clientId, this.userName, password);
+            return yield AwsApi_1.AwsApi.cognito(this.config()).login(this.poolId.poolId, this.poolId.clientId, this.userName, password);
         });
     }
     refresh(refreshToken) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            return yield AwsApi_1.AwsApi.cognito.refresh(this.poolId.poolId, this.poolId.clientId, this.userName, refreshToken);
+            return yield AwsApi_1.AwsApi.cognito(this.config()).refresh(this.poolId.poolId, this.poolId.clientId, this.userName, refreshToken);
         });
     }
     addToGroup(groupName) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            return yield AwsApi_1.AwsApi.cognito.addUserToGroup(this.poolId.poolId, this.userName, groupName);
+            return yield AwsApi_1.AwsApi.cognito(this.config()).addUserToGroup(this.poolId.poolId, this.userName, groupName);
         });
     }
     removeFromGroup(groupName) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            return yield AwsApi_1.AwsApi.cognito.removeUserFromGroup(this.poolId.poolId, this.userName, groupName);
+            return yield AwsApi_1.AwsApi.cognito(this.config()).removeUserFromGroup(this.poolId.poolId, this.userName, groupName);
         });
     }
     /**
@@ -51,19 +51,19 @@ class CognitoUser extends AwsDataApiNode_1.AwsDataApiNode {
     listGroups() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            return yield AwsApi_1.AwsApi.cognito.listGroupsForUser(this.poolId.poolId, this.userName);
+            return yield AwsApi_1.AwsApi.cognito(this.config()).listGroupsForUser(this.poolId.poolId, this.userName);
         });
     }
     globalSignOut() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            return yield AwsApi_1.AwsApi.cognito.globalSignOut(this.poolId.poolId, this.userName);
+            return yield AwsApi_1.AwsApi.cognito(this.config()).globalSignOut(this.poolId.poolId, this.userName);
         });
     }
     delete() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            yield AwsApi_1.AwsApi.cognito.deleteUser(this.poolId.poolId, this.userName);
+            yield AwsApi_1.AwsApi.cognito(this.config()).deleteUser(this.poolId.poolId, this.userName);
         });
     }
 }

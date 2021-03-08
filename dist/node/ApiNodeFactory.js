@@ -59,7 +59,7 @@ class ApiNodeFactory {
     static s3Bucket(parent, name) { return new S3Bucket_1.S3Bucket(parent, name); }
     static s3BucketCollection(parent) { return new S3BucketCollection_1.S3BucketCollection(parent); }
     static s3Object(parent, bucketName, key) { return new S3Object_1.S3Object(parent, bucketName, key); }
-    static s3ObjectCollection(parent, bucketName) { return new S3ObjectCollection_1.S3ObjectCollection(parent, bucketName); }
+    static s3ObjectCollection(parent, bucketName, prefix) { return new S3ObjectCollection_1.S3ObjectCollection(parent, bucketName, prefix); }
     // ECS
     static ecs(parent) { return new Ecs_1.Ecs(parent); }
     static ecsCluster(parent, idOrArn) { return new EcsCluster_1.EcsCluster(parent, idOrArn); }

@@ -14,10 +14,10 @@ const AwsApi_1 = require("../awsapi/AwsApi");
 class KmsKeyCollection extends ApiNodeCollection_1.ApiNodeCollection {
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            const allKeys = yield AwsApi_1.AwsApi.kms.listKeys();
+            const allKeys = yield AwsApi_1.AwsApi.kms(this.config()).listKeys();
             let result = [];
             for (const key of allKeys) {
-                const metaData = yield AwsApi_1.AwsApi.kms.describeKey(key.KeyId);
+                const metaData = yield AwsApi_1.AwsApi.kms(this.config()).describeKey(key.KeyId);
                 result.push(metaData);
             }
             return result;

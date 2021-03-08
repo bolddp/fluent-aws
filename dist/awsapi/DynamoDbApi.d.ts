@@ -1,8 +1,11 @@
 import { DynamoDbItem } from './../dynamoDb/DynamoDbTable';
 import * as AWS from 'aws-sdk';
+import { FluentAwsConfig } from '../FluentAwsConfig';
 export declare class DynamoDbApi {
+    config: FluentAwsConfig;
     dynamoDb: () => AWS.DynamoDB;
     docClient: () => AWS.DynamoDB.DocumentClient;
+    constructor(config: FluentAwsConfig);
     listTableNames(): Promise<string[]>;
     describeTable(tableName: string): Promise<AWS.DynamoDB.TableDescription>;
     get(input: AWS.DynamoDB.GetItemInput): Promise<AWS.DynamoDB.AttributeMap>;

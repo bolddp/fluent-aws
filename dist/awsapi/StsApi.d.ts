@@ -1,5 +1,9 @@
 import * as AWS from 'aws-sdk';
+import { Credentials } from 'aws-sdk';
+import { FluentAwsConfig } from '../FluentAwsConfig';
 export declare class StsApi {
+    config: FluentAwsConfig;
     sts: () => AWS.STS;
-    assumeRole(roleArn: string, sessionName: string): Promise<void>;
+    constructor(config: FluentAwsConfig);
+    assumeRole(roleArn: string, sessionName: string): Promise<Credentials>;
 }

@@ -1,9 +1,15 @@
 import * as AWS from 'aws-sdk';
+import { FluentAwsConfig } from '../FluentAwsConfig';
 
 const debug = require('debug')('fluentaws:CloudFormationApi');
 
 export class CloudFormationApi {
-  cf = () => new AWS.CloudFormation();
+  config: FluentAwsConfig;
+  cf = () => new AWS.CloudFormation(this.config);
+
+  constructor(config: FluentAwsConfig) {
+    this.config = config;
+  }
 
   async describeStacks() {
     debug('describing stacks');

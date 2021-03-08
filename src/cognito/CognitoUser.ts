@@ -16,29 +16,29 @@ export class CognitoUser extends AwsDataApiNode<AdminGetUserResponse> {
   }
 
   async loadAwsData(): Promise<AdminGetUserResponse> {
-    return await AwsApi.cognito.getUser(this.poolId.poolId, this.userName);
+    return await AwsApi.cognito(this.config()).getUser(this.poolId.poolId, this.userName);
   }
 
   async login(password: string): Promise<AmazonCognitoIdentity.CognitoUserSession> {
     await this.ensureResolved();
-    return await AwsApi.cognito.login(this.poolId.poolId, this.poolId.clientId,
+    return await AwsApi.cognito(this.config()).login(this.poolId.poolId, this.poolId.clientId,
       this.userName, password);
   }
 
   async refresh(refreshToken: string): Promise<AmazonCognitoIdentity.CognitoUserSession> {
     await this.ensureResolved();
-    return await AwsApi.cognito.refresh(this.poolId.poolId, this.poolId.clientId,
+    return await AwsApi.cognito(this.config()).refresh(this.poolId.poolId, this.poolId.clientId,
       this.userName, refreshToken);
   }
 
   async addToGroup(groupName: string): Promise<void> {
     await this.ensureResolved();
-    return await AwsApi.cognito.addUserToGroup(this.poolId.poolId, this.userName, groupName);
+    return await AwsApi.cognito(this.config()).addUserToGroup(this.poolId.poolId, this.userName, groupName);
   }
 
   async removeFromGroup(groupName: string): Promise<void> {
     await this.ensureResolved();
-    return await AwsApi.cognito.removeUserFromGroup(this.poolId.poolId, this.userName, groupName);
+    return await AwsApi.cognito(this.config()).removeUserFromGroup(this.poolId.poolId, this.userName, groupName);
   }
 
   /**
@@ -46,16 +46,16 @@ export class CognitoUser extends AwsDataApiNode<AdminGetUserResponse> {
    */
   async listGroups(): Promise<string[]> {
     await this.ensureResolved();
-    return await AwsApi.cognito.listGroupsForUser(this.poolId.poolId, this.userName);
+    return await AwsApi.cognito(this.config()).listGroupsForUser(this.poolId.poolId, this.userName);
   }
 
   async globalSignOut(): Promise<void> {
     await this.ensureResolved();
-    return await AwsApi.cognito.globalSignOut(this.poolId.poolId, this.userName);
+    return await AwsApi.cognito(this.config()).globalSignOut(this.poolId.poolId, this.userName);
   }
 
   async delete(): Promise<void> {
     await this.ensureResolved();
-    await AwsApi.cognito.deleteUser(this.poolId.poolId, this.userName);
+    await AwsApi.cognito(this.config()).deleteUser(this.poolId.poolId, this.userName);
   }
 }

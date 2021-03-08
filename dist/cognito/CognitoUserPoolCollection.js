@@ -17,7 +17,7 @@ class CognitoUserPoolCollection extends ApiNodeCollection_1.ApiNodeCollection {
         return ApiNodeFactory_1.ApiNodeFactory.cognitoUserPool(this, { poolId, clientId });
     }
     load() {
-        return AwsApi_1.AwsApi.cognito.listUserPools();
+        return AwsApi_1.AwsApi.cognito(this.config()).listUserPools();
     }
 }
 exports.CognitoUserPoolCollection = CognitoUserPoolCollection;

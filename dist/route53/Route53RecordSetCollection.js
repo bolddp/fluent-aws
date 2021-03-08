@@ -16,12 +16,12 @@ class Route53RecordSetCollection extends AwsDataApiNode_1.AwsDataApiNode {
         this.hostedZoneId = hostedZoneId;
     }
     loadAwsData() {
-        return AwsApi_1.AwsApi.route53.listRecordSets(this.hostedZoneId);
+        return AwsApi_1.AwsApi.route53(this.config()).listRecordSets(this.hostedZoneId);
     }
     create(recordSet) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            yield AwsApi_1.AwsApi.route53.createRecordSet(this.hostedZoneId, recordSet);
+            yield AwsApi_1.AwsApi.route53(this.config()).createRecordSet(this.hostedZoneId, recordSet);
         });
     }
     /**
@@ -30,7 +30,7 @@ class Route53RecordSetCollection extends AwsDataApiNode_1.AwsDataApiNode {
     delete(recordSet) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            yield AwsApi_1.AwsApi.route53.deleteRecordSet(this.hostedZoneId, recordSet);
+            yield AwsApi_1.AwsApi.route53(this.config()).deleteRecordSet(this.hostedZoneId, recordSet);
         });
     }
 }

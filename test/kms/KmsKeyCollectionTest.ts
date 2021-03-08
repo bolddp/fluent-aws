@@ -36,9 +36,11 @@ describe('KmsKeyCollection', () => {
 
   it('will load', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.kms.listKeys = stubs.awsApiStub.returns([{ KeyId: 'key01' }, { KeyId: 'key02' }]);
     const stubs2 = apiNodeCollectionStubs();
-    AwsApi.kms.describeKey = stubs2.awsApiStub.returns({ KeyId: 'keyId' });
+    AwsApi.kms = () => (<any>{
+      listKeys: stubs.awsApiStub.returns([{ KeyId: 'key01' }, { KeyId: 'key02' }]),
+      describeKey: stubs2.awsApiStub.returns({ KeyId: 'keyId' })
+    });
 
     const sut = new KmsKeyCollection(<any>stubs.parentStub);
     await sut.load();

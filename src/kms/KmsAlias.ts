@@ -17,7 +17,7 @@ export class KmsAlias extends ApiNode {
       this.kmsKeyInstance = ApiNodeFactory.kmsKey(this, undefined);
       // We add a promise that will lazy loads the correct id of the key
       this.promiseChain.add(async () => {
-        const aliases = await AwsApi.kms.listAliases();
+        const aliases = await AwsApi.kms(this.config()).listAliases();
         const alias = aliases.find(x => x.AliasName == this.aliasName);
         if (!alias) {
           throw new Error(`Alias not found: ${this.aliasName}`);

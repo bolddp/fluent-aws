@@ -18,7 +18,7 @@ export class AutoScalingGroup extends AwsDataApiNode<AWS.AutoScaling.AutoScaling
   }
 
   loadAwsData() {
-    return AwsApi.autoScaling.describeGroup(this.name);
+    return AwsApi.autoScaling(this.config()).describeGroup(this.name);
   }
 
   ec2Instances(): Ec2InstanceCollection {
@@ -35,7 +35,7 @@ export class AutoScalingGroup extends AwsDataApiNode<AWS.AutoScaling.AutoScaling
 
   async updateSize(minSize: number, maxSize: number, desiredSize: number): Promise<void> {
     await this.ensureResolved();
-    return AwsApi.autoScaling.update({
+    return AwsApi.autoScaling(this.config()).update({
       AutoScalingGroupName: this.name,
       MinSize: minSize,
       MaxSize: maxSize,
@@ -45,6 +45,6 @@ export class AutoScalingGroup extends AwsDataApiNode<AWS.AutoScaling.AutoScaling
 
   async setInstanceProtection(instanceIds: string[], value: boolean): Promise<void> {
     await this.ensureResolved();
-    return AwsApi.autoScaling.setInstanceProtection(this.name, instanceIds, value);
+    return AwsApi.autoScaling(this.config()).setInstanceProtection(this.name, instanceIds, value);
   }
 }

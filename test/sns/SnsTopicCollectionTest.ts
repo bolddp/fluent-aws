@@ -36,7 +36,9 @@ describe('SnsTopicCollection', () => {
 
   it('will load', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.sns.listTopics = stubs.awsApiStub.returns([{ TopicArn: 'topicArn01' }, { TopicArn: 'topicArn02' }]);
+    AwsApi.sns = () => (<any>{
+      listTopics: stubs.awsApiStub.returns([{ TopicArn: 'topicArn01' }, { TopicArn: 'topicArn02' }])
+    });
 
     const sut = new SnsTopicCollection(<any>stubs.parentStub);
     await sut.load();

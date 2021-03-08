@@ -6,23 +6,26 @@ import { expect } from 'chai';
 import { ApiNodeFactory } from '../../src/node/ApiNodeFactory';
 
 describe('SystemsManagerParameterCollection', () => {
-  it('will load', async() => {
+  it('will load', async () => {
     const stubs = apiNodeCollectionStubs();
     // 12 parameters will force 2 loads, since only 10 parameters at a time can be fetched
-    AwsApi.systemsManager.describeParameters = stubs.awsApiStub.returns([
-      { Name: 'parameter01' }, { Name: 'parameter02' }, { Name: 'parameter03' }, { Name: 'parameter04' },
-      { Name: 'parameter05' }, { Name: 'parameter06' }, { Name: 'parameter07' }, { Name: 'parameter08' },
-      { Name: 'parameter09' }, { Name: 'parameter10' }, { Name: 'parameter11' }, { Name: 'parameter12' }
-    ]);
 
     // For simplicity we return 2 instead of 10
     const getParametersStub = sinon.stub().returns([
       { Name: 'parameter01' },
       { Name: 'parameter02' }
     ]);
-    AwsApi.systemsManager.getParameters = getParametersStub;
 
-    const sut = new SystemsManagerParameterCollection(<any> stubs.parentStub);
+    AwsApi.systemsManager = () => (<any>{
+      describeParameters: stubs.awsApiStub.returns([
+        { Name: 'parameter01' }, { Name: 'parameter02' }, { Name: 'parameter03' }, { Name: 'parameter04' },
+        { Name: 'parameter05' }, { Name: 'parameter06' }, { Name: 'parameter07' }, { Name: 'parameter08' },
+        { Name: 'parameter09' }, { Name: 'parameter10' }, { Name: 'parameter11' }, { Name: 'parameter12' }
+      ]),
+      getParameters: getParametersStub
+    });
+
+    const sut = new SystemsManagerParameterCollection(<any>stubs.parentStub);
     const parameters = await sut.load();
 
     expect(stubs.awsApiStub.calledOnce).to.be.true;
@@ -46,7 +49,7 @@ describe('SystemsManagerParameterCollection', () => {
   it('will create from AWS data', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.systemsManagerParameter = stubs.factoryStub;
-    const awsData: AWS.SSM.Parameter = <any> <unknown> {
+    const awsData: AWS.SSM.Parameter = <any><unknown>{
       Name: 'parameterName'
     }
 
@@ -59,9 +62,11 @@ describe('SystemsManagerParameterCollection', () => {
     expect(stubs.factoryStub.args[0][1]).to.equal('parameterName');
   });
 
-  it('will provide metadata', async() => {
+  it('will provide metadata', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.systemsManager.describeParameters = stubs.awsApiStub;
+    AwsApi.systemsManager = () => (<any>{
+      describeParameters: stubs.awsApiStub
+    });
 
     const sut = new SystemsManagerParameterCollection(<any>stubs.parentStub);
     await sut.metaData();
@@ -69,9 +74,11 @@ describe('SystemsManagerParameterCollection', () => {
     expect(stubs.awsApiStub.calledOnce).to.be.true;
   });
 
-  it('will put parameter', async() => {
+  it('will put parameter', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.systemsManager.putParameter = stubs.awsApiStub;
+    AwsApi.systemsManager = () => (<any>{
+      putParameter: stubs.awsApiStub
+    });
 
     const request: AWS.SSM.PutParameterRequest = {
       Name: 'name',

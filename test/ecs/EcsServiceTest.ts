@@ -8,7 +8,9 @@ describe('EcsService', () => {
   it('will load awsData', async () => {
     const stubs = apiNodeCollectionStubs();
     const awsApiStub = sinon.stub().returns({});
-    AwsApi.ecs.describeService = awsApiStub;
+    AwsApi.ecs = () => (<any>{
+      describeService: awsApiStub
+    });
 
     const sut = new EcsService(<any>stubs.parentStub, 'clusterId', 'serviceId');
     await sut.loadAwsData();

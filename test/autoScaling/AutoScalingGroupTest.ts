@@ -10,7 +10,9 @@ describe('AutoScalingGroup', () => {
   it('will load awsData', async () => {
     const stubs = apiNodeCollectionStubs();
     const awsApiStub = sinon.stub().returns({});
-    AwsApi.autoScaling.describeGroup = awsApiStub;
+    AwsApi.autoScaling = () => (<any>{
+      describeGroup: awsApiStub
+    });
 
     const sut = new AutoScalingGroup(<any>stubs.parentStub, 'name');
 
@@ -24,15 +26,19 @@ describe('AutoScalingGroup', () => {
     const stubs = apiNodeCollectionStubs();
     const sut = new AutoScalingGroup(<any>stubs.parentStub, 'name');
 
-    AwsApi.autoScaling.describeGroup = stubs.awsApiStub.returns({
-      Instances: [
-        { InstanceId: 'instanceId01' },
-        { InstanceId: 'instanceId02' }
-      ]
+    AwsApi.autoScaling = () => (<any>{
+      describeGroup: stubs.awsApiStub.returns({
+        Instances: [
+          { InstanceId: 'instanceId01' },
+          { InstanceId: 'instanceId02' }
+        ]
+      })
     });
     const ec2InstanceCollection = new Ec2InstanceCollection(sut);
     ApiNodeFactory.ec2InstanceCollection = stubs.factoryStub.returns(ec2InstanceCollection);
-    AwsApi.ec2.describeInstances = apiNodeCollectionStubs().awsApiStub.returns([]);
+    AwsApi.ec2 = () => (<any>{
+      describeInstances: apiNodeCollectionStubs().awsApiStub.returns([])
+    });
 
     await sut.ec2Instances().ensureResolved();
 
@@ -41,7 +47,9 @@ describe('AutoScalingGroup', () => {
 
   it('will set instance protection', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.autoScaling.setInstanceProtection = stubs.awsApiStub;
+    AwsApi.autoScaling = () => (<any>{
+      setInstanceProtection: stubs.awsApiStub
+    });
 
     const sut = new AutoScalingGroup(<any>stubs.parentStub, 'groupName');
     await sut.setInstanceProtection(['id01', 'id02'], true);
@@ -53,7 +61,9 @@ describe('AutoScalingGroup', () => {
 
   it('will update size', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.autoScaling.update = stubs.awsApiStub;
+    AwsApi.autoScaling = () => (<any>{
+      update: stubs.awsApiStub
+    });
 
     const sut = new AutoScalingGroup(<any>stubs.parentStub, 'groupName');
     await sut.updateSize(10, 20, 15);

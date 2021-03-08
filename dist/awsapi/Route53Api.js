@@ -11,8 +11,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const AWS = require("aws-sdk");
 const debug = require('debug')('fluentaws:Route53Api');
 class Route53Api {
-    constructor() {
-        this.route53 = () => new AWS.Route53();
+    constructor(config) {
+        this.route53 = () => new AWS.Route53(this.config);
+        this.config = config;
     }
     listHealthChecks() {
         return __awaiter(this, void 0, void 0, function* () {

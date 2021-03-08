@@ -10,7 +10,9 @@ describe('Ec2Instance', () => {
   it('will load awsData', async () => {
     const stubs = apiNodeCollectionStubs();
     const awsApiStub = sinon.stub().returns({});
-    AwsApi.ec2.describeInstance = awsApiStub;
+    AwsApi.ec2 = () => (<any>{
+      describeInstance: awsApiStub
+    });
 
     const sut = new Ec2Instance(<any>stubs.parentStub, 'instanceId');
     await sut.loadAwsData();
@@ -26,15 +28,19 @@ describe('Ec2Instance', () => {
     const iamRole = new IamRole(sut, undefined);
     ApiNodeFactory.iamRole = stubs.factoryStub.returns(iamRole);
 
-    AwsApi.ec2.describeInstance = stubs.awsApiStub.returns({
-      IamInstanceProfile: { Arn: 'tjoho/iamRoleName' }
-    })
+    AwsApi.ec2 = () => (<any>{
+      describeInstance: stubs.awsApiStub.returns({
+        IamInstanceProfile: { Arn: 'tjoho/iamRoleName' }
+      })
+    });
 
     const stubs2 = apiNodeCollectionStubs();
-    AwsApi.iam.getInstanceProfile = stubs2.awsApiStub.returns({
-      Roles: [
-        { RoleName: 'iamRoleName' }
-      ]
+    AwsApi.iam = () => (<any>{
+      getInstanceProfile: stubs2.awsApiStub.returns({
+        Roles: [
+          { RoleName: 'iamRoleName' }
+        ]
+      })
     });
 
     await sut.iamRole().ensureResolved();
@@ -48,7 +54,9 @@ describe('Ec2Instance', () => {
     const iamRole = new IamRole(sut, undefined);
     ApiNodeFactory.iamRole = stubs.factoryStub.returns(iamRole);
 
-    AwsApi.ec2.describeInstance = stubs.awsApiStub.returns({});
+    AwsApi.ec2 = () => (<any>{
+      describeInstance: stubs.awsApiStub.returns({})
+    });
 
     let thrownError: Error;
     await sut.iamRole().awsData()
@@ -64,13 +72,17 @@ describe('Ec2Instance', () => {
     const iamRole = new IamRole(sut, undefined);
     ApiNodeFactory.iamRole = stubs.factoryStub.returns(iamRole);
 
-    AwsApi.ec2.describeInstance = stubs.awsApiStub.returns({
-      IamInstanceProfile: { Arn: 'tjoho/iamRoleName' }
-    })
+    AwsApi.ec2 = () => (<any>{
+      describeInstance: stubs.awsApiStub.returns({
+        IamInstanceProfile: { Arn: 'tjoho/iamRoleName' }
+      })
+    });
 
     const stubs2 = apiNodeCollectionStubs();
-    AwsApi.iam.getInstanceProfile = stubs2.awsApiStub.returns({
-      Roles: [ ]
+    AwsApi.iam = () => (<any>{
+      getInstanceProfile: stubs2.awsApiStub.returns({
+        Roles: []
+      })
     });
 
     let thrownError: Error;

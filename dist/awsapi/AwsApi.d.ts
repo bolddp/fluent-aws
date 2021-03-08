@@ -17,20 +17,17 @@ import { SnsApi } from './SnsApi';
  * that are needed by the module.
  */
 export declare class AwsApi {
-    static autoScaling: AutoScalingApi;
-    static cloudFormation: CloudFormationApi;
-    static cognito: CognitoApi;
-    static dynamoDb: DynamoDbApi;
-    static ec2: Ec2Api;
-    static ecs: EcsApi;
-    static iam: IamApi;
-    static kms: KmsApi;
-    static route53: Route53Api;
-    static s3: S3Api;
-    static sns: SnsApi;
-    static sts: StsApi;
-    static systemsManager: SystemsManagerApi;
-    static configure: (config: FluentAwsConfig) => void;
-    static profile: (profile: string) => void;
-    static assumeRole: (roleArn: string, sessionName: string) => Promise<void>;
+    static autoScaling: (config: FluentAwsConfig) => AutoScalingApi;
+    static cloudFormation: (config: FluentAwsConfig) => CloudFormationApi;
+    static cognito: (config: FluentAwsConfig) => CognitoApi;
+    static dynamoDb: (config: FluentAwsConfig) => DynamoDbApi;
+    static ec2: (config: FluentAwsConfig) => Ec2Api;
+    static ecs: (config: FluentAwsConfig) => EcsApi;
+    static iam: (config: FluentAwsConfig) => IamApi;
+    static kms: (config: FluentAwsConfig) => KmsApi;
+    static route53: (config: FluentAwsConfig) => Route53Api;
+    static s3: (config: FluentAwsConfig) => S3Api;
+    static sns: (config: FluentAwsConfig) => SnsApi;
+    static sts: (config: FluentAwsConfig) => StsApi;
+    static systemsManager: (config: FluentAwsConfig) => SystemsManagerApi;
 }

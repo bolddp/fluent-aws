@@ -8,7 +8,9 @@ import { ApiNodeFactory } from '../../src/node/ApiNodeFactory';
 describe('S3Bucket', () => {
   it('will return true if bucket exists', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.s3.headBucket = stubs.awsApiStub.returns({});
+    AwsApi.s3 = () => (<any>{
+      headBucket: stubs.awsApiStub.returns({})
+    });
     const sut = new S3Bucket(<any> stubs.parentStub, 'bucketName');
 
     const exists = await sut.exists();
@@ -17,7 +19,9 @@ describe('S3Bucket', () => {
 
   it('will return false if bucket does not exist', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.s3.headBucket = stubs.awsApiStub.throws({ statusCode: 404 });
+    AwsApi.s3 = () => (<any>{
+      headBucket: stubs.awsApiStub.throws({ statusCode: 404 })
+    });
     const sut = new S3Bucket(<any> stubs.parentStub, 'bucketName');
 
     const exists = await sut.exists();
@@ -26,7 +30,9 @@ describe('S3Bucket', () => {
 
   it('will rethrow error if statusCode != 404', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.s3.headBucket = stubs.awsApiStub.throws({ statusCode: 403 });
+    AwsApi.s3 = () => (<any>{
+      headBucket: stubs.awsApiStub.throws({ statusCode: 403 })
+    });
     const sut = new S3Bucket(<any> stubs.parentStub, 'bucketName');
     // Promise should be rejected
     let wasRejected = false;
@@ -37,8 +43,10 @@ describe('S3Bucket', () => {
 
   it('will create bucket if it does not exist', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.s3.headBucket = sinon.stub().throws({ statusCode: 404 });
-    AwsApi.s3.createBucket = stubs.awsApiStub;
+    AwsApi.s3 = () => (<any>{
+      headBucket: sinon.stub().throws({ statusCode: 404 }),
+      createBucket: stubs.awsApiStub
+    });
 
     const sut = new S3Bucket(<any> stubs.parentStub, 'bucketName');
     await sut.createIfNotExists().ensureResolved();

@@ -1,6 +1,5 @@
 import { SystemsManagerApi } from './SystemsManagerApi';
 import { CloudFormationApi } from './CloudFormationApi';
-import * as AWS from 'aws-sdk';
 import { S3Api } from "./S3Api";
 import { Ec2Api } from "./Ec2Api";
 import { AutoScalingApi } from "./AutoScalingApi";
@@ -21,34 +20,17 @@ const debug = require('debug')('fluentaws:AwsApi');
  * that are needed by the module.
  */
 export class AwsApi {
-  static autoScaling: AutoScalingApi = new AutoScalingApi();
-  static cloudFormation: CloudFormationApi = new CloudFormationApi();
-  static cognito: CognitoApi = new CognitoApi();
-  static dynamoDb: DynamoDbApi = new DynamoDbApi();
-  static ec2: Ec2Api = new Ec2Api();
-  static ecs: EcsApi = new EcsApi();
-  static iam: IamApi = new IamApi();
-  static kms: KmsApi = new KmsApi();
-  static route53: Route53Api = new Route53Api();
-  static s3: S3Api = new S3Api();
-  static sns: SnsApi = new SnsApi();
-  static sts: StsApi = new StsApi();
-  static systemsManager: SystemsManagerApi = new SystemsManagerApi();
-
-  static configure = (config: FluentAwsConfig): void => {
-    debug('applying configuration: %j', config);
-    AWS.config.update(config);
-  };
-
-  static profile = (profile: string): void => {
-    debug('applying profile: %s', profile);
-    var credentials = new AWS.SharedIniFileCredentials({ profile });
-    AWS.config.credentials = credentials;
-  }
-
-  static assumeRole = async (roleArn: string, sessionName: string): Promise<void> => {
-    debug('assuming role: %s, session name: %s', roleArn, sessionName);
-    await AwsApi.sts.assumeRole(roleArn, sessionName);
-    debug('assumed role: %s, session name: %s', roleArn, sessionName);
-  }
+  static autoScaling = (config: FluentAwsConfig): AutoScalingApi => new AutoScalingApi(config);
+  static cloudFormation = (config: FluentAwsConfig): CloudFormationApi => new CloudFormationApi(config);
+  static cognito = (config: FluentAwsConfig): CognitoApi => new CognitoApi(config);
+  static dynamoDb = (config: FluentAwsConfig): DynamoDbApi => new DynamoDbApi(config);
+  static ec2 = (config: FluentAwsConfig): Ec2Api => new Ec2Api(config);
+  static ecs = (config: FluentAwsConfig): EcsApi => new EcsApi(config);
+  static iam = (config: FluentAwsConfig): IamApi => new IamApi(config);
+  static kms = (config: FluentAwsConfig): KmsApi => new KmsApi(config);
+  static route53 = (config: FluentAwsConfig): Route53Api => new Route53Api(config);
+  static s3 = (config: FluentAwsConfig): S3Api => new S3Api(config);
+  static sns = (config: FluentAwsConfig): SnsApi => new SnsApi(config);
+  static sts = (config: FluentAwsConfig): StsApi => new StsApi(config);
+  static systemsManager = (config: FluentAwsConfig): SystemsManagerApi => new SystemsManagerApi(config);
 }

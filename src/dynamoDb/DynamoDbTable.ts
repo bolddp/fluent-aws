@@ -15,12 +15,12 @@ export class DynamoDbTable extends AwsDataApiNode<AWS.DynamoDB.TableDescription>
   }
 
   loadAwsData() {
-    return AwsApi.dynamoDb.describeTable(this.tableName);
+    return AwsApi.dynamoDb(this.config()).describeTable(this.tableName);
   }
 
   async get(key: DynamoDbKey): Promise<DynamoDbItem> {
     await this.ensureResolved();
-    return AwsApi.dynamoDb.get({
+    return AwsApi.dynamoDb(this.config()).get({
       TableName: this.tableName,
       Key: key
     });
@@ -31,7 +31,7 @@ export class DynamoDbTable extends AwsDataApiNode<AWS.DynamoDB.TableDescription>
     const keyConditionExpression = Object.keys(key).map(k => `${k} = :${k.toLowerCase()}`).join(' and ');
     const expressionAttributeValues: { [key: string]: any } = {};
     Object.keys(key).forEach(k => expressionAttributeValues[`:${k.toLowerCase()}`] = key[k]);
-    return AwsApi.dynamoDb.query({
+    return AwsApi.dynamoDb(this.config()).query({
       TableName: this.tableName,
       KeyConditionExpression: keyConditionExpression,
       ExpressionAttributeValues: expressionAttributeValues
@@ -43,7 +43,7 @@ export class DynamoDbTable extends AwsDataApiNode<AWS.DynamoDB.TableDescription>
     const keyConditionExpression = Object.keys(key).map(k => `${k} = :${k.toLowerCase()}`).join(' and ');
     const expressionAttributeValues: { [key: string]: any } = {};
     Object.keys(key).forEach(k => expressionAttributeValues[`:${k.toLowerCase()}`] = key[k]);
-    return AwsApi.dynamoDb.query({
+    return AwsApi.dynamoDb(this.config()).query({
       TableName: this.tableName,
       IndexName: indexName,
       KeyConditionExpression: keyConditionExpression,
@@ -53,11 +53,11 @@ export class DynamoDbTable extends AwsDataApiNode<AWS.DynamoDB.TableDescription>
 
   async put(item: DynamoDbItem): Promise<void> {
     await this.ensureResolved();
-    return AwsApi.dynamoDb.put(this.tableName, item);
+    return AwsApi.dynamoDb(this.config()).put(this.tableName, item);
   }
 
   async delete(key: DynamoDbKey): Promise<void> {
     await this.ensureResolved();
-    return AwsApi.dynamoDb.delete(this.tableName, key);
+    return AwsApi.dynamoDb(this.config()).delete(this.tableName, key);
   }
 }

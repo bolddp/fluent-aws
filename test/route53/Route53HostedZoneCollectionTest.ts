@@ -36,7 +36,9 @@ describe('Route53HostedZoneCollection', () => {
 
   it('will load', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.route53.listHostedZones = stubs.awsApiStub;
+    AwsApi.route53 = () => (<any>{
+      listHostedZones: stubs.awsApiStub
+    });
     const sut = new Route53HostedZoneCollection(<any>stubs.parentStub);
 
     await sut.load();

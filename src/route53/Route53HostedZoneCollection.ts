@@ -13,6 +13,6 @@ export class Route53HostedZoneCollection extends ApiNodeCollection<Route53Hosted
   }
 
   load(): Promise<AWS.Route53.HostedZone[]> {
-    return AwsApi.route53.listHostedZones();
+    return AwsApi.route53(this.config()).listHostedZones();
   }
 }

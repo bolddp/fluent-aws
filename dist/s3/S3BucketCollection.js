@@ -20,7 +20,7 @@ class S3BucketCollection extends ApiNodeCollection_1.ApiNodeCollection {
     }
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield AwsApi_1.AwsApi.s3.listBuckets();
+            return yield AwsApi_1.AwsApi.s3(this.config()).listBuckets();
         });
     }
 }

@@ -20,7 +20,7 @@ class AutoScalingGroup extends AwsDataApiNode_1.AwsDataApiNode {
         this.name = name;
     }
     loadAwsData() {
-        return AwsApi_1.AwsApi.autoScaling.describeGroup(this.name);
+        return AwsApi_1.AwsApi.autoScaling(this.config()).describeGroup(this.name);
     }
     ec2Instances() {
         if (!this.ec2InstanceCollection) {
@@ -36,7 +36,7 @@ class AutoScalingGroup extends AwsDataApiNode_1.AwsDataApiNode {
     updateSize(minSize, maxSize, desiredSize) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            return AwsApi_1.AwsApi.autoScaling.update({
+            return AwsApi_1.AwsApi.autoScaling(this.config()).update({
                 AutoScalingGroupName: this.name,
                 MinSize: minSize,
                 MaxSize: maxSize,
@@ -47,7 +47,7 @@ class AutoScalingGroup extends AwsDataApiNode_1.AwsDataApiNode {
     setInstanceProtection(instanceIds, value) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            return AwsApi_1.AwsApi.autoScaling.setInstanceProtection(this.name, instanceIds, value);
+            return AwsApi_1.AwsApi.autoScaling(this.config()).setInstanceProtection(this.name, instanceIds, value);
         });
     }
 }

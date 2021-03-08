@@ -1,8 +1,11 @@
 import * as AWS from 'aws-sdk';
 import { CognitoUserAttribute, ISignUpResult, CognitoUserSession } from 'amazon-cognito-identity-js';
 import { UserPoolDescriptionType, UserType, AdminGetUserResponse } from 'aws-sdk/clients/cognitoidentityserviceprovider';
+import { FluentAwsConfig } from '../FluentAwsConfig';
 export declare class CognitoApi {
+    config: FluentAwsConfig;
     cognitoSp: () => AWS.CognitoIdentityServiceProvider;
+    constructor(config: FluentAwsConfig);
     private getPoolData;
     private getCognitoUser;
     listUserPools(): Promise<UserPoolDescriptionType[]>;

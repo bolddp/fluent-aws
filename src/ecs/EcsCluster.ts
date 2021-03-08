@@ -20,7 +20,7 @@ export class EcsCluster extends AwsDataApiNode<AWS.ECS.Cluster> {
   }
 
   loadAwsData() {
-    return AwsApi.ecs.describeCluster(this.idOrArn);
+    return AwsApi.ecs(this.config()).describeCluster(this.idOrArn);
   }
 
   task(id: string): EcsTask {

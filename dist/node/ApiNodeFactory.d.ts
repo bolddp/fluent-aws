@@ -55,7 +55,7 @@ export declare class ApiNodeFactory {
     static s3Bucket(parent: ApiNode, name: string): S3Bucket;
     static s3BucketCollection(parent: ApiNode): S3BucketCollection;
     static s3Object(parent: ApiNode, bucketName: string, key: string): S3Object;
-    static s3ObjectCollection(parent: ApiNode, bucketName: string): S3ObjectCollection;
+    static s3ObjectCollection(parent: ApiNode, bucketName: string, prefix: string): S3ObjectCollection;
     static ecs(parent: ApiNode): Ecs;
     static ecsCluster(parent: ApiNode, idOrArn: string): EcsCluster;
     static ecsClusterCollection(parent: ApiNode): EcsClusterCollection;

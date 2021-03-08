@@ -44,7 +44,9 @@ describe('CognitoUserCollection', () => {
 
   it('will load', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.cognito.listUsers = stubs.awsApiStub.returns([{ Username: 'userName01' }, { Username: 'userName02' }]);
+    AwsApi.cognito = () => (<any>{
+      listUsers: stubs.awsApiStub.returns([{ Username: 'userName01' }, { Username: 'userName02' }])
+    });
 
     const sut = new CognitoUserCollection(<any>stubs.parentStub, {
       poolId: 'poolId',

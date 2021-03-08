@@ -1,9 +1,15 @@
 import * as AWS from 'aws-sdk';
+import { FluentAwsConfig } from '../FluentAwsConfig';
 
 const debug = require('debug')('fluentaws:KmsApi');
 
 export class KmsApi {
-  kms = () => new AWS.KMS();
+  config: FluentAwsConfig;
+  kms = () => new AWS.KMS(this.config);
+
+  constructor(config: FluentAwsConfig) {
+    this.config = config;
+  }
 
   async listAliases(): Promise<AWS.KMS.AliasListEntry[]> {
     debug(`listing aliases`);

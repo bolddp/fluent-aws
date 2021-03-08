@@ -24,8 +24,8 @@ class EcsTaskCollection extends ApiNodeCollection_1.ApiNodeCollection {
     }
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            const taskArns = yield AwsApi_1.AwsApi.ecs.listTasks(this.clusterId);
-            return AwsApi_1.AwsApi.ecs.describeTasks(this.clusterId, taskArns);
+            const taskArns = yield AwsApi_1.AwsApi.ecs(this.config()).listTasks(this.clusterId);
+            return AwsApi_1.AwsApi.ecs(this.config()).describeTasks(this.clusterId, taskArns);
         });
     }
 }

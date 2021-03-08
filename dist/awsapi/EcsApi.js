@@ -11,8 +11,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const AWS = require("aws-sdk");
 const debug = require('debug')('fluentaws:EcsApi');
 class EcsApi {
-    constructor() {
-        this.ecs = () => new AWS.ECS();
+    constructor(config) {
+        this.ecs = () => new AWS.ECS(this.config);
+        this.config = config;
     }
     listClusters() {
         return __awaiter(this, void 0, void 0, function* () {

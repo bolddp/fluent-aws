@@ -12,8 +12,9 @@ const AWS = require("aws-sdk");
 const amazon_cognito_identity_js_1 = require("amazon-cognito-identity-js");
 const debug = require('debug')('fluentaws:CognitoApi');
 class CognitoApi {
-    constructor() {
-        this.cognitoSp = () => new AWS.CognitoIdentityServiceProvider();
+    constructor(config) {
+        this.cognitoSp = () => new AWS.CognitoIdentityServiceProvider(this.config);
+        this.config = config;
     }
     getPoolData(poolId, clientId) {
         const poolData = {

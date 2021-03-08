@@ -19,7 +19,7 @@ class CognitoUserPool extends AwsDataApiNode_1.AwsDataApiNode {
         this.userCollection = ApiNodeFactory_1.ApiNodeFactory.cognitoUserCollection(this, this.id);
     }
     loadAwsData() {
-        return AwsApi_1.AwsApi.cognito.describeUserPool(this.id.poolId);
+        return AwsApi_1.AwsApi.cognito(this.config()).describeUserPool(this.id.poolId);
     }
     users() {
         return this.userCollection;
@@ -50,7 +50,7 @@ class CognitoUserPool extends AwsDataApiNode_1.AwsDataApiNode {
                     }));
                 }
             }
-            return yield AwsApi_1.AwsApi.cognito.signup(this.id.poolId, this.id.clientId, signupData.userName, signupData.password, attributeList, signupData.skipVerification);
+            return yield AwsApi_1.AwsApi.cognito(this.config()).signup(this.id.poolId, this.id.clientId, signupData.userName, signupData.password, attributeList, signupData.skipVerification);
         });
     }
     /**
@@ -61,7 +61,7 @@ class CognitoUserPool extends AwsDataApiNode_1.AwsDataApiNode {
     requestForgotPasswordCode(email) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            yield AwsApi_1.AwsApi.cognito.forgotPassword(this.id.poolId, this.id.clientId, email);
+            yield AwsApi_1.AwsApi.cognito(this.config()).forgotPassword(this.id.poolId, this.id.clientId, email);
         });
     }
     /**
@@ -73,7 +73,7 @@ class CognitoUserPool extends AwsDataApiNode_1.AwsDataApiNode {
     setNewUserPassword(email, verificationCode, password) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            yield AwsApi_1.AwsApi.cognito.confirmPassword(this.id.poolId, this.id.clientId, email, verificationCode, password);
+            yield AwsApi_1.AwsApi.cognito(this.config()).confirmPassword(this.id.poolId, this.id.clientId, email, verificationCode, password);
         });
     }
 }

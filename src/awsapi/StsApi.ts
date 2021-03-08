@@ -1,9 +1,16 @@
 import * as AWS from 'aws-sdk';
+import { Credentials } from 'aws-sdk';
+import { FluentAwsConfig } from '../FluentAwsConfig';
 
 export class StsApi {
-  sts = () => new AWS.STS();
+  config: FluentAwsConfig;
+  sts = () => new AWS.STS(this.config);
 
-  async assumeRole(roleArn: string, sessionName: string): Promise<void> {
+  constructor(config: FluentAwsConfig) {
+    this.config = config;
+  }
+
+  async assumeRole(roleArn: string, sessionName: string): Promise<Credentials> {
     const params = {
       DurationSeconds: 3600,
       ExternalId: sessionName,
@@ -11,7 +18,7 @@ export class StsApi {
       RoleSessionName: sessionName
     };
     const assumed = await this.sts().assumeRole(params).promise();
-    AWS.config.update({
+    return new AWS.Credentials({
       accessKeyId: assumed.Credentials.AccessKeyId,
       secretAccessKey: assumed.Credentials.SecretAccessKey,
       sessionToken: assumed.Credentials.SessionToken

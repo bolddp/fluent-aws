@@ -11,8 +11,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const AWS = require("aws-sdk");
 const debug = require('debug')('fluentaws:SnsApi');
 class SnsApi {
-    constructor() {
-        this.sns = () => new AWS.SNS();
+    constructor(config) {
+        this.sns = () => new AWS.SNS(this.config);
+        this.config = config;
     }
     listTopics() {
         return __awaiter(this, void 0, void 0, function* () {

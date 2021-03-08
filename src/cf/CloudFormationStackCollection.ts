@@ -13,6 +13,6 @@ export class CloudFormationStackCollection extends ApiNodeCollection<CloudFormat
   }
 
   load(): Promise<AWS.CloudFormation.Stack[]> {
-    return AwsApi.cloudFormation.describeStacks();
+    return AwsApi.cloudFormation(this.config()).describeStacks();
   }
 }

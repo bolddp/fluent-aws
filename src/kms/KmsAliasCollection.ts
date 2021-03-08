@@ -5,7 +5,7 @@ import { AwsApi } from '../awsapi/AwsApi';
 
 export class KmsAliasCollection extends ApiNodeCollection<KmsAlias, AWS.KMS.AliasListEntry> {
   public async load(): Promise<AWS.KMS.AliasListEntry[]> {
-    return AwsApi.kms.listAliases();
+    return AwsApi.kms(this.config()).listAliases();
   }
 
   public apiNodeFromAwsData(data: AWS.KMS.AliasListEntry): KmsAlias {

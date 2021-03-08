@@ -11,7 +11,7 @@ class Ec2InstanceCollection extends ApiNodeCollection_1.ApiNodeCollection {
         return ApiNodeFactory_1.ApiNodeFactory.ec2Instance(this, data.InstanceId);
     }
     load() {
-        return AwsApi_1.AwsApi.ec2.describeInstances(this.instanceIds);
+        return AwsApi_1.AwsApi.ec2(this.config()).describeInstances(this.instanceIds);
     }
 }
 exports.Ec2InstanceCollection = Ec2InstanceCollection;

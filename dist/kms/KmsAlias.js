@@ -21,7 +21,7 @@ class KmsAlias extends ApiNode_1.ApiNode {
             this.kmsKeyInstance = ApiNodeFactory_1.ApiNodeFactory.kmsKey(this, undefined);
             // We add a promise that will lazy loads the correct id of the key
             this.promiseChain.add(() => __awaiter(this, void 0, void 0, function* () {
-                const aliases = yield AwsApi_1.AwsApi.kms.listAliases();
+                const aliases = yield AwsApi_1.AwsApi.kms(this.config()).listAliases();
                 const alias = aliases.find(x => x.AliasName == this.aliasName);
                 if (!alias) {
                     throw new Error(`Alias not found: ${this.aliasName}`);

@@ -36,7 +36,9 @@ describe('KmsAliasCollection', () => {
 
   it('will load', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.kms.listAliases = stubs.awsApiStub.returns([{ AliasName: 'alias01' }, { AliasName: 'alias02' }]);
+    AwsApi.kms = () => (<any>{
+      listAliases: stubs.awsApiStub.returns([{ AliasName: 'alias01' }, { AliasName: 'alias02' }])
+    });
 
     const sut = new KmsAliasCollection(<any>stubs.parentStub);
     await sut.load();

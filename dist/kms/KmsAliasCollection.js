@@ -14,7 +14,7 @@ const AwsApi_1 = require("../awsapi/AwsApi");
 class KmsAliasCollection extends ApiNodeCollection_1.ApiNodeCollection {
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            return AwsApi_1.AwsApi.kms.listAliases();
+            return AwsApi_1.AwsApi.kms(this.config()).listAliases();
         });
     }
     apiNodeFromAwsData(data) {

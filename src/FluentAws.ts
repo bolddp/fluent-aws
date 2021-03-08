@@ -1,6 +1,5 @@
 import * as AWS from 'aws-sdk';
 import * as fetch from 'node-fetch';
-import { FluentAwsConfig } from "./FluentAwsConfig";
 import { S3 } from './s3/S3';
 import { Ecs } from './ecs/Ecs';
 import { Ec2 } from './ec2/Ec2';
@@ -16,46 +15,28 @@ import { SystemsManager } from "./ssm/SystemsManager";
 import { Kms } from './kms/Kms';
 import { Cognito } from './cognito/Cognito';
 import { Sns } from './sns/Sns';
+import { FluentAwsConfig } from './FluentAwsConfig';
 
 (<any>global)['fetch'] = fetch;
 
+const debug = require('debug')('fluentaws:FluentAws');
+
 export class FluentAws extends ApiNode {
-  config: FluentAwsConfig;
+  configInstance: FluentAwsConfig = {};
   promiseChain = new PromiseChain();
   assumeRolePromise: () => Promise<void>;
-  configurePromise: () => Promise<void>;
-  profilePromise: () => Promise<void>;
-
-  autoScalingInstance: AutoScaling;
-  cloudFormationInstance: CloudFormation;
-  cognitoInstance: Cognito;
-  dynamoDbInstance: DynamoDb;
-  ec2Instance: Ec2;
-  ecsInstance: Ecs;
-  kmsInstance: Kms;
-  route53Instance: Route53;
-  s3Instance: S3;
-  snsInstance: Sns;
-  systemsManagerInstance: SystemsManager;
 
   constructor() {
     super(undefined);
-    this.autoScalingInstance = ApiNodeFactory.autoScaling(this);
-    this.cloudFormationInstance = ApiNodeFactory.cloudFormation(this);
-    this.cognitoInstance = ApiNodeFactory.cognito(this);
-    this.dynamoDbInstance = ApiNodeFactory.dynamoDb(this);
-    this.ecsInstance = ApiNodeFactory.ecs(this);
-    this.ec2Instance = ApiNodeFactory.ec2(this);
-    this.kmsInstance = ApiNodeFactory.kms(this);
-    this.route53Instance = ApiNodeFactory.route53(this);
-    this.s3Instance = ApiNodeFactory.s3(this);
-    this.snsInstance = ApiNodeFactory.sns(this);
-    this.systemsManagerInstance = ApiNodeFactory.systemsManager(this);
   }
 
-  async sdk(): Promise<typeof AWS> {
+  async sdk<T>(fnc: (aws: typeof AWS, cfg: FluentAwsConfig) => T): Promise<T> {
     await this.ensureResolved();
-    return AWS;
+    return fnc(AWS, this.configInstance);
+  }
+
+  config(): FluentAwsConfig {
+    return this.configInstance;
   }
 
   /**
@@ -64,22 +45,30 @@ export class FluentAws extends ApiNode {
    * allowing for mixing AWS API calls through FluentAws and the raw AWS SDK.
    */
 
-  configure(config: FluentAwsConfig): FluentAws {
-    this.config = config;
-    this.configurePromise = this.promiseChain.replaceVolatile(this.configurePromise,
-      async () => {
-        const fluentAwsConfig = {
-          region: config.region
-        };
-        AwsApi.configure(fluentAwsConfig);
-      });
+  region(region: string): FluentAws {
+    debug('setting region: %s', region);
+    this.configInstance = {
+      ...this.configInstance,
+      region
+    }
     return this;
   }
 
   profile(profile: string): FluentAws {
-    this.profilePromise = this.promiseChain.replace(this.profilePromise, async () => {
-      AwsApi.profile(profile);
-    });
+    debug('setting profile: %s', profile);
+    this.configInstance = {
+      ...this.configInstance,
+      credentials: new AWS.SharedIniFileCredentials({ profile })
+    }
+    return this;
+  }
+
+  credentials(accessKeyId: string, secretAccessKey: string): FluentAws {
+    debug('setting credentials');
+    this.configInstance = {
+      ...this.configInstance,
+      credentials: new AWS.Credentials({ accessKeyId, secretAccessKey })
+    }
     return this;
   }
 
@@ -88,7 +77,10 @@ export class FluentAws extends ApiNode {
    * The command can be repeated periodically to ensure that the assumed role doesn't expire.
    */
   assumeRole(roleArn: string, sessionName: string): FluentAws {
-    this.assumeRolePromise = this.promiseChain.replace(this.assumeRolePromise, () => AwsApi.assumeRole(roleArn, sessionName));
+    this.assumeRolePromise = this.promiseChain.replace(this.assumeRolePromise, async () => {
+      const credentials = await AwsApi.sts(this.config()).assumeRole(roleArn, sessionName);
+      this.configInstance = { ...this.configInstance, credentials }
+    });
     return this;
   }
 
@@ -99,24 +91,25 @@ export class FluentAws extends ApiNode {
     this.assumeRolePromise = this.promiseChain.replace(this.assumeRolePromise, async () => {
       let index = 1;
       for (const arn of roleArns) {
-        await AwsApi.assumeRole(arn, `${sessionNamePrefix}-${index}`);
+        const credentials = await AwsApi.sts(this.config()).assumeRole(arn, `${sessionNamePrefix}-${index}`);
+        this.configInstance = { ...this.configInstance, credentials }
         index += 1;
       }
     });
     return this;
   }
 
-  autoScaling(): AutoScaling { return this.autoScalingInstance; }
-  cloudFormation(): CloudFormation { return this.cloudFormationInstance; }
-  cognito(): Cognito { return this.cognitoInstance; }
-  dynamoDb(): DynamoDb { return this.dynamoDbInstance; }
-  ecs(): Ecs { return this.ecsInstance; }
-  ec2(): Ec2 { return this.ec2Instance; }
-  kms(): Kms { return this.kmsInstance; }
-  route53(): Route53 { return this.route53Instance; }
-  s3(): S3 { return this.s3Instance; }
-  sns(): Sns { return this.snsInstance; }
-  systemsManager(): SystemsManager { return this.systemsManagerInstance; }
+  autoScaling(): AutoScaling { return ApiNodeFactory.autoScaling(this); }
+  cloudFormation(): CloudFormation { return ApiNodeFactory.cloudFormation(this); }
+  cognito(): Cognito { return ApiNodeFactory.cognito(this); }
+  dynamoDb(): DynamoDb { return ApiNodeFactory.dynamoDb(this); }
+  ecs(): Ecs { return ApiNodeFactory.ecs(this); }
+  ec2(): Ec2 { return ApiNodeFactory.ec2(this); }
+  kms(): Kms { return ApiNodeFactory.kms(this); }
+  route53(): Route53 { return ApiNodeFactory.route53(this); }
+  s3(): S3 { return ApiNodeFactory.s3(this); }
+  sns(): Sns { return ApiNodeFactory.sns(this); }
+  systemsManager(): SystemsManager { return ApiNodeFactory.systemsManager(this); }
 }
 
 const fluentAwsInstances = new Map<string, FluentAws>();
@@ -125,6 +118,7 @@ export function aws(name?: string): FluentAws {
   const instanceName = name || 'default';
   let instance = fluentAwsInstances.get(instanceName);
   if (!instance) {
+    debug('creating instance: %s', instanceName);
     instance = new FluentAws();
     fluentAwsInstances.set(instanceName, instance);
   }

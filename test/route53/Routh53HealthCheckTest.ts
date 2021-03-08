@@ -8,7 +8,9 @@ describe('Route53HealthCheck', () => {
   it('will load awsData', async () => {
     const stubs = apiNodeCollectionStubs();
     const awsApiStub = sinon.stub().returns({});
-    AwsApi.route53.getHealthCheck = awsApiStub;
+    AwsApi.route53 = () => (<any>{
+      getHealthCheck: awsApiStub
+    });
 
     const sut = new Route53HealthCheck(<any>stubs.parentStub, 'id');
     await sut.loadAwsData();
@@ -21,7 +23,9 @@ describe('Route53HealthCheck', () => {
     const stubs = apiNodeCollectionStubs();
     const sut = new Route53HealthCheck(<any>stubs.parentStub, 'id');
 
-    AwsApi.route53.deleteHealthCheck = stubs.awsApiStub;
+    AwsApi.route53 = () => (<any>{
+      deleteHealthCheck: stubs.awsApiStub
+    });
 
     await sut.delete();
 

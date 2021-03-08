@@ -10,7 +10,7 @@ class EcsService extends AwsDataApiNode_1.AwsDataApiNode {
         this.name = name;
     }
     loadAwsData() {
-        return AwsApi_1.AwsApi.ecs.describeService(this.clusterId, this.name);
+        return AwsApi_1.AwsApi.ecs(this.config()).describeService(this.clusterId, this.name);
     }
 }
 exports.EcsService = EcsService;

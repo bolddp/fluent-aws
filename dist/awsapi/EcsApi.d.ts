@@ -1,6 +1,9 @@
 import * as AWS from 'aws-sdk';
+import { FluentAwsConfig } from '../FluentAwsConfig';
 export declare class EcsApi {
+    config: FluentAwsConfig;
     ecs: () => AWS.ECS;
+    constructor(config: FluentAwsConfig);
     listClusters(): Promise<string[]>;
     describeClusters(idOrArns?: string[]): Promise<AWS.ECS.Cluster[]>;
     describeCluster(idOrArn: string): Promise<AWS.ECS.Cluster>;

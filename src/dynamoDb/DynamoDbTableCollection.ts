@@ -13,6 +13,6 @@ export class DynamoDbTableCollection extends ApiNodeCollection<DynamoDbTable, st
   }
 
   async load(): Promise<string[]> {
-    return await AwsApi.dynamoDb.listTableNames();
+    return await AwsApi.dynamoDb(this.config()).listTableNames();
   }
 }

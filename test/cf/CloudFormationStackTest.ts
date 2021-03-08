@@ -8,7 +8,9 @@ describe('CloudFormationStackTest', () => {
   it('will load awsData', async () => {
     const stubs = apiNodeCollectionStubs();
     const awsApiStub = sinon.stub().returns({});
-    AwsApi.cloudFormation.describeStack = awsApiStub;
+    AwsApi.cloudFormation = () => (<any>{
+      describeStack: awsApiStub
+    });
 
     const sut = new CloudFormationStack(<any>stubs.parentStub, 'stackName');
     await sut.loadAwsData();
@@ -20,7 +22,9 @@ describe('CloudFormationStackTest', () => {
   it('will provide resources', async () => {
     const stubs = apiNodeCollectionStubs();
     const awsApiStub = sinon.stub().returns({});
-    AwsApi.cloudFormation.listStackResources = awsApiStub;
+    AwsApi.cloudFormation = () => (<any>{
+      listStackResources: awsApiStub
+    });
 
     const sut = new CloudFormationStack(<any> stubs.parentStub, 'stackName');
     await sut.resources();
@@ -32,7 +36,9 @@ describe('CloudFormationStackTest', () => {
   it('will provide template', async () => {
     const stubs = apiNodeCollectionStubs();
     const awsApiStub = sinon.stub().returns({});
-    AwsApi.cloudFormation.getTemplate = awsApiStub;
+    AwsApi.cloudFormation = () => (<any>{
+      getTemplate: awsApiStub
+    });
 
     const sut = new CloudFormationStack(<any> stubs.parentStub, 'stackName');
     await sut.template();
@@ -44,13 +50,13 @@ describe('CloudFormationStackTest', () => {
   it('will check drift', async () => {
     const stubs = apiNodeCollectionStubs();
     const detectStub = sinon.stub().returns('detectionId');
-    AwsApi.cloudFormation.detectStackDrift = detectStub;
     const detectionStatusStub = sinon.stub().returns('DETECTION_COMPLETE');
-    AwsApi.cloudFormation.describeStackDriftDetectionStatus = detectionStatusStub;
-    const resourceDriftsStub = sinon.stub().returns([{
-      StackId: 'stackId'
-    }])
-    AwsApi.cloudFormation.describeStackResourceDrifts = resourceDriftsStub;
+    const resourceDriftsStub = sinon.stub().returns([{ StackId: 'stackId' }]);
+    AwsApi.cloudFormation = () => (<any>{
+      detectStackDrift: detectStub,
+      describeStackDriftDetectionStatus: detectionStatusStub,
+      describeStackResourceDrifts: resourceDriftsStub
+    });
 
     const sut = new CloudFormationStack(<any> stubs.parentStub, 'stackName');
     const drift = await sut.checkDrift(1);
@@ -62,13 +68,15 @@ describe('CloudFormationStackTest', () => {
   it('will handle failed drift', async () => {
     const stubs = apiNodeCollectionStubs();
     const detectStub = sinon.stub().returns('detectionId');
-    AwsApi.cloudFormation.detectStackDrift = detectStub;
     const detectionStatusStub = sinon.stub().returns('DETECTION_FAILED');
-    AwsApi.cloudFormation.describeStackDriftDetectionStatus = detectionStatusStub;
     const resourceDriftsStub = sinon.stub().returns([{
       StackId: 'stackId'
     }])
-    AwsApi.cloudFormation.describeStackResourceDrifts = resourceDriftsStub;
+    AwsApi.cloudFormation = () => (<any>{
+      detectStackDrift: detectStub,
+      describeStackDriftDetectionStatus: detectionStatusStub,
+      describeStackResourceDrifts: resourceDriftsStub
+    });
 
     const sut = new CloudFormationStack(<any> stubs.parentStub, 'stackName');
 
