@@ -1,14 +1,15 @@
 {
   "name": "fluent-aws",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "description": "Fluent AWS API, written in Typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "clean": "node ./node_modules/rimraf/bin.js ./dist",
     "test": "nyc mocha -r ts-node/register --recursive './test/**/*Test.ts'",
     "coverage": "nyc --require ts-node/register --require source-map-support/register mocha test/**/*Test.ts",
     "npm:publish": "npm run clean:build && npm publish",
-    "clean:build": "rm ./dist -rf && node ./node_modules/typescript/bin/tsc --sourcemap false"
+    "clean:build": "npm run clean && node ./node_modules/typescript/bin/tsc --sourcemap false"
   },
   "repository": {
     "type": "git",
@@ -21,24 +22,25 @@
   },
   "homepage": "https://github.com/bolddp/fluent-aws#readme",
   "devDependencies": {
-    "@types/chai": "^4.1.7",
-    "@types/debug": "^4.1.4",
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^12.0.10",
-    "@types/node-fetch": "^2.5.4",
-    "@types/sinon": "^7.0.13",
-    "chai": "^4.2.0",
-    "mocha": "^8.2.1",
-    "nyc": "^15.0.0",
-    "sinon": "^7.3.2",
-    "ts-node": "^8.10.2",
-    "typescript": "^3.5.2"
+    "@types/chai": "4.1.7",
+    "@types/debug": "4.1.4",
+    "@types/mocha": "5.2.7",
+    "@types/node": "12.0.10",
+    "@types/node-fetch": "2.5.4",
+    "@types/sinon": "7.0.13",
+    "chai": "4.2.0",
+    "mocha": "8.2.1",
+    "nyc": "15.0.0",
+    "rimraf": "3.0.2",
+    "sinon": "7.3.2",
+    "ts-node": "8.10.2",
+    "typescript": "3.5.2"
   },
   "dependencies": {
-    "amazon-cognito-identity-js": "^3.2.1",
-    "aws-sdk": "^2.484.0",
-    "debug": "^4.1.1",
-    "node-fetch": "^2.6.1"
+    "amazon-cognito-identity-js": "3.2.1",
+    "aws-sdk": "2.596.0",
+    "debug": "4.3.2",
+    "node-fetch": "2.6.1"
   },
   "files": [
     "/dist",
