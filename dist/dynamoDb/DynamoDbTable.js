@@ -66,5 +66,11 @@ class DynamoDbTable extends AwsDataApiNode_1.AwsDataApiNode {
             return AwsApi_1.AwsApi.dynamoDb(this.config()).delete(this.tableName, key);
         });
     }
+    batchGet(keys) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.ensureResolved();
+            return AwsApi_1.AwsApi.dynamoDb(this.config()).batchGet(this.tableName, keys);
+        });
+    }
 }
 exports.DynamoDbTable = DynamoDbTable;

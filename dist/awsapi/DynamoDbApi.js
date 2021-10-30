@@ -81,5 +81,35 @@ class DynamoDbApi {
             debug('deleted item');
         });
     }
+    batchGet(tableName, keys) {
+        return __awaiter(this, void 0, void 0, function* () {
+            debug('batchGet: %s, #keys: %d', tableName, keys.length);
+            const batchSize = 100;
+            const batches = keys.reduce((acc, key, index) => {
+                const batchIndex = Math.floor(index / batchSize);
+                if ((index % batchSize) == 0) {
+                    acc[batchIndex] = [];
+                }
+                acc[batchIndex].push(key);
+                return acc;
+            }, []);
+            let result = [];
+            for (const keyBatch of batches) {
+                debug('getting batch of %d', keyBatch.length);
+                const rsp = yield this.docClient().batchGet({
+                    RequestItems: {
+                        [tableName]: {
+                            ConsistentRead: true,
+                            Keys: keyBatch
+                        }
+                    }
+                }).promise();
+                debug('did get batch');
+                result.push(...rsp.Responses[tableName]);
+            }
+            debug('did batchGet');
+            return result;
+        });
+    }
 }
 exports.DynamoDbApi = DynamoDbApi;

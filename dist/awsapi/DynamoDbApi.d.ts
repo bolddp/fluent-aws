@@ -12,4 +12,5 @@ export declare class DynamoDbApi {
     query(input: AWS.DynamoDB.QueryInput): Promise<AWS.DynamoDB.AttributeMap[]>;
     put(tableName: string, item: DynamoDbItem): Promise<void>;
     delete(tableName: string, key: AWS.DynamoDB.DocumentClient.Key): Promise<void>;
+    batchGet(tableName: string, keys: AWS.DynamoDB.DocumentClient.Key[]): Promise<AWS.DynamoDB.AttributeMap[]>;
 }

@@ -60,4 +60,9 @@ export class DynamoDbTable extends AwsDataApiNode<AWS.DynamoDB.TableDescription>
     await this.ensureResolved();
     return AwsApi.dynamoDb(this.config()).delete(this.tableName, key);
   }
+
+  async batchGet(keys: DynamoDbKey[]): Promise<DynamoDbItem[]> {
+    await this.ensureResolved();
+    return AwsApi.dynamoDb(this.config()).batchGet(this.tableName, keys);
+  }
 }

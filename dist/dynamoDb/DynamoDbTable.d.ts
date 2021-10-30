@@ -16,4 +16,5 @@ export declare class DynamoDbTable extends AwsDataApiNode<AWS.DynamoDB.TableDesc
     queryByIndex(indexName: string, key: DynamoDbKey): Promise<DynamoDbItem[]>;
     put(item: DynamoDbItem): Promise<void>;
     delete(key: DynamoDbKey): Promise<void>;
+    batchGet(keys: DynamoDbKey[]): Promise<DynamoDbItem[]>;
 }

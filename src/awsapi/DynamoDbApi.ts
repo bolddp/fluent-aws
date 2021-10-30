@@ -71,4 +71,33 @@ export class DynamoDbApi {
     }).promise();
     debug('deleted item');
   }
+
+  async batchGet(tableName: string, keys: AWS.DynamoDB.DocumentClient.Key[]): Promise<AWS.DynamoDB.AttributeMap[]> {
+    debug('batchGet: %s, #keys: %d', tableName, keys.length);
+    const batchSize = 100;
+    const batches = keys.reduce<AWS.DynamoDB.DocumentClient.Key[][]>((acc, key, index) => {
+      const batchIndex = Math.floor(index / batchSize);
+      if ((index % batchSize) == 0) {
+        acc[batchIndex] = [];
+      }
+      acc[batchIndex].push(key);
+      return acc;
+    }, []);
+    let result: AWS.DynamoDB.AttributeMap[] = [];
+    for (const keyBatch of batches) {
+      debug('getting batch of %d', keyBatch.length);
+      const rsp = await this.docClient().batchGet({
+        RequestItems: {
+          [tableName]: {
+            ConsistentRead: true,
+            Keys: keyBatch
+          }
+        }
+      }).promise();
+      debug('did get batch')
+      result.push(...rsp.Responses[tableName]);
+    }
+    debug('did batchGet');
+    return result;
+  }
 }
