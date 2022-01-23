@@ -1,5 +1,5 @@
 import { AwsApi } from './../../src/awsapi/AwsApi';
-import { expect } from 'chai';
+
 import { ApiNodeFactory } from './../../src/node/ApiNodeFactory';
 import { apiNodeCollectionStubs } from './../utils/stubs';
 import { DynamoDbTableCollection } from '../../src/dynamoDb/DynamoDbTableCollection';
@@ -10,11 +10,9 @@ describe('DynamoDbTableCollection', () => {
 
     const sut = new DynamoDbTableCollection(<any>stubs.parentStub);
 
-    await sut.apiNodeFromId('tableName');
+    sut.apiNodeFromId('tableName');
 
-    expect(stubs.factoryStub.calledOnce).to.be.true;
-    expect(stubs.factoryStub.args[0][0]).to.equal(sut);
-    expect(stubs.factoryStub.args[0][1]).to.equal('tableName');
+    expect(stubs.factoryStub).toHaveBeenCalledWith(sut, 'tableName');
   });
 
   it('will create from AWS data', async () => {
@@ -24,23 +22,22 @@ describe('DynamoDbTableCollection', () => {
 
     const sut = new DynamoDbTableCollection(<any>stubs.parentStub);
 
-    await sut.apiNodeFromAwsData(awsData);
+    sut.apiNodeFromAwsData(awsData);
 
-    expect(stubs.factoryStub.calledOnce).to.be.true;
-    expect(stubs.factoryStub.args[0][0]).to.equal(sut);
-    expect(stubs.factoryStub.args[0][1]).to.equal('tableName');
+    expect(stubs.factoryStub).toHaveBeenCalledWith(sut, 'tableName');
   });
 
   it('will load', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.dynamoDb = () => (<any>{
-      listTableNames: stubs.awsApiStub
-    });
+    AwsApi.dynamoDb = () =>
+      <any>{
+        listTableNames: stubs.awsApiStub,
+      };
 
     const sut = new DynamoDbTableCollection(<any>stubs.parentStub);
 
     await sut.load();
 
-    expect(stubs.awsApiStub.calledOnce).to.be.true;
+    expect(stubs.awsApiStub).toHaveBeenCalled();
   });
 });

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CloudFormationStackCollection = void 0;
 const ApiNodeCollection_1 = require("../node/ApiNodeCollection");
 const ApiNodeFactory_1 = require("../node/ApiNodeFactory");
 const AwsApi_1 = require("../awsapi/AwsApi");

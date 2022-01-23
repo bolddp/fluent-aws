@@ -1,6 +1,5 @@
-import { apiNodeCollectionStubs } from "../utils/stubs";
-import { ApiNodeFactory } from "../../src/node/ApiNodeFactory";
-import { expect } from "chai";
+import { apiNodeCollectionStubs } from '../utils/stubs';
+import { ApiNodeFactory } from '../../src/node/ApiNodeFactory';
 import { SnsTopicCollection } from '../../src/sns/SnsTopicCollection';
 import { AwsApi } from '../../src/awsapi/AwsApi';
 
@@ -13,36 +12,36 @@ describe('SnsTopicCollection', () => {
 
     sut.apiNodeFromId('id');
 
-    expect(stubs.factoryStub.calledOnce).to.be.true;
-    expect(stubs.factoryStub.args[0][0]).to.equal(sut);
-    expect(stubs.factoryStub.args[0][1]).to.equal('id');
+    expect(stubs.factoryStub).toHaveBeenCalledWith(sut, 'id');
   });
 
   it('will create from AWS data', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.snsTopic = stubs.factoryStub;
     const awsData: AWS.SNS.Topic = {
-      TopicArn: 'topicArn'
-    }
+      TopicArn: 'topicArn',
+    };
 
     const sut = new SnsTopicCollection(<any>stubs.parentStub);
 
     sut.apiNodeFromAwsData(awsData);
 
-    expect(stubs.factoryStub.calledOnce).to.be.true;
-    expect(stubs.factoryStub.args[0][0]).to.equal(sut);
-    expect(stubs.factoryStub.args[0][1]).to.equal('topicArn');
+    expect(stubs.factoryStub).toHaveBeenCalledWith(sut, 'topicArn');
   });
 
   it('will load', async () => {
     const stubs = apiNodeCollectionStubs();
-    AwsApi.sns = () => (<any>{
-      listTopics: stubs.awsApiStub.returns([{ TopicArn: 'topicArn01' }, { TopicArn: 'topicArn02' }])
-    });
+    AwsApi.sns = () =>
+      <any>{
+        listTopics: stubs.awsApiStub.mockReturnValue([
+          { TopicArn: 'topicArn01' },
+          { TopicArn: 'topicArn02' },
+        ]),
+      };
 
     const sut = new SnsTopicCollection(<any>stubs.parentStub);
     await sut.load();
 
-    expect(stubs.awsApiStub.calledOnce).to.be.true;
+    expect(stubs.awsApiStub).toHaveBeenCalled();
   });
 });

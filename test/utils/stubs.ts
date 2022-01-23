@@ -1,19 +1,16 @@
-import * as sinon from 'sinon';
-import { ApiNode } from '../../src/node/ApiNode';
-
 export const apiNodeCollectionStubs = () => {
   const parentStub = {
     config: () => {},
-    ensureResolved: sinon.stub().returns(Promise.resolve())
+    ensureResolved: jest.fn().mockResolvedValue(undefined)
   }
-  const getByIdStub = sinon.stub().returns({
+  const getByIdStub = jest.fn().mockReturnValue({
     ensureResolved: () => { return Promise.resolve(); }
   });
-  const factoryStub = sinon.stub().returns({
+  const factoryStub = jest.fn().mockReturnValue({
     getById: getByIdStub,
     ensureResolved: () => { return Promise.resolve(); }
   });
-  const awsApiStub = sinon.stub();
+  const awsApiStub = jest.fn();
   return {
     parentStub,
     factoryStub,

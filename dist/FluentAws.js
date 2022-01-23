@@ -1,15 +1,36 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const AWS = require("aws-sdk");
-const fetch = require("node-fetch");
+exports.aws = exports.FluentAws = void 0;
+const AWS = __importStar(require("aws-sdk"));
+const fetch = __importStar(require("node-fetch"));
 const PromiseChain_1 = require("./node/PromiseChain");
 const ApiNode_1 = require("./node/ApiNode");
 const ApiNodeFactory_1 = require("./node/ApiNodeFactory");
@@ -38,17 +59,17 @@ class FluentAws extends ApiNode_1.ApiNode {
      */
     region(region) {
         debug('setting region: %s', region);
-        this.configInstance = Object.assign({}, this.configInstance, { region });
+        this.configInstance = Object.assign(Object.assign({}, this.configInstance), { region });
         return this;
     }
     profile(profile) {
         debug('setting profile: %s', profile);
-        this.configInstance = Object.assign({}, this.configInstance, { credentials: new AWS.SharedIniFileCredentials({ profile }) });
+        this.configInstance = Object.assign(Object.assign({}, this.configInstance), { credentials: new AWS.SharedIniFileCredentials({ profile }) });
         return this;
     }
     credentials(accessKeyId, secretAccessKey) {
         debug('setting credentials');
-        this.configInstance = Object.assign({}, this.configInstance, { credentials: new AWS.Credentials({ accessKeyId, secretAccessKey }) });
+        this.configInstance = Object.assign(Object.assign({}, this.configInstance), { credentials: new AWS.Credentials({ accessKeyId, secretAccessKey }) });
         return this;
     }
     /**
@@ -58,7 +79,7 @@ class FluentAws extends ApiNode_1.ApiNode {
     assumeRole(roleArn, sessionName) {
         this.assumeRolePromise = this.promiseChain.replace(this.assumeRolePromise, () => __awaiter(this, void 0, void 0, function* () {
             const credentials = yield AwsApi_1.AwsApi.sts(this.config()).assumeRole(roleArn, sessionName);
-            this.configInstance = Object.assign({}, this.configInstance, { credentials });
+            this.configInstance = Object.assign(Object.assign({}, this.configInstance), { credentials });
         }));
         return this;
     }
@@ -70,7 +91,7 @@ class FluentAws extends ApiNode_1.ApiNode {
             let index = 1;
             for (const arn of roleArns) {
                 const credentials = yield AwsApi_1.AwsApi.sts(this.config()).assumeRole(arn, `${sessionNamePrefix}-${index}`);
-                this.configInstance = Object.assign({}, this.configInstance, { credentials });
+                this.configInstance = Object.assign(Object.assign({}, this.configInstance), { credentials });
                 index += 1;
             }
         }));

@@ -1,48 +1,44 @@
-import { AwsApi } from './../src/awsapi/AwsApi';
-import * as AWS from 'aws-sdk';
-import { expect } from 'chai';
-import * as sinon from 'sinon';
 import { ApiNodeFactory } from '../src/node/ApiNodeFactory';
 import { FluentAws, aws } from '../src/FluentAws';
 
 describe('FluentAws', () => {
-  let autoScalingStub: sinon.SinonStub<any[], any>;
-  let cloudFormationStub: sinon.SinonStub<any[], any>
-  let cognitoStub: sinon.SinonStub<any[], any>;
-  let dynamoDbStub: sinon.SinonStub<any[], any>
-  let ec2Stub: sinon.SinonStub<any[], any>;
-  let ecsStub: sinon.SinonStub<any[], any>;
-  let kmsStub: sinon.SinonStub<any[], any>
-  let route53Stub: sinon.SinonStub<any[], any>;
-  let s3Stub: sinon.SinonStub<any[], any>;
-  let snsStub: sinon.SinonStub<any[], any>;
-  let systemsManagerStub: sinon.SinonStub<any[], any>
+  let autoScalingStub: jest.Mock<any, any>;
+  let cloudFormationStub: jest.Mock<any, any>;
+  let cognitoStub: jest.Mock<any, any>;
+  let dynamoDbStub: jest.Mock<any, any>;
+  let ec2Stub: jest.Mock<any, any>;
+  let ecsStub: jest.Mock<any, any>;
+  let kmsStub: jest.Mock<any, any>;
+  let route53Stub: jest.Mock<any, any>;
+  let s3Stub: jest.Mock<any, any>;
+  let snsStub: jest.Mock<any, any>;
+  let systemsManagerStub: jest.Mock<any, any>;
 
   let sut: FluentAws;
 
-  before(() => {
-    autoScalingStub = sinon.stub();
-    autoScalingStub = autoScalingStub.returns(autoScalingStub);
-    cloudFormationStub = sinon.stub();
-    cloudFormationStub = cloudFormationStub.returns(cloudFormationStub);
-    cognitoStub = sinon.stub();
-    cognitoStub = cognitoStub.returns(cognitoStub);
-    dynamoDbStub = sinon.stub();
-    dynamoDbStub = dynamoDbStub.returns(dynamoDbStub);
-    ec2Stub = sinon.stub();
-    ec2Stub = ec2Stub.returns(ec2Stub);
-    ecsStub = sinon.stub();
-    ecsStub = ecsStub.returns(ecsStub);
-    kmsStub = sinon.stub();
-    kmsStub = kmsStub.returns(kmsStub);
-    route53Stub = sinon.stub();
-    route53Stub = route53Stub.returns(route53Stub);
-    s3Stub = sinon.stub();
-    s3Stub = s3Stub.returns(s3Stub);
-    snsStub = sinon.stub();
-    snsStub = snsStub.returns(snsStub);
-    systemsManagerStub = sinon.stub();
-    systemsManagerStub = systemsManagerStub.returns(systemsManagerStub);
+  beforeAll(() => {
+    autoScalingStub = jest.fn();
+    autoScalingStub = autoScalingStub.mockReturnValue(autoScalingStub);
+    cloudFormationStub = jest.fn();
+    cloudFormationStub = cloudFormationStub.mockReturnValue(cloudFormationStub);
+    cognitoStub = jest.fn();
+    cognitoStub = cognitoStub.mockReturnValue(cognitoStub);
+    dynamoDbStub = jest.fn();
+    dynamoDbStub = dynamoDbStub.mockReturnValue(dynamoDbStub);
+    ec2Stub = jest.fn();
+    ec2Stub = ec2Stub.mockReturnValue(ec2Stub);
+    ecsStub = jest.fn();
+    ecsStub = ecsStub.mockReturnValue(ecsStub);
+    kmsStub = jest.fn();
+    kmsStub = kmsStub.mockReturnValue(kmsStub);
+    route53Stub = jest.fn();
+    route53Stub = route53Stub.mockReturnValue(route53Stub);
+    s3Stub = jest.fn();
+    s3Stub = s3Stub.mockReturnValue(s3Stub);
+    snsStub = jest.fn();
+    snsStub = snsStub.mockReturnValue(snsStub);
+    systemsManagerStub = jest.fn();
+    systemsManagerStub = systemsManagerStub.mockReturnValue(systemsManagerStub);
 
     ApiNodeFactory.autoScaling = autoScalingStub;
     ApiNodeFactory.cloudFormation = cloudFormationStub;
@@ -60,35 +56,34 @@ describe('FluentAws', () => {
   });
 
   it('should initialize', () => {
-    expect(sut.autoScaling()).to.equal(autoScalingStub);
-    expect(sut.cloudFormation()).to.equal(cloudFormationStub);
-    expect(sut.cognito()).to.equal(cognitoStub);
-    expect(sut.dynamoDb()).to.equal(dynamoDbStub);
-    expect(sut.ec2()).to.equal(ec2Stub);
-    expect(sut.ecs()).to.equal(ecsStub);
-    expect(sut.kms()).to.equal(kmsStub);
-    expect(sut.route53()).to.equal(route53Stub);
-    expect(sut.s3()).to.equal(s3Stub);
-    expect(sut.sns()).to.equal(snsStub);
-    expect(sut.systemsManager()).to.equal(systemsManagerStub);
+    expect(sut.autoScaling()).toEqual(autoScalingStub);
+    expect(sut.cloudFormation()).toEqual(cloudFormationStub);
+    expect(sut.cognito()).toEqual(cognitoStub);
+    expect(sut.dynamoDb()).toEqual(dynamoDbStub);
+    expect(sut.ec2()).toEqual(ec2Stub);
+    expect(sut.ecs()).toEqual(ecsStub);
+    expect(sut.kms()).toEqual(kmsStub);
+    expect(sut.route53()).toEqual(route53Stub);
+    expect(sut.s3()).toEqual(s3Stub);
+    expect(sut.sns()).toEqual(snsStub);
+    expect(sut.systemsManager()).toEqual(systemsManagerStub);
 
-    // expect(autoScalingStub.calledOnce).to.be.true;
-    // expect(cloudFormationStub.calledOnce).to.be.true;
-    // expect(cognitoStub.calledOnce).to.be.true;
-    // expect(dynamoDbStub.calledOnce).to.be.true;
-    // expect(ec2Stub.calledOnce).to.be.true;
-    // expect(ecsStub.calledOnce).to.be.true;
-    // expect(kmsStub.calledOnce).to.be.true;
-    // expect(route53Stub.calledOnce).to.be.true;
-    // expect(s3Stub.calledOnce).to.be.true;
-    // expect(snsStub.calledOnce).to.be.true;
-    // expect(systemsManagerStub.calledOnce).to.be.true;
-
+    // expect(autoScalingStub).toHaveBeenCalled();
+    // expect(cloudFormationStub).toHaveBeenCalled();
+    // expect(cognitoStub).toHaveBeenCalled();
+    // expect(dynamoDbStub).toHaveBeenCalled();
+    // expect(ec2Stub).toHaveBeenCalled();
+    // expect(ecsStub).toHaveBeenCalled();
+    // expect(kmsStub).toHaveBeenCalled();
+    // expect(route53Stub).toHaveBeenCalled();
+    // expect(s3Stub).toHaveBeenCalled();
+    // expect(snsStub).toHaveBeenCalled();
+    // expect(systemsManagerStub).toHaveBeenCalled();
   });
 
   it('should provide AWS SDK', async () => {
     sut.region('eu-west-2');
     const obj = await sut.sdk((aws, cfg) => ({ cfg }));
-    expect(obj.cfg.region).to.equal('eu-west-2');
+    expect(obj.cfg.region).toEqual('eu-west-2');
   });
 });
