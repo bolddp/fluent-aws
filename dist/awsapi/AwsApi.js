@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AwsApi = void 0;
 const SystemsManagerApi_1 = require("./SystemsManagerApi");
 const CloudFormationApi_1 = require("./CloudFormationApi");
 const S3Api_1 = require("./S3Api");
@@ -20,6 +21,7 @@ const debug = require('debug')('fluentaws:AwsApi');
  */
 class AwsApi {
 }
+exports.AwsApi = AwsApi;
 AwsApi.autoScaling = (config) => new AutoScalingApi_1.AutoScalingApi(config);
 AwsApi.cloudFormation = (config) => new CloudFormationApi_1.CloudFormationApi(config);
 AwsApi.cognito = (config) => new CognitoApi_1.CognitoApi(config);
@@ -33,4 +35,3 @@ AwsApi.s3 = (config) => new S3Api_1.S3Api(config);
 AwsApi.sns = (config) => new SnsApi_1.SnsApi(config);
 AwsApi.sts = (config) => new StsApi_1.StsApi(config);
 AwsApi.systemsManager = (config) => new SystemsManagerApi_1.SystemsManagerApi(config);
-exports.AwsApi = AwsApi;

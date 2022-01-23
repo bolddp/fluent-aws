@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.EcsService = void 0;
 const AwsApi_1 = require("../awsapi/AwsApi");
 const AwsDataApiNode_1 = require("../node/AwsDataApiNode");
 const debug = require('debug')('fluentaws:EcsService');

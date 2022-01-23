@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PromiseChain = void 0;
 /**
  * Holds an array of promise factory functions that can be chained together
  * and executed. The factory functions can either by static or volatile.

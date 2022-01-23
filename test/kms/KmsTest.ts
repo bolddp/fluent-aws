@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { ApiNodeFactory } from '../../src/node/ApiNodeFactory';
 import { apiNodeCollectionStubs } from '../utils/stubs';
 import { Kms } from '../../src/kms/Kms';
@@ -8,46 +7,43 @@ describe('Kms', () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.kmsAliasCollection = stubs.factoryStub;
 
-    const sut = new Kms(<any> stubs.parentStub);
+    const sut = new Kms(<any>stubs.parentStub);
 
     await sut.aliases().ensureResolved();
-    expect(stubs.factoryStub.calledOnce).to.be.true;
+    expect(stubs.factoryStub).toHaveBeenCalled();
   });
 
   it('will provide access to an alias', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.kmsAliasCollection = stubs.factoryStub;
 
-    const sut = new Kms(<any> stubs.parentStub);
+    const sut = new Kms(<any>stubs.parentStub);
 
     await sut.alias('alias').ensureResolved();
 
-    expect(stubs.factoryStub.calledOnce).to.be.true;
-    expect(stubs.getByIdStub.calledOnce).to.be.true;
-    expect(stubs.getByIdStub.args[0][0]).to.equal('alias');
+    expect(stubs.factoryStub).toHaveBeenCalled();
+    expect(stubs.getByIdStub).toHaveBeenCalledWith('alias');
   });
 
   it('will provide access to keys', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.kmsKeyCollection = stubs.factoryStub;
 
-    const sut = new Kms(<any> stubs.parentStub);
+    const sut = new Kms(<any>stubs.parentStub);
 
     await sut.keys().ensureResolved();
-    expect(stubs.factoryStub.calledOnce).to.be.true;
+    expect(stubs.factoryStub).toHaveBeenCalled();
   });
 
   it('will provide access to a key', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.kmsKeyCollection = stubs.factoryStub;
 
-    const sut = new Kms(<any> stubs.parentStub);
+    const sut = new Kms(<any>stubs.parentStub);
 
     await sut.key('keyId').ensureResolved();
 
-    expect(stubs.factoryStub.calledOnce).to.be.true;
-    expect(stubs.getByIdStub.calledOnce).to.be.true;
-    expect(stubs.getByIdStub.args[0][0]).to.equal('keyId');
+    expect(stubs.factoryStub).toHaveBeenCalled();
+    expect(stubs.getByIdStub).toHaveBeenCalledWith('keyId');
   });
-
 });

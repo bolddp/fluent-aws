@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Route53HostedZoneCollection = void 0;
 const AwsApi_1 = require("./../awsapi/AwsApi");
 const ApiNodeFactory_1 = require("./../node/ApiNodeFactory");
 const ApiNodeCollection_1 = require("../node/ApiNodeCollection");

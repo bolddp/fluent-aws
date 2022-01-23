@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ApiNodeFactory = void 0;
 const KmsKeyCollection_1 = require("./../kms/KmsKeyCollection");
 const SystemsManagerParameterCollection_1 = require("./../ssm/SystemsManagerParameterCollection");
 const CloudFormationStack_1 = require("./../cf/CloudFormationStack");

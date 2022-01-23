@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Cognito = void 0;
 const ApiNode_1 = require("../node/ApiNode");
 const ApiNodeFactory_1 = require("../node/ApiNodeFactory");
 class Cognito extends ApiNode_1.ApiNode {
