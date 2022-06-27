@@ -35,19 +35,19 @@ class StsApi {
         this.sts = () => new AWS.STS(this.config);
         this.config = config;
     }
-    assumeRole(roleArn, sessionName) {
+    assumeRole(roleArn, sessionName, durationSeconds) {
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
-                DurationSeconds: 3600,
+                DurationSeconds: durationSeconds,
                 ExternalId: sessionName,
                 RoleArn: roleArn,
-                RoleSessionName: sessionName
+                RoleSessionName: sessionName,
             };
             const assumed = yield this.sts().assumeRole(params).promise();
             return new AWS.Credentials({
                 accessKeyId: assumed.Credentials.AccessKeyId,
                 secretAccessKey: assumed.Credentials.SecretAccessKey,
-                sessionToken: assumed.Credentials.SessionToken
+                sessionToken: assumed.Credentials.SessionToken,
             });
         });
     }

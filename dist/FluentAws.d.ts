@@ -6,9 +6,9 @@ import { PromiseChain } from './node/PromiseChain';
 import { ApiNode } from './node/ApiNode';
 import { AutoScaling } from './autoScaling/AutoScaling';
 import { Route53 } from './route53/Route53';
-import { DynamoDb } from "./dynamoDb/DynamoDb";
-import { CloudFormation } from "./cf/CloudFormation";
-import { SystemsManager } from "./ssm/SystemsManager";
+import { DynamoDb } from './dynamoDb/DynamoDb';
+import { CloudFormation } from './cf/CloudFormation';
+import { SystemsManager } from './ssm/SystemsManager';
 import { Kms } from './kms/Kms';
 import { Cognito } from './cognito/Cognito';
 import { Sns } from './sns/Sns';
@@ -32,11 +32,11 @@ export declare class FluentAws extends ApiNode {
      * Makes sure that the FluentAws instance assumes a role before attempting to access AWS resources.
      * The command can be repeated periodically to ensure that the assumed role doesn't expire.
      */
-    assumeRole(roleArn: string, sessionName: string): FluentAws;
+    assumeRole(roleArn: string, sessionName: string, durationSeconds?: number): FluentAws;
     /**
      * Makes the FluentAws instance assume a chain of roles before attempting to access AWS resources.
      */
-    assumeRoles(roleArns: string[], sessionNamePrefix: string): FluentAws;
+    assumeRoles(roleArns: string[], sessionNamePrefix: string, durationSeconds?: number): FluentAws;
     autoScaling(): AutoScaling;
     cloudFormation(): CloudFormation;
     cognito(): Cognito;

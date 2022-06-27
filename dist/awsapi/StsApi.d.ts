@@ -5,5 +5,5 @@ export declare class StsApi {
     config: FluentAwsConfig;
     sts: () => AWS.STS;
     constructor(config: FluentAwsConfig);
-    assumeRole(roleArn: string, sessionName: string): Promise<Credentials>;
+    assumeRole(roleArn: string, sessionName: string, durationSeconds: number): Promise<Credentials>;
 }
