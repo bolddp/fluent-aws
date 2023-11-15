@@ -1,6 +1,6 @@
 {
   "name": "fluent-aws",
-  "version": "0.19.0",
+  "version": "0.19.1",
   "description": "Fluent AWS API, written in Typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -53,7 +53,7 @@
     "@aws-sdk/lib-dynamodb": "3.395.0",
     "@aws-sdk/s3-request-presigner": "3.395.0",
     "@aws-sdk/types": "3.391.0",
-    "amazon-cognito-identity-js": "3.2.1",
+    "amazon-cognito-identity-js": "6.3.7",
     "debug": "4.3.2",
     "node-fetch": "2.6.7"
   },
