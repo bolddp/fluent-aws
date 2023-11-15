@@ -1,23 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -29,33 +10,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CognitoApi = void 0;
-const AWS = __importStar(require("aws-sdk"));
 const amazon_cognito_identity_js_1 = require("amazon-cognito-identity-js");
+const client_cognito_identity_provider_1 = require("@aws-sdk/client-cognito-identity-provider");
 const debug = require('debug')('fluentaws:CognitoApi');
 class CognitoApi {
     constructor(config) {
-        this.cognitoSp = () => new AWS.CognitoIdentityServiceProvider(this.config);
         this.config = config;
+        this.cognitoSp = () => new client_cognito_identity_provider_1.CognitoIdentityProvider(this.config);
     }
-    getPoolData(poolId, clientId) {
-        const poolData = {
-            UserPoolId: poolId,
-            ClientId: clientId
-        };
-        return new amazon_cognito_identity_js_1.CognitoUserPool(poolData);
-    }
-    getCognitoUser(poolId, clientId, userName) {
-        const pool = this.getPoolData(poolId, clientId);
-        const userData = {
-            Username: userName,
-            Pool: pool
-        };
-        return new amazon_cognito_identity_js_1.CognitoUser(userData);
+    getClient() {
+        return this.cognitoSp();
     }
     listUserPools() {
         return __awaiter(this, void 0, void 0, function* () {
             debug('listing user pools');
-            const response = yield this.cognitoSp().listUserPools().promise();
+            const response = yield this.cognitoSp().listUserPools({ MaxResults: 60 });
             debug('listed user pools');
             return response.UserPools;
         });
@@ -64,8 +33,8 @@ class CognitoApi {
         return __awaiter(this, void 0, void 0, function* () {
             debug('describing user pool: %s', poolId);
             const response = yield this.cognitoSp().describeUserPool({
-                UserPoolId: poolId
-            }).promise();
+                UserPoolId: poolId,
+            });
             debug('described user pool');
             return response.UserPool;
         });
@@ -77,8 +46,8 @@ class CognitoApi {
             const recursiveFunction = (paginationToken) => __awaiter(this, void 0, void 0, function* () {
                 const response = yield this.cognitoSp().listUsers({
                     UserPoolId: poolId,
-                    PaginationToken: paginationToken
-                }).promise();
+                    PaginationToken: paginationToken,
+                });
                 result = result.concat(response.Users);
                 if (response.PaginationToken) {
                     yield recursiveFunction(response.PaginationToken);
@@ -115,24 +84,24 @@ class CognitoApi {
                     ForceAliasCreation: false,
                     MessageAction: 'SUPPRESS',
                     TemporaryPassword: '!ItIsTemp01',
-                    UserAttributes: attributeList.map(a => {
+                    UserAttributes: attributeList.map((a) => {
                         return { Name: a.getName(), Value: a.getValue() };
-                    })
-                }).promise();
+                    }),
+                });
                 debug('admin created user');
                 debug('admin set user password: %s, clientId: %s, userName: %s', poolId, clientId, userName);
                 yield this.cognitoSp().adminSetUserPassword({
                     UserPoolId: poolId,
                     Username: rsp.User.Username,
                     Password: password,
-                    Permanent: true
-                }).promise();
+                    Permanent: true,
+                });
                 debug('admin did set user password');
                 return {
                     user: this.getCognitoUser(poolId, clientId, userName),
                     userConfirmed: true,
                     userSub: rsp.User.Username,
-                    codeDeliveryDetails: undefined
+                    codeDeliveryDetails: undefined,
                 };
             }
         });
@@ -141,14 +110,14 @@ class CognitoApi {
         return __awaiter(this, void 0, void 0, function* () {
             const authenticationData = {
                 Username: userName,
-                Password: password
+                Password: password,
             };
             const authenticationDetails = new amazon_cognito_identity_js_1.AuthenticationDetails(authenticationData);
             return yield new Promise((resolve, reject) => {
                 const user = this.getCognitoUser(poolId, clientId, userName);
                 user.authenticateUser(authenticationDetails, {
                     onSuccess: (session) => resolve(session),
-                    onFailure: (err) => reject(err)
+                    onFailure: (err) => reject(err),
                 });
             });
         });
@@ -172,8 +141,8 @@ class CognitoApi {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.cognitoSp().adminGetUser({
                 UserPoolId: poolId,
-                Username: userName
-            }).promise();
+                Username: userName,
+            });
         });
     }
     forgotPassword(poolId, clientId, userName) {
@@ -181,8 +150,8 @@ class CognitoApi {
             return yield new Promise((resolve, reject) => {
                 const user = this.getCognitoUser(poolId, clientId, userName);
                 user.forgotPassword({
-                    onSuccess: rsp => resolve(rsp),
-                    onFailure: error => reject(error)
+                    onSuccess: (rsp) => resolve(rsp),
+                    onFailure: (error) => reject(error),
                 });
             });
         });
@@ -193,7 +162,7 @@ class CognitoApi {
                 const user = this.getCognitoUser(poolId, clientId, userName);
                 user.confirmPassword(verificationCode, newPassword, {
                     onSuccess: () => resolve(),
-                    onFailure: (error) => reject(error)
+                    onFailure: (error) => reject(error),
                 });
             });
         });
@@ -203,8 +172,8 @@ class CognitoApi {
             debug('deleting user: %s, poolId: %s', userName, poolId);
             yield this.cognitoSp().adminDeleteUser({
                 UserPoolId: poolId,
-                Username: userName
-            }).promise();
+                Username: userName,
+            });
             debug('deleted user');
         });
     }
@@ -214,8 +183,8 @@ class CognitoApi {
             yield this.cognitoSp().adminAddUserToGroup({
                 UserPoolId: poolId,
                 Username: userName,
-                GroupName: groupName
-            }).promise();
+                GroupName: groupName,
+            });
             debug('added user to group');
         });
     }
@@ -225,8 +194,8 @@ class CognitoApi {
             yield this.cognitoSp().adminRemoveUserFromGroup({
                 UserPoolId: poolId,
                 Username: userName,
-                GroupName: groupName
-            }).promise();
+                GroupName: groupName,
+            });
             debug('removed user from group');
         });
     }
@@ -235,9 +204,9 @@ class CognitoApi {
             debug('listing groups for user: %s, poolId: %s', userName, poolId);
             const response = yield this.cognitoSp().adminListGroupsForUser({
                 UserPoolId: poolId,
-                Username: userName
-            }).promise();
-            return response.Groups.map(g => g.GroupName);
+                Username: userName,
+            });
+            return response.Groups.map((g) => g.GroupName);
         });
     }
     globalSignOut(poolId, userName) {
@@ -245,10 +214,25 @@ class CognitoApi {
             debug('globally signing out user: %s, poolId:', userName, poolId);
             yield this.cognitoSp().adminUserGlobalSignOut({
                 UserPoolId: poolId,
-                Username: userName
-            }).promise();
+                Username: userName,
+            });
             debug('globally signed out user');
         });
+    }
+    getPoolData(poolId, clientId) {
+        const poolData = {
+            UserPoolId: poolId,
+            ClientId: clientId,
+        };
+        return new amazon_cognito_identity_js_1.CognitoUserPool(poolData);
+    }
+    getCognitoUser(poolId, clientId, userName) {
+        const pool = this.getPoolData(poolId, clientId);
+        const userData = {
+            Username: userName,
+            Pool: pool,
+        };
+        return new amazon_cognito_identity_js_1.CognitoUser(userData);
     }
 }
 exports.CognitoApi = CognitoApi;

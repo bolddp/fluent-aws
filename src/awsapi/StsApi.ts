@@ -1,32 +1,28 @@
-import * as AWS from 'aws-sdk';
-import { Credentials } from 'aws-sdk';
-import { AssumeRoleRequest } from 'aws-sdk/clients/sts';
+import { AwsCredentialIdentity, Credentials } from '@aws-sdk/types';
 import { FluentAwsConfig } from '../FluentAwsConfig';
+import { AssumeRoleRequest, STS } from '@aws-sdk/client-sts';
 
 export class StsApi {
-  config: FluentAwsConfig;
-  sts = () => new AWS.STS(this.config);
+  private sts = () => new STS(this.config);
 
-  constructor(config: FluentAwsConfig) {
-    this.config = config;
-  }
+  constructor(private config: FluentAwsConfig) {}
 
   async assumeRole(
     roleArn: string,
     sessionName: string,
     durationSeconds: number
-  ): Promise<Credentials> {
+  ): Promise<AwsCredentialIdentity> {
     const params: AssumeRoleRequest = {
       DurationSeconds: durationSeconds,
       ExternalId: sessionName,
       RoleArn: roleArn,
       RoleSessionName: sessionName,
     };
-    const assumed = await this.sts().assumeRole(params).promise();
-    return new AWS.Credentials({
+    const assumed = await this.sts().assumeRole(params);
+    return {
       accessKeyId: assumed.Credentials.AccessKeyId,
       secretAccessKey: assumed.Credentials.SecretAccessKey,
       sessionToken: assumed.Credentials.SessionToken,
-    });
+    };
   }
 }

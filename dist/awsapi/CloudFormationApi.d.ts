@@ -1,14 +1,14 @@
-import * as AWS from 'aws-sdk';
+import { Stack, StackResourceDrift, StackResourceSummary } from '@aws-sdk/client-cloudformation';
 import { FluentAwsConfig } from '../FluentAwsConfig';
 export declare class CloudFormationApi {
-    config: FluentAwsConfig;
-    cf: () => AWS.CloudFormation;
+    private config;
+    private cf;
     constructor(config: FluentAwsConfig);
-    describeStacks(): Promise<AWS.CloudFormation.Stack[]>;
-    describeStack(stackName: string): Promise<AWS.CloudFormation.Stack>;
+    describeStacks(): Promise<Stack[]>;
+    describeStack(stackName: string): Promise<Stack>;
     detectStackDrift(stackName: string): Promise<string>;
     describeStackDriftDetectionStatus(driftDetectionId: string): Promise<string>;
-    describeStackResourceDrifts(stackName: string): Promise<AWS.CloudFormation.StackResourceDrift[]>;
-    listStackResources(stackName: string): Promise<AWS.CloudFormation.StackResourceSummary[]>;
+    describeStackResourceDrifts(stackName: string): Promise<StackResourceDrift[]>;
+    listStackResources(stackName: string): Promise<StackResourceSummary[]>;
     getTemplate(stackName: string, templateStage?: 'Original' | 'Processed'): Promise<string>;
 }

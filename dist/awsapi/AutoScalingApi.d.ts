@@ -1,11 +1,11 @@
-import * as AWS from 'aws-sdk';
+import { AutoScalingGroup, UpdateAutoScalingGroupType } from '@aws-sdk/client-auto-scaling';
 import { FluentAwsConfig } from '../FluentAwsConfig';
 export declare class AutoScalingApi {
-    config: FluentAwsConfig;
-    autoScaling: () => AWS.AutoScaling;
+    private config;
+    private autoScaling;
     constructor(config: FluentAwsConfig);
-    describeGroups(idOrArns?: string[]): Promise<AWS.AutoScaling.AutoScalingGroup[]>;
-    describeGroup(idOrArn: string): Promise<AWS.AutoScaling.AutoScalingGroup>;
-    update(updateData: AWS.AutoScaling.UpdateAutoScalingGroupType): Promise<void>;
+    describeGroups(idOrArns?: string[]): Promise<AutoScalingGroup[]>;
+    describeGroup(idOrArn: string): Promise<AutoScalingGroup>;
+    update(updateData: UpdateAutoScalingGroupType): Promise<void>;
     setInstanceProtection(idOrArn: string, instanceIds: string[], value: boolean): Promise<void>;
 }

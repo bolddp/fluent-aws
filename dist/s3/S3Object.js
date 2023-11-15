@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.S3Object = void 0;
+const stream_1 = require("stream");
 const AwsApi_1 = require("../awsapi/AwsApi");
 const AwsDataApiNode_1 = require("../node/AwsDataApiNode");
 const debug = require('debug')('fluentaws:S3Object');
@@ -58,7 +59,7 @@ class S3Object extends AwsDataApiNode_1.AwsDataApiNode {
     writeString(contents) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            yield AwsApi_1.AwsApi.s3(this.config()).putObject(this.bucketName, this.key, contents);
+            yield AwsApi_1.AwsApi.s3(this.config()).putObject(this.bucketName, this.key, stream_1.Readable.from(contents));
         });
     }
     readString() {

@@ -117,7 +117,7 @@ describe('S3Object', () => {
     expect(stubs.awsApiStub).toHaveBeenCalledWith(
       'bucketName',
       'key',
-      'contents'
+      expect.any(Readable)
     );
   });
 

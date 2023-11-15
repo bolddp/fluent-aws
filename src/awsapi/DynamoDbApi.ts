@@ -1,54 +1,73 @@
 import { DynamoDbItem } from './../dynamoDb/DynamoDbTable';
-import * as AWS from 'aws-sdk';
 import { FluentAwsConfig } from '../FluentAwsConfig';
+import {
+  DynamoDB,
+  GetItemInput,
+  QueryInput,
+  TableDescription,
+} from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
 
 const debug = require('debug')('fluentaws:DynamoDbApi');
 
 export class DynamoDbApi {
-  config: FluentAwsConfig;
-  dynamoDb = () => new AWS.DynamoDB(this.config);
-  docClient = () => new AWS.DynamoDB.DocumentClient(this.config);
+  private dynamoDb = () => new DynamoDB(this.config);
+  private docClient = () =>
+    DynamoDBDocument.from(this.dynamoDb(), {
+      marshallOptions: {
+        removeUndefinedValues: true,
+      },
+    });
 
-  constructor(config: FluentAwsConfig) {
-    this.config = config;
+  constructor(private config: FluentAwsConfig) {}
+
+  getDynamoDb(): DynamoDB {
+    return this.dynamoDb();
+  }
+
+  getDocClient(): DynamoDBDocument {
+    return this.docClient();
   }
 
   async listTableNames(): Promise<string[]> {
     debug('listing tables');
-    const response = await this.dynamoDb().listTables({}).promise();
+    const response = await this.dynamoDb().listTables({});
     debug('listed tables');
     return response.TableNames;
   }
 
-  async describeTable(tableName: string): Promise<AWS.DynamoDB.TableDescription> {
+  async describeTable(tableName: string): Promise<TableDescription> {
     debug('describing table: %s', tableName);
     const response = await this.dynamoDb().describeTable({
-      TableName: tableName
-    }).promise();
+      TableName: tableName,
+    });
     debug('described table');
     return response.Table;
   }
 
-  async get(input: AWS.DynamoDB.GetItemInput): Promise<AWS.DynamoDB.AttributeMap> {
+  async get(input: GetItemInput): Promise<Record<string, any>> {
     debug('getting item: %s, key: %j', input.TableName, input.Key);
-    const response = await this.docClient().get(input).promise();
+    const response = await this.docClient().get(input);
     debug('got item');
     return response.Item;
   }
 
-  async query(input: AWS.DynamoDB.QueryInput): Promise<AWS.DynamoDB.AttributeMap[]> {
+  async query(input: QueryInput): Promise<Record<string, any>[]> {
     debug('querying: %j', input);
-    let result: AWS.DynamoDB.AttributeMap[] = [];
-    const fnc = async (fncInput: AWS.DynamoDB.QueryInput) => {
-      const response = await this.docClient().query(fncInput).promise();
+    let result: Record<string, any>[] = [];
+    const fnc = async (fncInput: QueryInput) => {
+      const response = await this.docClient().query(fncInput);
       result = result.concat(response.Items || []);
       debug('#items: %d', response.Items.length);
       if (response.LastEvaluatedKey) {
-        const newInput = { ...fncInput, ExclusiveStartKey: response.LastEvaluatedKey }
+        const newInput = {
+          ...fncInput,
+          ExclusiveStartKey: response.LastEvaluatedKey,
+        };
         debug('queries recursive: %j', newInput);
         await fnc(newInput);
       }
-    }
+    };
     await fnc(input);
     debug('queried');
     return result;
@@ -58,43 +77,46 @@ export class DynamoDbApi {
     debug('putting item: %s, item: %j', tableName, item);
     await this.docClient().put({
       TableName: tableName,
-      Item: item
-    }).promise();
+      Item: item,
+    });
     debug('put item');
   }
 
-  async delete(tableName: string, key: AWS.DynamoDB.DocumentClient.Key): Promise<void> {
+  async delete(tableName: string, key: Record<string, any>): Promise<void> {
     debug('deleting item: %s, key: %j', tableName, key);
     await this.docClient().delete({
       TableName: tableName,
-      Key: key
-    }).promise();
+      Key: key,
+    });
     debug('deleted item');
   }
 
-  async batchGet(tableName: string, keys: AWS.DynamoDB.DocumentClient.Key[]): Promise<AWS.DynamoDB.AttributeMap[]> {
+  async batchGet(
+    tableName: string,
+    keys: Record<string, any>[]
+  ): Promise<Record<string, any>[]> {
     debug('batchGet: %s, #keys: %d', tableName, keys.length);
     const batchSize = 100;
-    const batches = keys.reduce<AWS.DynamoDB.DocumentClient.Key[][]>((acc, key, index) => {
+    const batches = keys.reduce<Record<string, any>[][]>((acc, key, index) => {
       const batchIndex = Math.floor(index / batchSize);
-      if ((index % batchSize) == 0) {
+      if (index % batchSize == 0) {
         acc[batchIndex] = [];
       }
       acc[batchIndex].push(key);
       return acc;
     }, []);
-    let result: AWS.DynamoDB.AttributeMap[] = [];
+    let result: Record<string, any>[] = [];
     for (const keyBatch of batches) {
       debug('getting batch of %d', keyBatch.length);
       const rsp = await this.docClient().batchGet({
         RequestItems: {
           [tableName]: {
             ConsistentRead: true,
-            Keys: keyBatch
-          }
-        }
-      }).promise();
-      debug('did get batch')
+            Keys: keyBatch,
+          },
+        },
+      });
+      debug('did get batch');
       result.push(...rsp.Responses[tableName]);
     }
     debug('did batchGet');

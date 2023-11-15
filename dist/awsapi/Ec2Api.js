@@ -1,23 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -29,19 +10,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Ec2Api = void 0;
-const AWS = __importStar(require("aws-sdk"));
+const client_ec2_1 = require("@aws-sdk/client-ec2");
 const debug = require('debug')('fluentaws:Ec2Api');
 class Ec2Api {
     constructor(config) {
-        this.ec2 = () => new AWS.EC2(this.config);
         this.config = config;
+        this.ec2 = () => new client_ec2_1.EC2(this.config);
     }
     describeInstances(instanceIds) {
         return __awaiter(this, void 0, void 0, function* () {
             debug('describing instances: %j', instanceIds || {});
             const response = yield this.ec2().describeInstances({
-                InstanceIds: instanceIds
-            }).promise();
+                InstanceIds: instanceIds,
+            });
             const result = [];
             for (const res of response.Reservations) {
                 for (const ins of res.Instances) {
@@ -68,7 +49,7 @@ class Ec2Api {
     describeAccountAttributes() {
         return __awaiter(this, void 0, void 0, function* () {
             debug('describing account attributes');
-            const response = yield this.ec2().describeAccountAttributes().promise();
+            const response = yield this.ec2().describeAccountAttributes({});
             debug('described account attributes');
             return response.AccountAttributes;
         });

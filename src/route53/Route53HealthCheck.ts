@@ -1,8 +1,9 @@
-import { AwsDataApiNode } from "../node/AwsDataApiNode";
-import { ApiNode } from "../node/ApiNode";
-import { AwsApi } from "../awsapi/AwsApi";
+import { AwsDataApiNode } from '../node/AwsDataApiNode';
+import { ApiNode } from '../node/ApiNode';
+import { AwsApi } from '../awsapi/AwsApi';
+import { HealthCheck } from '@aws-sdk/client-route-53';
 
-export class Route53HealthCheck extends AwsDataApiNode<AWS.Route53.HealthCheck> {
+export class Route53HealthCheck extends AwsDataApiNode<HealthCheck> {
   id: string;
 
   constructor(parent: ApiNode, id: string) {

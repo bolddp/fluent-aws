@@ -50,65 +50,157 @@ const CognitoUser_1 = require("../cognito/CognitoUser");
 const CognitoUserCollection_1 = require("../cognito/CognitoUserCollection");
 class ApiNodeFactory {
     // IAM
-    static iamRole(parent, name) { return new IamRole_1.IamRole(parent, name); }
+    static iamRole(parent, name) {
+        return new IamRole_1.IamRole(parent, name);
+    }
     // AutoScaling
-    static autoScaling(parent) { return new AutoScaling_1.AutoScaling(parent); }
-    static autoScalingGroup(parent, name) { return new AutoScalingGroup_1.AutoScalingGroup(parent, name); }
-    static autoScalingGroupCollection(parent) { return new AutoScalingGroupCollection_1.AutoScalingGroupCollection(parent); }
+    static autoScaling(parent) {
+        return new AutoScaling_1.AutoScaling(parent);
+    }
+    static autoScalingGroup(parent, name) {
+        return new AutoScalingGroup_1.AutoScalingGroup(parent, name);
+    }
+    static autoScalingGroupCollection(parent) {
+        return new AutoScalingGroupCollection_1.AutoScalingGroupCollection(parent);
+    }
     // S3
-    static s3(parent) { return new S3_1.S3(parent); }
-    static s3Bucket(parent, name) { return new S3Bucket_1.S3Bucket(parent, name); }
-    static s3BucketCollection(parent) { return new S3BucketCollection_1.S3BucketCollection(parent); }
-    static s3Object(parent, bucketName, key) { return new S3Object_1.S3Object(parent, bucketName, key); }
-    static s3ObjectCollection(parent, bucketName, prefix) { return new S3ObjectCollection_1.S3ObjectCollection(parent, bucketName, prefix); }
+    static s3(parent) {
+        return new S3_1.S3(parent);
+    }
+    static s3Bucket(parent, name) {
+        return new S3Bucket_1.S3Bucket(parent, name);
+    }
+    static s3BucketCollection(parent) {
+        return new S3BucketCollection_1.S3BucketCollection(parent);
+    }
+    static s3Object(parent, bucketName, key) {
+        return new S3Object_1.S3Object(parent, bucketName, key);
+    }
+    static s3ObjectCollection(parent, bucketName, prefix) {
+        return new S3ObjectCollection_1.S3ObjectCollection(parent, bucketName, prefix);
+    }
     // ECS
-    static ecs(parent) { return new Ecs_1.Ecs(parent); }
-    static ecsCluster(parent, idOrArn) { return new EcsCluster_1.EcsCluster(parent, idOrArn); }
-    static ecsClusterCollection(parent) { return new EcsClusterCollection_1.EcsClusterCollection(parent); }
-    static ecsTask(parent, clusterId, idOrArn) { return new EcsTask_1.EcsTask(parent, clusterId, idOrArn); }
-    static ecsTaskCollection(parent, clusterId) { return new EcsTaskCollection_1.EcsTaskCollection(parent, clusterId); }
+    static ecs(parent) {
+        return new Ecs_1.Ecs(parent);
+    }
+    static ecsCluster(parent, idOrArn) {
+        return new EcsCluster_1.EcsCluster(parent, idOrArn);
+    }
+    static ecsClusterCollection(parent) {
+        return new EcsClusterCollection_1.EcsClusterCollection(parent);
+    }
+    static ecsTask(parent, clusterId, idOrArn) {
+        return new EcsTask_1.EcsTask(parent, clusterId, idOrArn);
+    }
+    static ecsTaskCollection(parent, clusterId) {
+        return new EcsTaskCollection_1.EcsTaskCollection(parent, clusterId);
+    }
     static ecsService(parent, clusterId, name) {
         return new EcsService_1.EcsService(parent, clusterId, name);
     }
-    static ecsServiceCollection(parent, clusterId) { return new EcsServiceCollection_1.EcsServiceCollection(parent, clusterId); }
+    static ecsServiceCollection(parent, clusterId) {
+        return new EcsServiceCollection_1.EcsServiceCollection(parent, clusterId);
+    }
     // EC2
-    static ec2(parent) { return new Ec2_1.Ec2(parent); }
-    static ec2Instance(parent, instanceId) { return new Ec2Instance_1.Ec2Instance(parent, instanceId); }
-    static ec2InstanceCollection(parent) { return new Ec2InstanceCollection_1.Ec2InstanceCollection(parent); }
+    static ec2(parent) {
+        return new Ec2_1.Ec2(parent);
+    }
+    static ec2Instance(parent, instanceId) {
+        return new Ec2Instance_1.Ec2Instance(parent, instanceId);
+    }
+    static ec2InstanceCollection(parent) {
+        return new Ec2InstanceCollection_1.Ec2InstanceCollection(parent);
+    }
     // Route53
-    static route53(parent) { return new Route53_1.Route53(parent); }
-    static route53HealthCheck(parent, id) { return new Route53HealthCheck_1.Route53HealthCheck(parent, id); }
-    static route53HealthCheckCollection(parent) { return new Route53HealthCheckCollection_1.Route53HealthCheckCollection(parent); }
-    static route53HostedZone(parent, id) { return new Route53HostedZone_1.Route53HostedZone(parent, id); }
-    static route53HostedZoneCollection(parent) { return new Route53HostedZoneCollection_1.Route53HostedZoneCollection(parent); }
-    static route53RecordSetCollection(parent, hostedZoneId) { return new Route53RecordSetCollection_1.Route53RecordSetCollection(parent, hostedZoneId); }
+    static route53(parent) {
+        return new Route53_1.Route53(parent);
+    }
+    static route53HealthCheck(parent, id) {
+        return new Route53HealthCheck_1.Route53HealthCheck(parent, id);
+    }
+    static route53HealthCheckCollection(parent) {
+        return new Route53HealthCheckCollection_1.Route53HealthCheckCollection(parent);
+    }
+    static route53HostedZone(parent, id) {
+        return new Route53HostedZone_1.Route53HostedZone(parent, id);
+    }
+    static route53HostedZoneCollection(parent) {
+        return new Route53HostedZoneCollection_1.Route53HostedZoneCollection(parent);
+    }
+    static route53RecordSetCollection(parent, hostedZoneId) {
+        return new Route53RecordSetCollection_1.Route53RecordSetCollection(parent, hostedZoneId);
+    }
     // Dynamo DB
-    static dynamoDb(parent) { return new DynamoDb_1.DynamoDb(parent); }
-    static dynamoDbTableCollection(parent) { return new DynamoDbTableCollection_1.DynamoDbTableCollection(parent); }
-    static dynamoDbTable(parent, name) { return new DynamoDbTable_1.DynamoDbTable(parent, name); }
+    static dynamoDb(parent) {
+        return new DynamoDb_1.DynamoDb(parent);
+    }
+    static dynamoDbTableCollection(parent) {
+        return new DynamoDbTableCollection_1.DynamoDbTableCollection(parent);
+    }
+    static dynamoDbTable(parent, name) {
+        return new DynamoDbTable_1.DynamoDbTable(parent, name);
+    }
     // CloudFormation
-    static cloudFormation(parent) { return new CloudFormation_1.CloudFormation(parent); }
-    static cloudFormationStackCollection(parent) { return new CloudFormationStackCollection_1.CloudFormationStackCollection(parent); }
-    static cloudFormationStack(parent, stackName) { return new CloudFormationStack_1.CloudFormationStack(parent, stackName); }
+    static cloudFormation(parent) {
+        return new CloudFormation_1.CloudFormation(parent);
+    }
+    static cloudFormationStackCollection(parent) {
+        return new CloudFormationStackCollection_1.CloudFormationStackCollection(parent);
+    }
+    static cloudFormationStack(parent, stackName) {
+        return new CloudFormationStack_1.CloudFormationStack(parent, stackName);
+    }
     // Systems manager
-    static systemsManager(parent) { return new SystemsManager_1.SystemsManager(parent); }
-    static systemsManagerParameterCollection(parent) { return new SystemsManagerParameterCollection_1.SystemsManagerParameterCollection(parent); }
-    static systemsManagerParameter(parent, name) { return new SystemsManagerParameter_1.SystemsManagerParameter(parent, name); }
+    static systemsManager(parent) {
+        return new SystemsManager_1.SystemsManager(parent);
+    }
+    static systemsManagerParameterCollection(parent) {
+        return new SystemsManagerParameterCollection_1.SystemsManagerParameterCollection(parent);
+    }
+    static systemsManagerParameter(parent, name) {
+        return new SystemsManagerParameter_1.SystemsManagerParameter(parent, name);
+    }
     // KMS
-    static kms(parent) { return new Kms_1.Kms(parent); }
-    static kmsKeyCollection(parent) { return new KmsKeyCollection_1.KmsKeyCollection(parent); }
-    static kmsKey(parent, id) { return new KmsKey_1.KmsKey(parent, id); }
-    static kmsAliasCollection(parent) { return new KmsAliasCollection_1.KmsAliasCollection(parent); }
-    static kmsAlias(parent, id) { return new KmsAlias_1.KmsAlias(parent, id); }
+    static kms(parent) {
+        return new Kms_1.Kms(parent);
+    }
+    static kmsKeyCollection(parent) {
+        return new KmsKeyCollection_1.KmsKeyCollection(parent);
+    }
+    static kmsKey(parent, id) {
+        return new KmsKey_1.KmsKey(parent, id);
+    }
+    static kmsAliasCollection(parent) {
+        return new KmsAliasCollection_1.KmsAliasCollection(parent);
+    }
+    static kmsAlias(parent, id) {
+        return new KmsAlias_1.KmsAlias(parent, id);
+    }
     // Cognito
-    static cognito(parent) { return new Cognito_1.Cognito(parent); }
-    static cognitoUserPoolCollection(parent) { return new CognitoUserPoolCollection_1.CognitoUserPoolCollection(parent); }
-    static cognitoUserPool(parent, id) { return new CognitoUserPool_1.CognitoUserPool(parent, id); }
-    static cognitoUserCollection(parent, poolId) { return new CognitoUserCollection_1.CognitoUserCollection(parent, poolId); }
-    static cognitoUser(parent, userName, poolId) { return new CognitoUser_1.CognitoUser(parent, userName, poolId); }
+    static cognito(parent) {
+        return new Cognito_1.Cognito(parent);
+    }
+    static cognitoUserPoolCollection(parent) {
+        return new CognitoUserPoolCollection_1.CognitoUserPoolCollection(parent);
+    }
+    static cognitoUserPool(parent, id) {
+        return new CognitoUserPool_1.CognitoUserPool(parent, id);
+    }
+    static cognitoUserCollection(parent, poolId) {
+        return new CognitoUserCollection_1.CognitoUserCollection(parent, poolId);
+    }
+    static cognitoUser(parent, userName, poolId) {
+        return new CognitoUser_1.CognitoUser(parent, userName, poolId);
+    }
     // SNS
-    static sns(parent) { return new Sns_1.Sns(parent); }
-    static snsTopicCollection(parent) { return new SnsTopicCollection_1.SnsTopicCollection(parent); }
-    static snsTopic(parent, arn) { return new SnsTopic_1.SnsTopic(parent, arn); }
+    static sns(parent) {
+        return new Sns_1.Sns(parent);
+    }
+    static snsTopicCollection(parent) {
+        return new SnsTopicCollection_1.SnsTopicCollection(parent);
+    }
+    static snsTopic(parent, arn) {
+        return new SnsTopic_1.SnsTopic(parent, arn);
+    }
 }
 exports.ApiNodeFactory = ApiNodeFactory;

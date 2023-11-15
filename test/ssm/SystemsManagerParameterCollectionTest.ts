@@ -3,6 +3,7 @@ import { AwsApi } from '../../src/awsapi/AwsApi';
 import { SystemsManagerParameterCollection } from '../../src/ssm/SystemsManagerParameterCollection';
 
 import { ApiNodeFactory } from '../../src/node/ApiNodeFactory';
+import { Parameter, PutParameterRequest } from '@aws-sdk/client-ssm';
 
 describe('SystemsManagerParameterCollection', () => {
   it('will load', async () => {
@@ -55,7 +56,7 @@ describe('SystemsManagerParameterCollection', () => {
   it('will create from AWS data', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.systemsManagerParameter = stubs.factoryStub;
-    const awsData: AWS.SSM.Parameter = <any>(<unknown>{
+    const awsData: Parameter = <any>(<unknown>{
       Name: 'parameterName',
     });
 
@@ -86,7 +87,7 @@ describe('SystemsManagerParameterCollection', () => {
         putParameter: stubs.awsApiStub,
       };
 
-    const request: AWS.SSM.PutParameterRequest = {
+    const request: PutParameterRequest = {
       Name: 'name',
       Value: 'value',
       Type: 'String',

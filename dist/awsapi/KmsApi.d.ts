@@ -1,10 +1,10 @@
-import * as AWS from 'aws-sdk';
+import { AliasListEntry, KeyListEntry, KeyMetadata } from '@aws-sdk/client-kms';
 import { FluentAwsConfig } from '../FluentAwsConfig';
 export declare class KmsApi {
-    config: FluentAwsConfig;
-    kms: () => AWS.KMS;
+    private config;
+    private kms;
     constructor(config: FluentAwsConfig);
-    listAliases(): Promise<AWS.KMS.AliasListEntry[]>;
-    listKeys(): Promise<AWS.KMS.KeyListEntry[]>;
-    describeKey(keyId: string): Promise<AWS.KMS.KeyMetadata>;
+    listAliases(): Promise<AliasListEntry[]>;
+    listKeys(): Promise<KeyListEntry[]>;
+    describeKey(keyId: string): Promise<KeyMetadata>;
 }

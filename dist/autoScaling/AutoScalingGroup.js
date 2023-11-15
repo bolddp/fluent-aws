@@ -30,7 +30,7 @@ class AutoScalingGroup extends AwsDataApiNode_1.AwsDataApiNode {
             // Promise to determine the id's of all instances in the autoscaling group
             this.promiseChain.addVolatile(() => __awaiter(this, void 0, void 0, function* () {
                 const awsData = yield this.loadAwsData();
-                this.ec2InstanceCollection.instanceIds = awsData.Instances.map(x => x.InstanceId);
+                this.ec2InstanceCollection.instanceIds = awsData.Instances.map((x) => x.InstanceId);
             }));
         }
         return this.ec2InstanceCollection;
@@ -42,7 +42,7 @@ class AutoScalingGroup extends AwsDataApiNode_1.AwsDataApiNode {
                 AutoScalingGroupName: this.name,
                 MinSize: minSize,
                 MaxSize: maxSize,
-                DesiredCapacity: desiredSize
+                DesiredCapacity: desiredSize,
             });
         });
     }

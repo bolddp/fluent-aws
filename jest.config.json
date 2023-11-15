@@ -9,10 +9,7 @@
   "coverageReporters": ["cobertura", "text", "lcov"],
   "coverageDirectory": "./test-results/coverage",
   "reporters": ["default", "jest-junit", "jest-stare"],
-  "globals": {
-    "ts-jest": {
-      "tsconfig": "<rootDir>/tsconfig.json",
-      "isolatedModules": true
-    }
+  "transform": {
+    "^.+\\.(ts|tsx)$": "ts-jest"
   }
 }

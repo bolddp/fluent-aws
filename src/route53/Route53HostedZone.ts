@@ -3,15 +3,19 @@ import { ApiNodeFactory } from './../node/ApiNodeFactory';
 import { ApiNode } from './../node/ApiNode';
 import { AwsApi } from './../awsapi/AwsApi';
 import { AwsDataApiNode } from '../node/AwsDataApiNode';
+import { HostedZone } from '@aws-sdk/client-route-53';
 
-export class Route53HostedZone extends AwsDataApiNode<AWS.Route53.HostedZone> {
+export class Route53HostedZone extends AwsDataApiNode<HostedZone> {
   id: string;
   recordSetCollection: Route53RecordSetCollection;
 
   constructor(parent: ApiNode, id: string) {
     super(parent);
     this.id = id;
-    this.recordSetCollection = ApiNodeFactory.route53RecordSetCollection(this, this.id);
+    this.recordSetCollection = ApiNodeFactory.route53RecordSetCollection(
+      this,
+      this.id
+    );
   }
 
   loadAwsData() {

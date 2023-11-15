@@ -1,10 +1,9 @@
-import { Credentials } from "aws-sdk";
-import { CredentialsOptions } from "aws-sdk/lib/credentials";
+import { AwsCredentialIdentity, Provider } from '@aws-sdk/types';
 
 /**
  * A subset of the AWS configuration concerning credentials and region.
  */
 export interface FluentAwsConfig {
   region?: string;
-  credentials?: Credentials|CredentialsOptions|null;
+  credentials?: AwsCredentialIdentity | Provider<AwsCredentialIdentity> | null;
 }

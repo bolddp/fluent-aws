@@ -80,10 +80,4 @@ describe('FluentAws', () => {
     // expect(snsStub).toHaveBeenCalled();
     // expect(systemsManagerStub).toHaveBeenCalled();
   });
-
-  it('should provide AWS SDK', async () => {
-    sut.region('eu-west-2');
-    const obj = await sut.sdk((aws, cfg) => ({ cfg }));
-    expect(obj.cfg.region).toEqual('eu-west-2');
-  });
 });

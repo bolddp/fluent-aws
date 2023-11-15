@@ -1,18 +1,22 @@
-import { ApiNodeCollection } from "../node/ApiNodeCollection";
+import { ApiNodeCollection } from '../node/ApiNodeCollection';
 import { EcsCluster } from './EcsCluster';
-import { ApiNodeFactory } from "../node/ApiNodeFactory";
-import { AwsApi } from "../awsapi/AwsApi";
+import { ApiNodeFactory } from '../node/ApiNodeFactory';
+import { AwsApi } from '../awsapi/AwsApi';
+import { Cluster } from '@aws-sdk/client-ecs';
 
-export class EcsClusterCollection extends ApiNodeCollection<EcsCluster, AWS.ECS.Cluster> {
+export class EcsClusterCollection extends ApiNodeCollection<
+  EcsCluster,
+  Cluster
+> {
   apiNodeFromId(id: string): EcsCluster {
     return ApiNodeFactory.ecsCluster(this, id);
   }
 
-  apiNodeFromAwsData(data: AWS.ECS.Cluster): EcsCluster {
+  apiNodeFromAwsData(data: Cluster): EcsCluster {
     return ApiNodeFactory.ecsCluster(this, data.clusterArn);
   }
 
-  async load(): Promise<AWS.ECS.Cluster[]> {
+  async load(): Promise<Cluster[]> {
     const clusterArns = await AwsApi.ecs(this.config()).listClusters();
     return await AwsApi.ecs(this.config()).describeClusters(clusterArns);
   }

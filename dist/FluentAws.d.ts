@@ -1,4 +1,3 @@
-import * as AWS from 'aws-sdk';
 import { S3 } from './s3/S3';
 import { Ecs } from './ecs/Ecs';
 import { Ec2 } from './ec2/Ec2';
@@ -18,7 +17,6 @@ export declare class FluentAws extends ApiNode {
     promiseChain: PromiseChain;
     assumeRolePromise: () => Promise<void>;
     constructor();
-    sdk<T>(fnc: (aws: typeof AWS, cfg: FluentAwsConfig) => T): Promise<T>;
     config(): FluentAwsConfig;
     /**
      * Reference to the AWS SDK instance that FluentAws uses. This reference can be used to access the

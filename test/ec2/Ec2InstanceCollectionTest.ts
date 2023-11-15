@@ -2,6 +2,7 @@ import { ApiNodeFactory } from '../../src/node/ApiNodeFactory';
 import { Ec2InstanceCollection } from '../../src/ec2/Ec2InstanceCollection';
 import { apiNodeCollectionStubs } from '../utils/stubs';
 import { AwsApi } from '../../src/awsapi/AwsApi';
+import { Instance } from '@aws-sdk/client-ec2';
 
 describe('Ec2InstanceCollection', () => {
   it('will create from id', async () => {
@@ -18,7 +19,7 @@ describe('Ec2InstanceCollection', () => {
   it('will create from AWS data', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.ec2Instance = stubs.factoryStub;
-    const awsData: AWS.EC2.Instance = {
+    const awsData: Instance = {
       InstanceId: 'instanceId',
     };
 

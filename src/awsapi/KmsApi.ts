@@ -1,55 +1,57 @@
-import * as AWS from 'aws-sdk';
+import {
+  AliasListEntry,
+  KMS,
+  KeyListEntry,
+  KeyMetadata,
+} from '@aws-sdk/client-kms';
 import { FluentAwsConfig } from '../FluentAwsConfig';
 
 const debug = require('debug')('fluentaws:KmsApi');
 
 export class KmsApi {
-  config: FluentAwsConfig;
-  kms = () => new AWS.KMS(this.config);
+  private kms = () => new KMS(this.config);
 
-  constructor(config: FluentAwsConfig) {
-    this.config = config;
-  }
+  constructor(private config: FluentAwsConfig) {}
 
-  async listAliases(): Promise<AWS.KMS.AliasListEntry[]> {
+  async listAliases(): Promise<AliasListEntry[]> {
     debug(`listing aliases`);
-    let result: AWS.KMS.AliasListEntry[] = [];
+    let result: AliasListEntry[] = [];
     const recursiveFunction = async (marker?: string) => {
       const response = await this.kms().listAliases({
-        Marker: marker
-      }).promise();
+        Marker: marker,
+      });
       result = result.concat(response.Aliases);
       if (response.Truncated) {
         await recursiveFunction(response.NextMarker);
       }
-    }
+    };
     await recursiveFunction();
     debug('listed aliases');
     return result;
   }
 
-  async listKeys(): Promise<AWS.KMS.KeyListEntry[]> {
+  async listKeys(): Promise<KeyListEntry[]> {
     debug(`listing keys`);
-    let result: AWS.KMS.KeyListEntry[] = [];
+    let result: KeyListEntry[] = [];
     const recursiveFunction = async (marker?: string) => {
       const response = await this.kms().listKeys({
-        Marker: marker
-      }).promise();
+        Marker: marker,
+      });
       result = result.concat(response.Keys);
       if (response.Truncated) {
         await recursiveFunction(response.NextMarker);
       }
-    }
+    };
     await recursiveFunction();
     debug('listed keys');
     return result;
   }
 
-  async describeKey(keyId: string): Promise<AWS.KMS.KeyMetadata> {
+  async describeKey(keyId: string): Promise<KeyMetadata> {
     debug(`describing key: %s`, keyId);
     const response = await this.kms().describeKey({
-      KeyId: keyId
-    }).promise();
+      KeyId: keyId,
+    });
     debug('described key');
     return response.KeyMetadata;
   }

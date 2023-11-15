@@ -2,6 +2,7 @@ import { ApiNodeFactory } from '../../src/node/ApiNodeFactory';
 import { Route53HostedZoneCollection } from '../../src/route53/Route53HostedZoneCollection';
 import { apiNodeCollectionStubs } from '../utils/stubs';
 import { AwsApi } from '../../src/awsapi/AwsApi';
+import { HostedZone } from '@aws-sdk/client-route-53';
 
 describe('Route53HostedZoneCollection', () => {
   it('will create from id', async () => {
@@ -18,7 +19,7 @@ describe('Route53HostedZoneCollection', () => {
   it('will create from AWS data', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.route53HostedZone = stubs.factoryStub;
-    const awsData: AWS.Route53.HostedZone = <any>{
+    const awsData: HostedZone = <any>{
       Id: 'hostedZoneId',
     };
 

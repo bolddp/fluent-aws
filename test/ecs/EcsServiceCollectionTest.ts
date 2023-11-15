@@ -2,6 +2,7 @@ import { ApiNodeFactory } from '../../src/node/ApiNodeFactory';
 import { EcsServiceCollection } from '../../src/ecs/EcsServiceCollection';
 import { apiNodeCollectionStubs } from '../utils/stubs';
 import { AwsApi } from '../../src/awsapi/AwsApi';
+import { Service } from '@aws-sdk/client-ecs';
 
 describe('EcsServiceCollection', () => {
   it('will create from id', async () => {
@@ -22,7 +23,7 @@ describe('EcsServiceCollection', () => {
   it('will create from AWS data', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.ecsService = stubs.factoryStub;
-    const awsData: AWS.ECS.Service = {
+    const awsData: Service = {
       serviceName: 'serviceName',
     };
 

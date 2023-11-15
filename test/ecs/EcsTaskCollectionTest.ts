@@ -2,6 +2,7 @@ import { ApiNodeFactory } from '../../src/node/ApiNodeFactory';
 import { EcsTaskCollection } from '../../src/ecs/EcsTaskCollection';
 import { apiNodeCollectionStubs } from '../utils/stubs';
 import { AwsApi } from '../../src/awsapi/AwsApi';
+import { Task } from '@aws-sdk/client-ecs';
 
 describe('EcsTaskCollection', () => {
   it('will create from id', async () => {
@@ -18,7 +19,7 @@ describe('EcsTaskCollection', () => {
   it('will create from AWS data', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.ecsTask = stubs.factoryStub;
-    const awsData: AWS.ECS.Task = {
+    const awsData: Task = {
       taskArn: 'taskArn',
     };
 

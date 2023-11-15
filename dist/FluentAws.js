@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -29,12 +33,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.aws = exports.FluentAws = void 0;
-const AWS = __importStar(require("aws-sdk"));
 const fetch = __importStar(require("node-fetch"));
 const PromiseChain_1 = require("./node/PromiseChain");
 const ApiNode_1 = require("./node/ApiNode");
 const ApiNodeFactory_1 = require("./node/ApiNodeFactory");
 const AwsApi_1 = require("./awsapi/AwsApi");
+const credential_providers_1 = require("@aws-sdk/credential-providers");
 global['fetch'] = fetch;
 const debug = require('debug')('fluentaws:FluentAws');
 class FluentAws extends ApiNode_1.ApiNode {
@@ -42,12 +46,6 @@ class FluentAws extends ApiNode_1.ApiNode {
         super(undefined);
         this.configInstance = {};
         this.promiseChain = new PromiseChain_1.PromiseChain();
-    }
-    sdk(fnc) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.ensureResolved();
-            return fnc(AWS, this.configInstance);
-        });
     }
     config() {
         return this.configInstance;
@@ -64,12 +62,12 @@ class FluentAws extends ApiNode_1.ApiNode {
     }
     profile(profile) {
         debug('setting profile: %s', profile);
-        this.configInstance = Object.assign(Object.assign({}, this.configInstance), { credentials: new AWS.SharedIniFileCredentials({ profile }) });
+        this.configInstance = Object.assign(Object.assign({}, this.configInstance), { credentials: (0, credential_providers_1.fromIni)({ profile }) });
         return this;
     }
     credentials(accessKeyId, secretAccessKey) {
         debug('setting credentials');
-        this.configInstance = Object.assign(Object.assign({}, this.configInstance), { credentials: new AWS.Credentials({ accessKeyId, secretAccessKey }) });
+        this.configInstance = Object.assign(Object.assign({}, this.configInstance), { credentials: { accessKeyId, secretAccessKey } });
         return this;
     }
     /**

@@ -1,10 +1,11 @@
-import { ApiNodeCollection } from "../node/ApiNodeCollection";
+import { ApiNodeCollection } from '../node/ApiNodeCollection';
 import { ApiNode } from '../node/ApiNode';
-import { EcsService } from "./EcsService";
-export declare class EcsServiceCollection extends ApiNodeCollection<EcsService, AWS.ECS.Service> {
+import { EcsService } from './EcsService';
+import { Service } from '@aws-sdk/client-ecs';
+export declare class EcsServiceCollection extends ApiNodeCollection<EcsService, Service> {
     clusterId: string;
     constructor(parent: ApiNode, clusterId: string);
-    apiNodeFromAwsData(awsData: AWS.ECS.Service): EcsService;
+    apiNodeFromAwsData(awsData: Service): EcsService;
     apiNodeFromId(id: string): EcsService;
-    load(): Promise<AWS.ECS.Service[]>;
+    load(): Promise<Service[]>;
 }

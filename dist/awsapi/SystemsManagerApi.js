@@ -1,23 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -29,12 +10,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SystemsManagerApi = void 0;
-const AWS = __importStar(require("aws-sdk"));
+const client_ssm_1 = require("@aws-sdk/client-ssm");
 const debug = require('debug')('fluentaws:SystemsManagerApi');
 class SystemsManagerApi {
     constructor(config) {
-        this.ssm = () => new AWS.SSM(this.config);
         this.config = config;
+        this.ssm = () => new client_ssm_1.SSM(this.config);
     }
     describeParameters() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -42,8 +23,8 @@ class SystemsManagerApi {
             let result = [];
             const recursiveFunction = (nextToken) => __awaiter(this, void 0, void 0, function* () {
                 const response = yield this.ssm().describeParameters({
-                    NextToken: nextToken
-                }).promise();
+                    NextToken: nextToken,
+                });
                 result = result.concat(response.Parameters);
                 if (response.NextToken) {
                     yield recursiveFunction(response.NextToken);
@@ -58,11 +39,13 @@ class SystemsManagerApi {
         return __awaiter(this, void 0, void 0, function* () {
             debug('describing parameter: %s', parameterName);
             const response = yield this.ssm().describeParameters({
-                Filters: [{
+                Filters: [
+                    {
                         Key: 'Name',
-                        Values: [parameterName]
-                    }]
-            }).promise();
+                        Values: [parameterName],
+                    },
+                ],
+            });
             if (response.Parameters.length == 0) {
                 throw new Error(`Parameter not found: ${parameterName}`);
             }
@@ -75,8 +58,8 @@ class SystemsManagerApi {
             debug('getting parameter: %s', parameterName);
             const response = yield this.ssm().getParameter({
                 Name: parameterName,
-                WithDecryption: true
-            }).promise();
+                WithDecryption: true,
+            });
             if (!response.Parameter) {
                 throw new Error(`Parameter not found: ${parameterName}`);
             }
@@ -89,8 +72,8 @@ class SystemsManagerApi {
             debug('getting parameters: %j', names);
             const response = yield this.ssm().getParameters({
                 Names: names,
-                WithDecryption: withDecryption
-            }).promise();
+                WithDecryption: withDecryption,
+            });
             debug('got parameters');
             return response.Parameters;
         });
@@ -103,8 +86,8 @@ class SystemsManagerApi {
                 const response = yield this.ssm().getParametersByPath({
                     Path: path,
                     WithDecryption: withDecryption,
-                    NextToken: nextToken
-                }).promise();
+                    NextToken: nextToken,
+                });
                 result = result.concat(response.Parameters);
                 if (response.NextToken) {
                     yield recursiveFunction(response.NextToken);
@@ -118,7 +101,7 @@ class SystemsManagerApi {
     putParameter(request) {
         return __awaiter(this, void 0, void 0, function* () {
             debug('putting parameter: %j', request);
-            yield this.ssm().putParameter(request).promise();
+            yield this.ssm().putParameter(request);
             debug('put parameter');
         });
     }

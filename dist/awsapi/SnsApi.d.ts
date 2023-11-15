@@ -1,9 +1,9 @@
-import * as AWS from 'aws-sdk';
+import { PublishInput, Topic } from '@aws-sdk/client-sns';
 import { FluentAwsConfig } from '../FluentAwsConfig';
 export declare class SnsApi {
-    config: FluentAwsConfig;
-    sns: () => AWS.SNS;
+    private config;
+    private sns;
     constructor(config: FluentAwsConfig);
-    listTopics(): Promise<AWS.SNS.Topic[]>;
-    publish(input: AWS.SNS.PublishInput): Promise<void>;
+    listTopics(): Promise<Topic[]>;
+    publish(input: PublishInput): Promise<void>;
 }

@@ -1,14 +1,15 @@
-import { AwsDataApiNode } from "../node/AwsDataApiNode";
-import { ApiNode } from "../node/ApiNode";
+import { AwsDataApiNode } from '../node/AwsDataApiNode';
+import { ApiNode } from '../node/ApiNode';
+import { Parameter, ParameterMetadata } from '@aws-sdk/client-ssm';
 /**
  * Represents a parameter in Systems Manager Parameter Store.
  */
-export declare class SystemsManagerParameter extends AwsDataApiNode<AWS.SSM.Parameter> {
+export declare class SystemsManagerParameter extends AwsDataApiNode<Parameter> {
     parameterName: string;
     constructor(parent: ApiNode, parameterName: string);
-    loadAwsData(): Promise<import("aws-sdk/clients/ssm").Parameter>;
+    loadAwsData(): Promise<Parameter>;
     /**
      * Returns the metadata for this parameter.
      */
-    metaData(): Promise<AWS.SSM.ParameterMetadata>;
+    metaData(): Promise<ParameterMetadata>;
 }

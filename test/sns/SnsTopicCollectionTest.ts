@@ -2,6 +2,7 @@ import { apiNodeCollectionStubs } from '../utils/stubs';
 import { ApiNodeFactory } from '../../src/node/ApiNodeFactory';
 import { SnsTopicCollection } from '../../src/sns/SnsTopicCollection';
 import { AwsApi } from '../../src/awsapi/AwsApi';
+import { Topic } from '@aws-sdk/client-sns';
 
 describe('SnsTopicCollection', () => {
   it('will create from id', async () => {
@@ -18,7 +19,7 @@ describe('SnsTopicCollection', () => {
   it('will create from AWS data', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.snsTopic = stubs.factoryStub;
-    const awsData: AWS.SNS.Topic = {
+    const awsData: Topic = {
       TopicArn: 'topicArn',
     };
 

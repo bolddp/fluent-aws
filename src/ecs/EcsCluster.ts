@@ -1,13 +1,14 @@
-import { EcsTask } from "./EcsTask";
-import { ApiNode } from "../node/ApiNode";
-import { ApiNodeFactory } from "../node/ApiNodeFactory";
-import { EcsServiceCollection } from "./EcsServiceCollection";
-import { AwsApi } from "../awsapi/AwsApi";
-import { EcsTaskCollection } from "./EcsTaskCollection";
-import { EcsService } from "./EcsService";
-import { AwsDataApiNode } from "../node/AwsDataApiNode";
+import { EcsTask } from './EcsTask';
+import { ApiNode } from '../node/ApiNode';
+import { ApiNodeFactory } from '../node/ApiNodeFactory';
+import { EcsServiceCollection } from './EcsServiceCollection';
+import { AwsApi } from '../awsapi/AwsApi';
+import { EcsTaskCollection } from './EcsTaskCollection';
+import { EcsService } from './EcsService';
+import { AwsDataApiNode } from '../node/AwsDataApiNode';
+import { Cluster } from '@aws-sdk/client-ecs';
 
-export class EcsCluster extends AwsDataApiNode<AWS.ECS.Cluster> {
+export class EcsCluster extends AwsDataApiNode<Cluster> {
   idOrArn: string;
   serviceCollection: EcsServiceCollection;
   taskCollection: EcsTaskCollection;
@@ -15,7 +16,10 @@ export class EcsCluster extends AwsDataApiNode<AWS.ECS.Cluster> {
   constructor(parent: ApiNode, idOrArn: string) {
     super(parent);
     this.idOrArn = idOrArn;
-    this.serviceCollection = ApiNodeFactory.ecsServiceCollection(this, this.idOrArn);
+    this.serviceCollection = ApiNodeFactory.ecsServiceCollection(
+      this,
+      this.idOrArn
+    );
     this.taskCollection = ApiNodeFactory.ecsTaskCollection(this, this.idOrArn);
   }
 

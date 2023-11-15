@@ -2,6 +2,7 @@ import { ApiNodeFactory } from '../../src/node/ApiNodeFactory';
 import { apiNodeCollectionStubs } from '../utils/stubs';
 import { AwsApi } from '../../src/awsapi/AwsApi';
 import { KmsKeyCollection } from '../../src/kms/KmsKeyCollection';
+import { KeyMetadata } from '@aws-sdk/client-kms';
 
 describe('KmsKeyCollection', () => {
   it('will create from id', async () => {
@@ -18,7 +19,7 @@ describe('KmsKeyCollection', () => {
   it('will create from AWS data', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.kmsKey = stubs.factoryStub;
-    const awsData: AWS.KMS.KeyMetadata = <any>(<unknown>{
+    const awsData: KeyMetadata = <any>(<unknown>{
       KeyId: 'keyId',
     });
 

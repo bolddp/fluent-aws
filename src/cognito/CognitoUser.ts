@@ -3,7 +3,7 @@ import { CognitoUserPoolId } from './CognitoUserPool';
 import { AwsApi } from '../awsapi/AwsApi';
 import { ApiNode } from '../node/ApiNode';
 import { AwsDataApiNode } from '../node/AwsDataApiNode';
-import { AdminGetUserResponse } from 'aws-sdk/clients/cognitoidentityserviceprovider';
+import { AdminGetUserResponse } from '@aws-sdk/client-cognito-identity-provider';
 
 export class CognitoUser extends AwsDataApiNode<AdminGetUserResponse> {
   userName: string;
@@ -16,29 +16,52 @@ export class CognitoUser extends AwsDataApiNode<AdminGetUserResponse> {
   }
 
   async loadAwsData(): Promise<AdminGetUserResponse> {
-    return await AwsApi.cognito(this.config()).getUser(this.poolId.poolId, this.userName);
+    return await AwsApi.cognito(this.config()).getUser(
+      this.poolId.poolId,
+      this.userName
+    );
   }
 
-  async login(password: string): Promise<AmazonCognitoIdentity.CognitoUserSession> {
+  async login(
+    password: string
+  ): Promise<AmazonCognitoIdentity.CognitoUserSession> {
     await this.ensureResolved();
-    return await AwsApi.cognito(this.config()).login(this.poolId.poolId, this.poolId.clientId,
-      this.userName, password);
+    return await AwsApi.cognito(this.config()).login(
+      this.poolId.poolId,
+      this.poolId.clientId,
+      this.userName,
+      password
+    );
   }
 
-  async refresh(refreshToken: string): Promise<AmazonCognitoIdentity.CognitoUserSession> {
+  async refresh(
+    refreshToken: string
+  ): Promise<AmazonCognitoIdentity.CognitoUserSession> {
     await this.ensureResolved();
-    return await AwsApi.cognito(this.config()).refresh(this.poolId.poolId, this.poolId.clientId,
-      this.userName, refreshToken);
+    return await AwsApi.cognito(this.config()).refresh(
+      this.poolId.poolId,
+      this.poolId.clientId,
+      this.userName,
+      refreshToken
+    );
   }
 
   async addToGroup(groupName: string): Promise<void> {
     await this.ensureResolved();
-    return await AwsApi.cognito(this.config()).addUserToGroup(this.poolId.poolId, this.userName, groupName);
+    return await AwsApi.cognito(this.config()).addUserToGroup(
+      this.poolId.poolId,
+      this.userName,
+      groupName
+    );
   }
 
   async removeFromGroup(groupName: string): Promise<void> {
     await this.ensureResolved();
-    return await AwsApi.cognito(this.config()).removeUserFromGroup(this.poolId.poolId, this.userName, groupName);
+    return await AwsApi.cognito(this.config()).removeUserFromGroup(
+      this.poolId.poolId,
+      this.userName,
+      groupName
+    );
   }
 
   /**
@@ -46,16 +69,25 @@ export class CognitoUser extends AwsDataApiNode<AdminGetUserResponse> {
    */
   async listGroups(): Promise<string[]> {
     await this.ensureResolved();
-    return await AwsApi.cognito(this.config()).listGroupsForUser(this.poolId.poolId, this.userName);
+    return await AwsApi.cognito(this.config()).listGroupsForUser(
+      this.poolId.poolId,
+      this.userName
+    );
   }
 
   async globalSignOut(): Promise<void> {
     await this.ensureResolved();
-    return await AwsApi.cognito(this.config()).globalSignOut(this.poolId.poolId, this.userName);
+    return await AwsApi.cognito(this.config()).globalSignOut(
+      this.poolId.poolId,
+      this.userName
+    );
   }
 
   async delete(): Promise<void> {
     await this.ensureResolved();
-    await AwsApi.cognito(this.config()).deleteUser(this.poolId.poolId, this.userName);
+    await AwsApi.cognito(this.config()).deleteUser(
+      this.poolId.poolId,
+      this.userName
+    );
   }
 }

@@ -2,6 +2,7 @@ import { ApiNodeFactory } from './../../src/node/ApiNodeFactory';
 import { EcsClusterCollection } from './../../src/ecs/EcsClusterCollection';
 import { apiNodeCollectionStubs } from '../utils/stubs';
 import { AwsApi } from '../../src/awsapi/AwsApi';
+import { Cluster } from '@aws-sdk/client-ecs';
 
 describe('EcsClusterCollection', () => {
   it('will create from id', async () => {
@@ -18,7 +19,7 @@ describe('EcsClusterCollection', () => {
   it('will create from AWS data', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.ecsCluster = stubs.factoryStub;
-    const awsData: AWS.ECS.Cluster = {
+    const awsData: Cluster = {
       clusterArn: 'clusterId',
     };
 

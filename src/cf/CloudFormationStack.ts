@@ -1,10 +1,15 @@
 import { AwsDataApiNode } from '../node/AwsDataApiNode';
 import { ApiNode } from '../node/ApiNode';
 import { AwsApi } from '../awsapi/AwsApi';
+import {
+  Stack,
+  StackResourceSummary,
+  StackResourceDrift,
+} from '@aws-sdk/client-cloudformation';
 
 const debug = require('debug')('fluentaws:CloudFormationStack');
 
-export class CloudFormationStack extends AwsDataApiNode<AWS.CloudFormation.Stack> {
+export class CloudFormationStack extends AwsDataApiNode<Stack> {
   stackName: string;
 
   constructor(parent: ApiNode, stackName: string) {
@@ -19,9 +24,11 @@ export class CloudFormationStack extends AwsDataApiNode<AWS.CloudFormation.Stack
   /**
    * Returns summaries of all resources in the stack.
    */
-  async resources(): Promise<AWS.CloudFormation.StackResourceSummary[]> {
+  async resources(): Promise<StackResourceSummary[]> {
     await this.ensureResolved();
-    return await AwsApi.cloudFormation(this.config()).listStackResources(this.stackName);
+    return await AwsApi.cloudFormation(this.config()).listStackResources(
+      this.stackName
+    );
   }
 
   /**
@@ -29,7 +36,9 @@ export class CloudFormationStack extends AwsDataApiNode<AWS.CloudFormation.Stack
    */
   async template(): Promise<string> {
     await this.ensureResolved();
-    return await AwsApi.cloudFormation(this.config()).getTemplate(this.stackName);
+    return await AwsApi.cloudFormation(this.config()).getTemplate(
+      this.stackName
+    );
   }
 
   /**
@@ -37,19 +46,35 @@ export class CloudFormationStack extends AwsDataApiNode<AWS.CloudFormation.Stack
    * template that was used when the stack was created or last updated. NOTE! This is an operation that
    * may take several minutes.
    */
-  async checkDrift(pauseMilliseconds: number = 10000): Promise<AWS.CloudFormation.StackResourceDrift[]> {
+  async checkDrift(
+    pauseMilliseconds: number = 10000
+  ): Promise<StackResourceDrift[]> {
     await this.ensureResolved();
-    const driftDetectionId = await AwsApi.cloudFormation(this.config()).detectStackDrift(this.stackName);
+    const driftDetectionId = await AwsApi.cloudFormation(
+      this.config()
+    ).detectStackDrift(this.stackName);
     while (true) {
       // Pause for 10 seconds
-      await new Promise<void>((resolve) => setTimeout(() => resolve(), pauseMilliseconds));
-      const status = await AwsApi.cloudFormation(this.config()).describeStackDriftDetectionStatus(driftDetectionId);
+      await new Promise<void>((resolve) =>
+        setTimeout(() => resolve(), pauseMilliseconds)
+      );
+      const status = await AwsApi.cloudFormation(
+        this.config()
+      ).describeStackDriftDetectionStatus(driftDetectionId);
       switch (status) {
         case 'DETECTION_FAILED':
-          const drifts = await AwsApi.cloudFormation(this.config()).describeStackResourceDrifts(this.stackName);
-          throw new Error(`Drift detection failed! Available drift info: ${JSON.stringify(drifts)}`);
+          const drifts = await AwsApi.cloudFormation(
+            this.config()
+          ).describeStackResourceDrifts(this.stackName);
+          throw new Error(
+            `Drift detection failed! Available drift info: ${JSON.stringify(
+              drifts
+            )}`
+          );
         case 'DETECTION_COMPLETE':
-          return await AwsApi.cloudFormation(this.config()).describeStackResourceDrifts(this.stackName);
+          return await AwsApi.cloudFormation(
+            this.config()
+          ).describeStackResourceDrifts(this.stackName);
       }
     }
   }

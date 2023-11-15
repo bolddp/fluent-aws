@@ -2,6 +2,7 @@ import { ApiNodeFactory } from '../../src/node/ApiNodeFactory';
 import { S3ObjectCollection } from '../../src/s3/S3ObjectCollection';
 import { apiNodeCollectionStubs } from '../utils/stubs';
 import { AwsApi } from '../../src/awsapi/AwsApi';
+import { _Object } from '@aws-sdk/client-s3';
 
 describe('S3ObjectCollection', () => {
   it('will create from id', async () => {
@@ -18,7 +19,7 @@ describe('S3ObjectCollection', () => {
   it('will create from AWS data', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.s3Object = stubs.factoryStub;
-    const awsData: AWS.S3.Object = {
+    const awsData: _Object = {
       Key: 'key',
     };
 

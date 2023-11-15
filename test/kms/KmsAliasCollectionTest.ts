@@ -2,6 +2,7 @@ import { ApiNodeFactory } from '../../src/node/ApiNodeFactory';
 import { apiNodeCollectionStubs } from '../utils/stubs';
 import { AwsApi } from '../../src/awsapi/AwsApi';
 import { KmsAliasCollection } from '../../src/kms/KmsAliasCollection';
+import { AliasListEntry } from '@aws-sdk/client-kms';
 
 describe('KmsAliasCollection', () => {
   it('will create from id', async () => {
@@ -18,7 +19,7 @@ describe('KmsAliasCollection', () => {
   it('will create from AWS data', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.kmsAlias = stubs.factoryStub;
-    const awsData: AWS.KMS.AliasListEntry = <any>(<unknown>{
+    const awsData: AliasListEntry = <any>(<unknown>{
       AliasName: 'aliasName',
     });
 

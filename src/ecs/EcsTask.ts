@@ -1,11 +1,11 @@
-import * as AWS from 'aws-sdk';
 import { Ec2Instance } from '../ec2/Ec2Instance';
 import { ApiNode } from '../node/ApiNode';
 import { ApiNodeFactory } from '../node/ApiNodeFactory';
 import { AwsApi } from '../awsapi/AwsApi';
 import { AwsDataApiNode } from '../node/AwsDataApiNode';
+import { Task } from '@aws-sdk/client-ecs';
 
-export class EcsTask extends AwsDataApiNode<AWS.ECS.Task> {
+export class EcsTask extends AwsDataApiNode<Task> {
   clusterId: string;
   idOrArn: string;
   ec2InstanceInstance: Ec2Instance;
@@ -29,7 +29,12 @@ export class EcsTask extends AwsDataApiNode<AWS.ECS.Task> {
       // We add a promise that will look up the EC2 instance id and feed it to the Ec2Instance
       this.promiseChain.add(async () => {
         const awsData = await this.loadAwsData();
-        const containerInstance = await AwsApi.ecs(this.config()).describeContainerInstance(this.clusterId, awsData.containerInstanceArn);
+        const containerInstance = await AwsApi.ecs(
+          this.config()
+        ).describeContainerInstance(
+          this.clusterId,
+          awsData.containerInstanceArn
+        );
         this.ec2InstanceInstance.instanceId = containerInstance.ec2InstanceId;
       });
     }

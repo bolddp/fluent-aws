@@ -1,21 +1,18 @@
-import * as AWS from 'aws-sdk';
+import { AccountAttribute, EC2, Instance } from '@aws-sdk/client-ec2';
 import { FluentAwsConfig } from '../FluentAwsConfig';
 
 const debug = require('debug')('fluentaws:Ec2Api');
 
 export class Ec2Api {
-  config: FluentAwsConfig;
-  ec2 = () => new AWS.EC2(this.config);
+  private ec2 = () => new EC2(this.config);
 
-  constructor(config: FluentAwsConfig) {
-    this.config = config;
-  }
+  constructor(private config: FluentAwsConfig) {}
 
-  async describeInstances(instanceIds?: string[]): Promise<AWS.EC2.Instance[]> {
+  async describeInstances(instanceIds?: string[]): Promise<Instance[]> {
     debug('describing instances: %j', instanceIds || {});
     const response = await this.ec2().describeInstances({
-      InstanceIds: instanceIds
-    }).promise();
+      InstanceIds: instanceIds,
+    });
     const result = [];
     for (const res of response.Reservations) {
       for (const ins of res.Instances) {
@@ -30,7 +27,7 @@ export class Ec2Api {
    * Loads AWS information about one EC2 instance. If the instance is not found,
    * an error is thrown.
    */
-  async describeInstance(instanceId: string): Promise<AWS.EC2.Instance> {
+  async describeInstance(instanceId: string): Promise<Instance> {
     const instances = await this.describeInstances([instanceId]);
     if (instances.length == 0) {
       throw new Error(`Instance not found: ${instanceId}`);
@@ -38,9 +35,9 @@ export class Ec2Api {
     return instances[0];
   }
 
-  async describeAccountAttributes(): Promise<AWS.EC2.AccountAttributeList> {
+  async describeAccountAttributes(): Promise<AccountAttribute[]> {
     debug('describing account attributes');
-    const response = await this.ec2().describeAccountAttributes().promise();
+    const response = await this.ec2().describeAccountAttributes({});
     debug('described account attributes');
     return response.AccountAttributes;
   }

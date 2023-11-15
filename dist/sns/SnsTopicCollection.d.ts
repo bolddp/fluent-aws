@@ -1,7 +1,8 @@
 import { ApiNodeCollection } from '../node/ApiNodeCollection';
 import { SnsTopic } from './SnsTopic';
-export declare class SnsTopicCollection extends ApiNodeCollection<SnsTopic, AWS.SNS.Topic> {
-    load(): Promise<AWS.SNS.Topic[]>;
-    apiNodeFromAwsData(data: AWS.SNS.Topic): SnsTopic;
+import { Topic } from '@aws-sdk/client-sns';
+export declare class SnsTopicCollection extends ApiNodeCollection<SnsTopic, Topic> {
+    load(): Promise<Topic[]>;
+    apiNodeFromAwsData(data: Topic): SnsTopic;
     apiNodeFromId(id: string): SnsTopic;
 }

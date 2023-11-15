@@ -1,23 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -29,18 +10,29 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DynamoDbApi = void 0;
-const AWS = __importStar(require("aws-sdk"));
+const client_dynamodb_1 = require("@aws-sdk/client-dynamodb");
+const lib_dynamodb_1 = require("@aws-sdk/lib-dynamodb");
 const debug = require('debug')('fluentaws:DynamoDbApi');
 class DynamoDbApi {
     constructor(config) {
-        this.dynamoDb = () => new AWS.DynamoDB(this.config);
-        this.docClient = () => new AWS.DynamoDB.DocumentClient(this.config);
         this.config = config;
+        this.dynamoDb = () => new client_dynamodb_1.DynamoDB(this.config);
+        this.docClient = () => lib_dynamodb_1.DynamoDBDocument.from(this.dynamoDb(), {
+            marshallOptions: {
+                removeUndefinedValues: true,
+            },
+        });
+    }
+    getDynamoDb() {
+        return this.dynamoDb();
+    }
+    getDocClient() {
+        return this.docClient();
     }
     listTableNames() {
         return __awaiter(this, void 0, void 0, function* () {
             debug('listing tables');
-            const response = yield this.dynamoDb().listTables({}).promise();
+            const response = yield this.dynamoDb().listTables({});
             debug('listed tables');
             return response.TableNames;
         });
@@ -49,8 +41,8 @@ class DynamoDbApi {
         return __awaiter(this, void 0, void 0, function* () {
             debug('describing table: %s', tableName);
             const response = yield this.dynamoDb().describeTable({
-                TableName: tableName
-            }).promise();
+                TableName: tableName,
+            });
             debug('described table');
             return response.Table;
         });
@@ -58,7 +50,7 @@ class DynamoDbApi {
     get(input) {
         return __awaiter(this, void 0, void 0, function* () {
             debug('getting item: %s, key: %j', input.TableName, input.Key);
-            const response = yield this.docClient().get(input).promise();
+            const response = yield this.docClient().get(input);
             debug('got item');
             return response.Item;
         });
@@ -68,7 +60,7 @@ class DynamoDbApi {
             debug('querying: %j', input);
             let result = [];
             const fnc = (fncInput) => __awaiter(this, void 0, void 0, function* () {
-                const response = yield this.docClient().query(fncInput).promise();
+                const response = yield this.docClient().query(fncInput);
                 result = result.concat(response.Items || []);
                 debug('#items: %d', response.Items.length);
                 if (response.LastEvaluatedKey) {
@@ -87,8 +79,8 @@ class DynamoDbApi {
             debug('putting item: %s, item: %j', tableName, item);
             yield this.docClient().put({
                 TableName: tableName,
-                Item: item
-            }).promise();
+                Item: item,
+            });
             debug('put item');
         });
     }
@@ -97,8 +89,8 @@ class DynamoDbApi {
             debug('deleting item: %s, key: %j', tableName, key);
             yield this.docClient().delete({
                 TableName: tableName,
-                Key: key
-            }).promise();
+                Key: key,
+            });
             debug('deleted item');
         });
     }
@@ -108,7 +100,7 @@ class DynamoDbApi {
             const batchSize = 100;
             const batches = keys.reduce((acc, key, index) => {
                 const batchIndex = Math.floor(index / batchSize);
-                if ((index % batchSize) == 0) {
+                if (index % batchSize == 0) {
                     acc[batchIndex] = [];
                 }
                 acc[batchIndex].push(key);
@@ -121,10 +113,10 @@ class DynamoDbApi {
                     RequestItems: {
                         [tableName]: {
                             ConsistentRead: true,
-                            Keys: keyBatch
-                        }
-                    }
-                }).promise();
+                            Keys: keyBatch,
+                        },
+                    },
+                });
                 debug('did get batch');
                 result.push(...rsp.Responses[tableName]);
             }

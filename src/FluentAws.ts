@@ -1,4 +1,3 @@
-import * as AWS from 'aws-sdk';
 import * as fetch from 'node-fetch';
 import { S3 } from './s3/S3';
 import { Ecs } from './ecs/Ecs';
@@ -16,6 +15,7 @@ import { Kms } from './kms/Kms';
 import { Cognito } from './cognito/Cognito';
 import { Sns } from './sns/Sns';
 import { FluentAwsConfig } from './FluentAwsConfig';
+import { fromIni } from '@aws-sdk/credential-providers';
 
 (<any>global)['fetch'] = fetch;
 
@@ -28,11 +28,6 @@ export class FluentAws extends ApiNode {
 
   constructor() {
     super(undefined);
-  }
-
-  async sdk<T>(fnc: (aws: typeof AWS, cfg: FluentAwsConfig) => T): Promise<T> {
-    await this.ensureResolved();
-    return fnc(AWS, this.configInstance);
   }
 
   config(): FluentAwsConfig {
@@ -58,7 +53,7 @@ export class FluentAws extends ApiNode {
     debug('setting profile: %s', profile);
     this.configInstance = {
       ...this.configInstance,
-      credentials: new AWS.SharedIniFileCredentials({ profile }),
+      credentials: fromIni({ profile }),
     };
     return this;
   }
@@ -67,7 +62,7 @@ export class FluentAws extends ApiNode {
     debug('setting credentials');
     this.configInstance = {
       ...this.configInstance,
-      credentials: new AWS.Credentials({ accessKeyId, secretAccessKey }),
+      credentials: { accessKeyId, secretAccessKey },
     };
     return this;
   }

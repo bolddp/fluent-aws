@@ -1,38 +1,41 @@
-import * as AWS from 'aws-sdk';
+import {
+  CloudFormation,
+  Stack,
+  StackResourceDrift,
+  StackResourceSummary,
+} from '@aws-sdk/client-cloudformation';
 import { FluentAwsConfig } from '../FluentAwsConfig';
 
 const debug = require('debug')('fluentaws:CloudFormationApi');
 
 export class CloudFormationApi {
-  config: FluentAwsConfig;
-  cf = () => new AWS.CloudFormation(this.config);
+  private cf = () => new CloudFormation(this.config);
 
-  constructor(config: FluentAwsConfig) {
-    this.config = config;
-  }
+  constructor(private config: FluentAwsConfig) {}
 
   async describeStacks() {
     debug('describing stacks');
-    let result: AWS.CloudFormation.Stack[] = [];
+    let result: Stack[] = [];
     // Perform the call in a function since we may need to recursively call it
     const recursiveFunction = async (nextToken?: string) => {
-      const response = await this.cf()
-        .describeStacks(nextToken ? { NextToken: nextToken! } : {}).promise();
+      const response = await this.cf().describeStacks(
+        nextToken ? { NextToken: nextToken! } : {}
+      );
       result = result.concat(response.Stacks);
       if (response.NextToken) {
         await recursiveFunction(response.NextToken);
       }
-    }
+    };
     await recursiveFunction();
     debug('described stacks');
     return result;
   }
 
-  async describeStack(stackName: string): Promise<AWS.CloudFormation.Stack> {
+  async describeStack(stackName: string): Promise<Stack> {
     debug('describing stack: %s', stackName);
     const response = await this.cf().describeStacks({
-      StackName: stackName
-    }).promise();
+      StackName: stackName,
+    });
     if (response.Stacks.length == 0) {
       throw new Error(`Stack not found: ${stackName}`);
     }
@@ -43,54 +46,61 @@ export class CloudFormationApi {
   async detectStackDrift(stackName: string): Promise<string> {
     debug('detecting stack drift: %s', stackName);
     const response = await this.cf().detectStackDrift({
-      StackName: stackName
-    }).promise();
+      StackName: stackName,
+    });
     debug('detected stack drift');
     return response.StackDriftDetectionId;
   }
 
-  async describeStackDriftDetectionStatus(driftDetectionId: string): Promise<string> {
+  async describeStackDriftDetectionStatus(
+    driftDetectionId: string
+  ): Promise<string> {
     debug('describing StackDriftDetectionStatus: %s', driftDetectionId);
     const response = await this.cf().describeStackDriftDetectionStatus({
-      StackDriftDetectionId: driftDetectionId
-    }).promise();
+      StackDriftDetectionId: driftDetectionId,
+    });
     debug('described StackDriftDetectionStatus');
     return response.DetectionStatus;
   }
 
-  async describeStackResourceDrifts(stackName: string): Promise<AWS.CloudFormation.StackResourceDrift[]> {
+  async describeStackResourceDrifts(
+    stackName: string
+  ): Promise<StackResourceDrift[]> {
     debug('describing StackResourceDrifts: %s', stackName);
     const response = await this.cf().describeStackResourceDrifts({
-      StackName: stackName
-    }).promise();
+      StackName: stackName,
+    });
     debug('described StackResourceDrifts');
     return response.StackResourceDrifts;
   }
 
-  async listStackResources(stackName: string): Promise<AWS.CloudFormation.StackResourceSummary[]> {
+  async listStackResources(stackName: string): Promise<StackResourceSummary[]> {
     debug('listing stack resources: %s', stackName);
-    let result: AWS.CloudFormation.StackResourceSummary[] = [];
+    let result: StackResourceSummary[] = [];
     const recursiveFunction = async (nextToken?: string) => {
       const response = await this.cf().listStackResources({
         StackName: stackName,
-        NextToken: nextToken
-      }).promise();
+        NextToken: nextToken,
+      });
       result = result.concat(response.StackResourceSummaries);
       if (response.NextToken) {
         await recursiveFunction(response.NextToken);
       }
-    }
+    };
     await recursiveFunction();
     debug('listed stack resources');
     return result;
   }
 
-  async getTemplate(stackName: string, templateStage: 'Original' | 'Processed' = 'Processed'): Promise<string> {
+  async getTemplate(
+    stackName: string,
+    templateStage: 'Original' | 'Processed' = 'Processed'
+  ): Promise<string> {
     debug('getting stack template: %s', stackName);
     const response = await this.cf().getTemplate({
       StackName: stackName,
-      TemplateStage: templateStage
-    }).promise();
+      TemplateStage: templateStage,
+    });
     debug('got stack template');
     return response.TemplateBody;
   }

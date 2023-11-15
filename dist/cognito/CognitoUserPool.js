@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -58,7 +62,7 @@ class CognitoUserPool extends AwsDataApiNode_1.AwsDataApiNode {
                 if (cognitoAttrId) {
                     attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({
                         Name: cognitoAttrId,
-                        Value: signupData.attributes[key]
+                        Value: signupData.attributes[key],
                     }));
                 }
             }
@@ -67,7 +71,7 @@ class CognitoUserPool extends AwsDataApiNode_1.AwsDataApiNode {
                 for (const key of Object.keys(signupData.attributes.custom)) {
                     attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({
                         Name: `custom:${key}`,
-                        Value: signupData.attributes.custom[key]
+                        Value: signupData.attributes.custom[key],
                     }));
                 }
             }
@@ -100,7 +104,21 @@ class CognitoUserPool extends AwsDataApiNode_1.AwsDataApiNode {
 }
 exports.CognitoUserPool = CognitoUserPool;
 CognitoUserPool.cognitoAttrIdMap = {
-    'address': 'address', 'birthDate': 'birthdate', 'email': 'email', 'familyName': 'family_name', 'gender': 'gender', 'givenName': 'given_name',
-    'locale': 'locale', 'middleName': 'middle_name', 'name': 'name', 'nickname': 'nickname', 'phoneNumber': 'phone_number', 'picture': 'picture',
-    'preferredUserName': 'preferred_username', 'profile': 'profile', 'timezone': 'timezone', 'updatedAt': 'updated_at', 'website': 'website'
+    address: 'address',
+    birthDate: 'birthdate',
+    email: 'email',
+    familyName: 'family_name',
+    gender: 'gender',
+    givenName: 'given_name',
+    locale: 'locale',
+    middleName: 'middle_name',
+    name: 'name',
+    nickname: 'nickname',
+    phoneNumber: 'phone_number',
+    picture: 'picture',
+    preferredUserName: 'preferred_username',
+    profile: 'profile',
+    timezone: 'timezone',
+    updatedAt: 'updated_at',
+    website: 'website',
 };

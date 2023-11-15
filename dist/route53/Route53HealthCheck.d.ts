@@ -1,8 +1,9 @@
-import { AwsDataApiNode } from "../node/AwsDataApiNode";
-import { ApiNode } from "../node/ApiNode";
-export declare class Route53HealthCheck extends AwsDataApiNode<AWS.Route53.HealthCheck> {
+import { AwsDataApiNode } from '../node/AwsDataApiNode';
+import { ApiNode } from '../node/ApiNode';
+import { HealthCheck } from '@aws-sdk/client-route-53';
+export declare class Route53HealthCheck extends AwsDataApiNode<HealthCheck> {
     id: string;
     constructor(parent: ApiNode, id: string);
-    loadAwsData(): Promise<import("aws-sdk/clients/route53").HealthCheck>;
+    loadAwsData(): Promise<HealthCheck>;
     delete(): Promise<void>;
 }

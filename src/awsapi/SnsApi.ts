@@ -1,26 +1,28 @@
-import * as AWS from 'aws-sdk';
+import {
+  ListTopicsCommand,
+  PublishInput,
+  SNS,
+  Topic,
+} from '@aws-sdk/client-sns';
 import { FluentAwsConfig } from '../FluentAwsConfig';
 
 const debug = require('debug')('fluentaws:SnsApi');
 
 export class SnsApi {
-  config: FluentAwsConfig;
-  sns = () => new AWS.SNS(this.config);
+  private sns = () => new SNS(this.config);
 
-  constructor(config: FluentAwsConfig) {
-    this.config = config;
-  }
+  constructor(private config: FluentAwsConfig) {}
 
-  async listTopics(): Promise<AWS.SNS.Topic[]> {
+  async listTopics(): Promise<Topic[]> {
     debug('listing topics');
-    const response = await this.sns().listTopics().promise();
+    const response = await this.sns().listTopics({});
     debug('listed topics');
     return response.Topics;
   }
 
-  async publish(input: AWS.SNS.PublishInput): Promise<void> {
+  async publish(input: PublishInput): Promise<void> {
     debug('publishing: %j', input);
-    const response = await this.sns().publish(input).promise();
+    const response = await this.sns().publish(input);
     debug('published');
   }
 }

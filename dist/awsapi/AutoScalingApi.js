@@ -1,23 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -29,19 +10,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AutoScalingApi = void 0;
-const AWS = __importStar(require("aws-sdk"));
+const client_auto_scaling_1 = require("@aws-sdk/client-auto-scaling");
 const debug = require('debug')('fluentaws:AutoScalingApi');
 class AutoScalingApi {
     constructor(config) {
-        this.autoScaling = () => new AWS.AutoScaling(this.config);
         this.config = config;
+        this.autoScaling = () => new client_auto_scaling_1.AutoScaling(this.config);
     }
     describeGroups(idOrArns) {
         return __awaiter(this, void 0, void 0, function* () {
             debug('describing auto scaling groups: %j', idOrArns || {});
             const response = yield this.autoScaling().describeAutoScalingGroups({
-                AutoScalingGroupNames: idOrArns
-            }).promise();
+                AutoScalingGroupNames: idOrArns,
+            });
             debug('described auto scaling groups');
             return response.AutoScalingGroups;
         });
@@ -57,7 +38,7 @@ class AutoScalingApi {
     }
     update(updateData) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.autoScaling().updateAutoScalingGroup(updateData).promise();
+            yield this.autoScaling().updateAutoScalingGroup(updateData);
         });
     }
     setInstanceProtection(idOrArn, instanceIds, value) {
@@ -66,8 +47,8 @@ class AutoScalingApi {
             yield this.autoScaling().setInstanceProtection({
                 AutoScalingGroupName: idOrArn,
                 InstanceIds: instanceIds,
-                ProtectedFromScaleIn: value
-            }).promise();
+                ProtectedFromScaleIn: value,
+            });
             debug('set instance protection');
         });
     }

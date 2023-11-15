@@ -1,23 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -29,17 +10,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Route53Api = void 0;
-const AWS = __importStar(require("aws-sdk"));
+const client_route_53_1 = require("@aws-sdk/client-route-53");
 const debug = require('debug')('fluentaws:Route53Api');
 class Route53Api {
     constructor(config) {
-        this.route53 = () => new AWS.Route53(this.config);
         this.config = config;
+        this.route53 = () => new client_route_53_1.Route53(this.config);
     }
     listHealthChecks() {
         return __awaiter(this, void 0, void 0, function* () {
             debug('getting all health checks');
-            const response = yield this.route53().listHealthChecks().promise();
+            const response = yield this.route53().listHealthChecks({});
             debug('got all health checks: count = %d', response.HealthChecks.length);
             return response.HealthChecks;
         });
@@ -47,7 +28,7 @@ class Route53Api {
     getHealthCheck(id) {
         return __awaiter(this, void 0, void 0, function* () {
             debug('getting health check: %s', id);
-            const response = yield this.route53().getHealthCheck({ HealthCheckId: id }).promise();
+            const response = yield this.route53().getHealthCheck({ HealthCheckId: id });
             if (!response.HealthCheck) {
                 throw new Error(`health check not found: ${id}`);
             }
@@ -58,7 +39,7 @@ class Route53Api {
     createHealthCheck(request) {
         return __awaiter(this, void 0, void 0, function* () {
             debug('creating health check: %j', request);
-            const response = yield this.route53().createHealthCheck(request).promise();
+            const response = yield this.route53().createHealthCheck(request);
             debug('created health check: %j', response.HealthCheck);
             return response.HealthCheck;
         });
@@ -66,14 +47,14 @@ class Route53Api {
     deleteHealthCheck(id) {
         return __awaiter(this, void 0, void 0, function* () {
             debug('deleting health check: %s', id);
-            yield this.route53().deleteHealthCheck({ HealthCheckId: id }).promise();
+            yield this.route53().deleteHealthCheck({ HealthCheckId: id });
             debug('deleted health check');
         });
     }
     listHostedZones() {
         return __awaiter(this, void 0, void 0, function* () {
             debug('getting all hosted zones');
-            const response = yield this.route53().listHostedZones().promise();
+            const response = yield this.route53().listHostedZones({});
             debug('got all hosted zones: count = %d', response.HostedZones.length);
             return response.HostedZones;
         });
@@ -82,8 +63,8 @@ class Route53Api {
         return __awaiter(this, void 0, void 0, function* () {
             debug('getting hosted zone: %s', id);
             const response = yield this.route53().getHostedZone({
-                Id: id
-            }).promise();
+                Id: id,
+            });
             debug('got hosted zone');
             return response.HostedZone;
         });
@@ -92,8 +73,8 @@ class Route53Api {
         return __awaiter(this, void 0, void 0, function* () {
             debug('getting record sets: %s', hostedZoneId);
             const response = yield this.route53().listResourceRecordSets({
-                HostedZoneId: hostedZoneId
-            }).promise();
+                HostedZoneId: hostedZoneId,
+            });
             debug('got record sets');
             return response.ResourceRecordSets;
         });
@@ -103,15 +84,15 @@ class Route53Api {
             debug('creating record set: %s, %j', hostedZoneId, recordSet);
             const change = {
                 Action: 'CREATE',
-                ResourceRecordSet: recordSet
+                ResourceRecordSet: recordSet,
             };
             const changeBatch = {
-                Changes: [change]
+                Changes: [change],
             };
             yield this.route53().changeResourceRecordSets({
                 HostedZoneId: hostedZoneId,
-                ChangeBatch: changeBatch
-            }).promise();
+                ChangeBatch: changeBatch,
+            });
             debug('created record set');
         });
     }
@@ -120,15 +101,15 @@ class Route53Api {
             debug('deleting record set: %s, %j', hostedZoneId, recordSet);
             const change = {
                 Action: 'DELETE',
-                ResourceRecordSet: recordSet
+                ResourceRecordSet: recordSet,
             };
             const changeBatch = {
-                Changes: [change]
+                Changes: [change],
             };
             yield this.route53().changeResourceRecordSets({
                 HostedZoneId: hostedZoneId,
-                ChangeBatch: changeBatch
-            }).promise();
+                ChangeBatch: changeBatch,
+            });
             debug('deleted record set');
         });
     }

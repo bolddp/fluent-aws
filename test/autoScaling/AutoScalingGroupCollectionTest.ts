@@ -2,6 +2,7 @@ import { ApiNodeFactory } from '../../src/node/ApiNodeFactory';
 import { AutoScalingGroupCollection } from '../../src/autoScaling/AutoScalingGroupCollection';
 import { apiNodeCollectionStubs } from '../utils/stubs';
 import { AwsApi } from '../../src/awsapi/AwsApi';
+import { AutoScalingGroup } from '@aws-sdk/client-auto-scaling';
 
 describe('AutoScalingGroupCollection', () => {
   it('will create from id', async () => {
@@ -19,7 +20,7 @@ describe('AutoScalingGroupCollection', () => {
   it('will create from AWS data', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.autoScalingGroup = stubs.factoryStub;
-    const awsData: AWS.AutoScaling.AutoScalingGroup = <any>{
+    const awsData: AutoScalingGroup = <any>{
       AutoScalingGroupName: 'groupName',
     };
 

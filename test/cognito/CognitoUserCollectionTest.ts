@@ -2,7 +2,7 @@ import { ApiNodeFactory } from '../../src/node/ApiNodeFactory';
 import { CognitoUserCollection } from '../../src/cognito/CognitoUserCollection';
 import { apiNodeCollectionStubs } from '../utils/stubs';
 import { AwsApi } from '../../src/awsapi/AwsApi';
-import { UserType } from 'aws-sdk/clients/cognitoidentityserviceprovider';
+import { UserType } from '@aws-sdk/client-cognito-identity-provider';
 
 describe('CognitoUserCollection', () => {
   it('will create from id', async () => {

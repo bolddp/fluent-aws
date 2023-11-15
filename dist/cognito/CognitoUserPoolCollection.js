@@ -7,7 +7,7 @@ const AwsApi_1 = require("../awsapi/AwsApi");
 class CognitoUserPoolCollection extends ApiNodeCollection_1.ApiNodeCollection {
     apiNodeFromAwsData(data) {
         return ApiNodeFactory_1.ApiNodeFactory.cognitoUserPool(this, {
-            poolId: data.Id
+            poolId: data.Id,
         });
     }
     apiNodeFromId(id) {

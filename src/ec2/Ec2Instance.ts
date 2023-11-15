@@ -1,11 +1,11 @@
-import * as AWS from 'aws-sdk';
 import { ApiNode } from '../node/ApiNode';
 import { AwsApi } from '../awsapi/AwsApi';
 import { AwsDataApiNode } from '../node/AwsDataApiNode';
 import { IamRole } from '../iam/IamRole';
 import { ApiNodeFactory } from '../node/ApiNodeFactory';
+import { Instance } from '@aws-sdk/client-ec2';
 
-export class Ec2Instance extends AwsDataApiNode<AWS.EC2.Instance> {
+export class Ec2Instance extends AwsDataApiNode<Instance> {
   instanceId: string;
   iamRoleInstance: IamRole;
 
@@ -27,9 +27,13 @@ export class Ec2Instance extends AwsDataApiNode<AWS.EC2.Instance> {
         if (!awsData.IamInstanceProfile) {
           throw new Error('EC2 instance has no IAM role');
         }
-        const instanceProfile = await AwsApi.iam(this.config()).getInstanceProfile(awsData.IamInstanceProfile.Arn.split('/')[1]);
+        const instanceProfile = await AwsApi.iam(
+          this.config()
+        ).getInstanceProfile(awsData.IamInstanceProfile.Arn.split('/')[1]);
         if (instanceProfile.Roles.length == 0) {
-          throw new Error(`No role in EC2 instance profile (profile ARN: ${awsData.IamInstanceProfile.Arn})`);
+          throw new Error(
+            `No role in EC2 instance profile (profile ARN: ${awsData.IamInstanceProfile.Arn})`
+          );
         }
         this.iamRoleInstance.name = instanceProfile.Roles[0].RoleName;
       });

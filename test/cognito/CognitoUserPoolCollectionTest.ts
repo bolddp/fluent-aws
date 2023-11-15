@@ -3,7 +3,7 @@ import { apiNodeCollectionStubs } from '../utils/stubs';
 import { ApiNodeFactory } from '../../src/node/ApiNodeFactory';
 
 import { AwsApi } from '../../src/awsapi/AwsApi';
-import { UserPoolDescriptionType } from 'aws-sdk/clients/cognitoidentityserviceprovider';
+import { UserPoolDescriptionType } from '@aws-sdk/client-cognito-identity-provider';
 
 describe('CognitoUserPoolCollection', () => {
   it('will create from id', async () => {

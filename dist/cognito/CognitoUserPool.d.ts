@@ -3,14 +3,15 @@ import { AwsDataApiNode } from '../node/AwsDataApiNode';
 import { ApiNode } from '../node/ApiNode';
 import { CognitoUser } from './CognitoUser';
 import { CognitoUserCollection } from './CognitoUserCollection';
-export declare class CognitoUserPool extends AwsDataApiNode<AWS.CognitoIdentityServiceProvider.UserPoolDescriptionType> {
+import { UserPoolDescriptionType } from '@aws-sdk/client-cognito-identity-provider';
+export declare class CognitoUserPool extends AwsDataApiNode<UserPoolDescriptionType> {
     static cognitoAttrIdMap: {
         [key: string]: string;
     };
     id: CognitoUserPoolId;
     userCollection: CognitoUserCollection;
     constructor(parent: ApiNode, id: CognitoUserPoolId);
-    loadAwsData(): Promise<AWS.CognitoIdentityServiceProvider.UserPoolDescriptionType>;
+    loadAwsData(): Promise<UserPoolDescriptionType>;
     users(): CognitoUserCollection;
     user(userName: string): CognitoUser;
     signup(signupData: CognitoSignupData): Promise<AmazonCognitoIdentity.ISignUpResult>;

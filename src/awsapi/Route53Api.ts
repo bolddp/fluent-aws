@@ -1,26 +1,31 @@
-import * as AWS from 'aws-sdk';
+import {
+  Change,
+  ChangeBatch,
+  CreateHealthCheckRequest,
+  HealthCheck,
+  HostedZone,
+  ResourceRecordSet,
+  Route53,
+} from '@aws-sdk/client-route-53';
 import { FluentAwsConfig } from '../FluentAwsConfig';
 
 const debug = require('debug')('fluentaws:Route53Api');
 
 export class Route53Api {
-  config: FluentAwsConfig;
-  route53 = () => new AWS.Route53(this.config);
+  private route53 = () => new Route53(this.config);
 
-  constructor(config: FluentAwsConfig) {
-    this.config = config;
-  }
+  constructor(private config: FluentAwsConfig) {}
 
-  async listHealthChecks(): Promise<AWS.Route53.HealthCheck[]> {
+  async listHealthChecks(): Promise<HealthCheck[]> {
     debug('getting all health checks');
-    const response = await this.route53().listHealthChecks().promise();
+    const response = await this.route53().listHealthChecks({});
     debug('got all health checks: count = %d', response.HealthChecks.length);
     return response.HealthChecks;
   }
 
-  async getHealthCheck(id: string): Promise<AWS.Route53.HealthCheck> {
+  async getHealthCheck(id: string): Promise<HealthCheck> {
     debug('getting health check: %s', id);
-    const response = await this.route53().getHealthCheck({ HealthCheckId: id }).promise();
+    const response = await this.route53().getHealthCheck({ HealthCheckId: id });
     if (!response.HealthCheck) {
       throw new Error(`health check not found: ${id}`);
     }
@@ -28,73 +33,81 @@ export class Route53Api {
     return response.HealthCheck;
   }
 
-  async createHealthCheck(request: AWS.Route53.CreateHealthCheckRequest): Promise<AWS.Route53.HealthCheck> {
+  async createHealthCheck(
+    request: CreateHealthCheckRequest
+  ): Promise<HealthCheck> {
     debug('creating health check: %j', request);
-    const response = await this.route53().createHealthCheck(request).promise();
+    const response = await this.route53().createHealthCheck(request);
     debug('created health check: %j', response.HealthCheck);
     return response.HealthCheck;
   }
 
   async deleteHealthCheck(id: string): Promise<void> {
     debug('deleting health check: %s', id);
-    await this.route53().deleteHealthCheck({ HealthCheckId: id }).promise();
+    await this.route53().deleteHealthCheck({ HealthCheckId: id });
     debug('deleted health check');
   }
 
-  async listHostedZones(): Promise<AWS.Route53.HostedZone[]> {
+  async listHostedZones(): Promise<HostedZone[]> {
     debug('getting all hosted zones');
-    const response = await this.route53().listHostedZones().promise();
+    const response = await this.route53().listHostedZones({});
     debug('got all hosted zones: count = %d', response.HostedZones.length);
     return response.HostedZones;
   }
 
-  async getHostedZone(id: string): Promise<AWS.Route53.HostedZone> {
+  async getHostedZone(id: string): Promise<HostedZone> {
     debug('getting hosted zone: %s', id);
     const response = await this.route53().getHostedZone({
-      Id: id
-    }).promise();
+      Id: id,
+    });
     debug('got hosted zone');
     return response.HostedZone;
   }
 
-  async listRecordSets(hostedZoneId: string): Promise<AWS.Route53.ResourceRecordSet[]> {
+  async listRecordSets(hostedZoneId: string): Promise<ResourceRecordSet[]> {
     debug('getting record sets: %s', hostedZoneId);
     const response = await this.route53().listResourceRecordSets({
-      HostedZoneId: hostedZoneId
-    }).promise();
+      HostedZoneId: hostedZoneId,
+    });
     debug('got record sets');
     return response.ResourceRecordSets;
   }
 
-  async createRecordSet(hostedZoneId: string, recordSet: AWS.Route53.ResourceRecordSet): Promise<void> {
+  async createRecordSet(
+    hostedZoneId: string,
+    recordSet: ResourceRecordSet
+  ): Promise<void> {
     debug('creating record set: %s, %j', hostedZoneId, recordSet);
-    const change: AWS.Route53.Change = {
+    const change: Change = {
       Action: 'CREATE',
-      ResourceRecordSet: recordSet
-    }
-    const changeBatch: AWS.Route53.ChangeBatch = {
-      Changes: [change]
+      ResourceRecordSet: recordSet,
+    };
+    const changeBatch: ChangeBatch = {
+      Changes: [change],
     };
     await this.route53().changeResourceRecordSets({
       HostedZoneId: hostedZoneId,
-      ChangeBatch: changeBatch
-    }).promise();
+      ChangeBatch: changeBatch,
+    });
     debug('created record set');
   }
 
-  async deleteRecordSet(hostedZoneId: string, recordSet: AWS.Route53.ResourceRecordSet): Promise<void> {
+  async deleteRecordSet(
+    hostedZoneId: string,
+    recordSet: ResourceRecordSet
+  ): Promise<void> {
     debug('deleting record set: %s, %j', hostedZoneId, recordSet);
-    const change: AWS.Route53.Change = {
+    const change: Change = {
       Action: 'DELETE',
-      ResourceRecordSet: recordSet
-    }
-    const changeBatch: AWS.Route53.ChangeBatch = {
-      Changes: [change]
+      ResourceRecordSet: recordSet,
+    };
+    const changeBatch: ChangeBatch = {
+      Changes: [change],
     };
     await this.route53().changeResourceRecordSets({
       HostedZoneId: hostedZoneId,
-      ChangeBatch: changeBatch
-    }).promise();
+      ChangeBatch: changeBatch,
+    });
     debug('deleted record set');
   }
 }

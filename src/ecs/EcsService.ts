@@ -1,11 +1,11 @@
-import { ApiNode } from "../node/ApiNode";
-import { AwsApi } from "../awsapi/AwsApi";
-import { EcsCluster } from "./EcsCluster";
-import { AwsDataApiNode } from "../node/AwsDataApiNode";
+import { ApiNode } from '../node/ApiNode';
+import { AwsApi } from '../awsapi/AwsApi';
+import { AwsDataApiNode } from '../node/AwsDataApiNode';
+import { Service } from '@aws-sdk/client-ecs';
 
 const debug = require('debug')('fluentaws:EcsService');
 
-export class EcsService extends AwsDataApiNode<AWS.ECS.Service> {
+export class EcsService extends AwsDataApiNode<Service> {
   clusterId: string;
   name: string;
 

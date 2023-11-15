@@ -1,13 +1,11 @@
-import * as AWS from 'aws-sdk';
 import { CognitoUserAttribute, ISignUpResult, CognitoUserSession } from 'amazon-cognito-identity-js';
-import { UserPoolDescriptionType, UserType, AdminGetUserResponse } from 'aws-sdk/clients/cognitoidentityserviceprovider';
 import { FluentAwsConfig } from '../FluentAwsConfig';
+import { AdminGetUserResponse, CognitoIdentityProvider, UserPoolDescriptionType, UserType } from '@aws-sdk/client-cognito-identity-provider';
 export declare class CognitoApi {
-    config: FluentAwsConfig;
-    cognitoSp: () => AWS.CognitoIdentityServiceProvider;
+    private config;
+    private cognitoSp;
     constructor(config: FluentAwsConfig);
-    private getPoolData;
-    private getCognitoUser;
+    getClient(): CognitoIdentityProvider;
     listUserPools(): Promise<UserPoolDescriptionType[]>;
     describeUserPool(poolId: string): Promise<UserPoolDescriptionType>;
     listUsers(poolId: string): Promise<UserType[]>;
@@ -22,4 +20,6 @@ export declare class CognitoApi {
     removeUserFromGroup(poolId: string, userName: string, groupName: string): Promise<void>;
     listGroupsForUser(poolId: string, userName: string): Promise<string[]>;
     globalSignOut(poolId: string, userName: string): Promise<void>;
+    private getPoolData;
+    private getCognitoUser;
 }

@@ -2,6 +2,7 @@ import { ApiNodeFactory } from '../../src/node/ApiNodeFactory';
 import { Route53HealthCheckCollection } from '../../src/route53/Route53HealthCheckCollection';
 import { apiNodeCollectionStubs } from '../utils/stubs';
 import { AwsApi } from '../../src/awsapi/AwsApi';
+import { HealthCheck } from '@aws-sdk/client-route-53';
 
 describe('Route53HealthCheckCollection', () => {
   it('will create from id', async () => {
@@ -18,7 +19,7 @@ describe('Route53HealthCheckCollection', () => {
   it('will create from AWS data', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.route53HealthCheck = stubs.factoryStub;
-    const awsData: AWS.Route53.HealthCheck = <any>{
+    const awsData: HealthCheck = <any>{
       Id: 'healthCheckId',
     };
 

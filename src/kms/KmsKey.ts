@@ -1,8 +1,9 @@
 import { ApiNode } from '../node/ApiNode';
 import { AwsDataApiNode } from '../node/AwsDataApiNode';
 import { AwsApi } from '../awsapi/AwsApi';
+import { KeyMetadata } from '@aws-sdk/client-kms';
 
-export class KmsKey extends AwsDataApiNode<AWS.KMS.KeyMetadata> {
+export class KmsKey extends AwsDataApiNode<KeyMetadata> {
   id: string;
 
   constructor(parent: ApiNode, id: string) {

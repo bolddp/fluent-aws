@@ -1,11 +1,12 @@
-import { ApiNode } from "../node/ApiNode";
-import { Readable } from "stream";
-import { AwsApi } from "../awsapi/AwsApi";
-import { AwsDataApiNode } from "../node/AwsDataApiNode";
+import { ApiNode } from '../node/ApiNode';
+import { Readable } from 'stream';
+import { AwsApi } from '../awsapi/AwsApi';
+import { AwsDataApiNode } from '../node/AwsDataApiNode';
+import { GetObjectOutput } from '@aws-sdk/client-s3';
 
 const debug = require('debug')('fluentaws:S3Object');
 
-export class S3Object extends AwsDataApiNode<AWS.S3.GetObjectOutput> {
+export class S3Object extends AwsDataApiNode<GetObjectOutput> {
   bucketName: string;
   key: string;
 
@@ -24,13 +25,25 @@ export class S3Object extends AwsDataApiNode<AWS.S3.GetObjectOutput> {
    */
   async exists(): Promise<boolean> {
     try {
-      debug('checking object exists... bucket: %s, key: %s', this.bucketName, this.key);
+      debug(
+        'checking object exists... bucket: %s, key: %s',
+        this.bucketName,
+        this.key
+      );
       await AwsApi.s3(this.config()).headObject(this.bucketName, this.key);
-      debug('checked object exists = true... bucket: %s, key: %s', this.bucketName, this.key);
+      debug(
+        'checked object exists = true... bucket: %s, key: %s',
+        this.bucketName,
+        this.key
+      );
       return true;
     } catch (error) {
       if (error.statusCode === 404) {
-        debug('checked object exists = false... bucket: %s, key: %s', this.bucketName, this.key);
+        debug(
+          'checked object exists = false... bucket: %s, key: %s',
+          this.bucketName,
+          this.key
+        );
         return false;
       }
       throw error;
@@ -44,13 +57,23 @@ export class S3Object extends AwsDataApiNode<AWS.S3.GetObjectOutput> {
 
   async writeS3Object(s3Object: S3Object, acl?: string): Promise<S3Object> {
     await this.ensureResolved();
-    await AwsApi.s3(this.config()).copyObject(s3Object.bucketName, s3Object.key, this.bucketName, this.key, acl);
+    await AwsApi.s3(this.config()).copyObject(
+      s3Object.bucketName,
+      s3Object.key,
+      this.bucketName,
+      this.key,
+      acl
+    );
     return s3Object;
   }
 
   async writeString(contents: string): Promise<void> {
     await this.ensureResolved();
-    await AwsApi.s3(this.config()).putObject(this.bucketName, this.key, contents);
+    await AwsApi.s3(this.config()).putObject(
+      this.bucketName,
+      this.key,
+      Readable.from(contents)
+    );
   }
 
   async readString(): Promise<string> {
@@ -58,7 +81,7 @@ export class S3Object extends AwsDataApiNode<AWS.S3.GetObjectOutput> {
     return obj.Body.toString();
   }
 
-  async readStream(): Promise<Readable> {
+  async readStream(): Promise<ReadableStream> {
     await this.ensureResolved();
     return AwsApi.s3(this.config()).getObjectStream(this.bucketName, this.key);
   }

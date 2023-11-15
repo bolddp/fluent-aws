@@ -1,42 +1,37 @@
-import * as AWS from 'aws-sdk';
 import {
-  CognitoUserAttribute, ISignUpResult, CognitoUserPool, ICognitoUserPoolData,
-  CognitoUserSession, CognitoUser, ICognitoUserData, IAuthenticationDetailsData,
-  AuthenticationDetails, CognitoRefreshToken
+  CognitoUserAttribute,
+  ISignUpResult,
+  CognitoUserPool,
+  ICognitoUserPoolData,
+  CognitoUserSession,
+  CognitoUser,
+  ICognitoUserData,
+  IAuthenticationDetailsData,
+  AuthenticationDetails,
+  CognitoRefreshToken,
 } from 'amazon-cognito-identity-js';
-import { UserPoolDescriptionType, UserType, AdminGetUserResponse, AttributeType } from 'aws-sdk/clients/cognitoidentityserviceprovider';
 import { FluentAwsConfig } from '../FluentAwsConfig';
+import {
+  AdminGetUserResponse,
+  CognitoIdentityProvider,
+  UserPoolDescriptionType,
+  UserType,
+} from '@aws-sdk/client-cognito-identity-provider';
 
 const debug = require('debug')('fluentaws:CognitoApi');
 
 export class CognitoApi {
-  config: FluentAwsConfig;
-  cognitoSp = () => new AWS.CognitoIdentityServiceProvider(this.config);
+  private cognitoSp = () => new CognitoIdentityProvider(this.config);
 
-  constructor(config: FluentAwsConfig) {
-    this.config = config;
-  }
+  constructor(private config: FluentAwsConfig) {}
 
-  private getPoolData(poolId: string, clientId: string): CognitoUserPool {
-    const poolData: ICognitoUserPoolData = {
-      UserPoolId: poolId,
-      ClientId: clientId
-    };
-    return new CognitoUserPool(poolData);
-  }
-
-  private getCognitoUser(poolId: string, clientId: string, userName: string): CognitoUser {
-    const pool = this.getPoolData(poolId, clientId);
-    const userData: ICognitoUserData = {
-      Username: userName,
-      Pool: pool
-    };
-    return new CognitoUser(userData);
+  getClient(): CognitoIdentityProvider {
+    return this.cognitoSp();
   }
 
   async listUserPools(): Promise<UserPoolDescriptionType[]> {
     debug('listing user pools');
-    const response = await this.cognitoSp().listUserPools().promise();
+    const response = await this.cognitoSp().listUserPools({ MaxResults: 60 });
     debug('listed user pools');
     return response.UserPools;
   }
@@ -44,8 +39,8 @@ export class CognitoApi {
   async describeUserPool(poolId: string): Promise<UserPoolDescriptionType> {
     debug('describing user pool: %s', poolId);
     const response = await this.cognitoSp().describeUserPool({
-      UserPoolId: poolId
-    }).promise();
+      UserPoolId: poolId,
+    });
     debug('described user pool');
     return response.UserPool;
   }
@@ -56,35 +51,59 @@ export class CognitoApi {
     const recursiveFunction = async (paginationToken?: string) => {
       const response = await this.cognitoSp().listUsers({
         UserPoolId: poolId,
-        PaginationToken: paginationToken
-      }).promise();
+        PaginationToken: paginationToken,
+      });
       result = result.concat(response.Users);
       if (response.PaginationToken) {
         await recursiveFunction(response.PaginationToken);
       }
-    }
+    };
     await recursiveFunction();
     debug('listed users');
     return result;
   }
 
-  async signup(poolId: string, clientId: string, userName: string, password: string,
-    attributeList: CognitoUserAttribute[], skipVerification: boolean = false): Promise<ISignUpResult> {
+  async signup(
+    poolId: string,
+    clientId: string,
+    userName: string,
+    password: string,
+    attributeList: CognitoUserAttribute[],
+    skipVerification: boolean = false
+  ): Promise<ISignUpResult> {
     if (!skipVerification) {
-      debug('signing up: %s, clientId: %s, userName: %s, attr: %j', poolId, clientId, userName, attributeList);
+      debug(
+        'signing up: %s, clientId: %s, userName: %s, attr: %j',
+        poolId,
+        clientId,
+        userName,
+        attributeList
+      );
       return new Promise((resolve, reject) => {
         const poolData = this.getPoolData(poolId, clientId);
-        poolData.signUp(userName, password, attributeList, null, (err, result) => {
-          if (err) {
-            reject(err);
-          } else {
-            debug('signed up');
-            resolve(result);
+        poolData.signUp(
+          userName,
+          password,
+          attributeList,
+          null,
+          (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              debug('signed up');
+              resolve(result);
+            }
           }
-        });
-      })
+        );
+      });
     } else {
-      debug('admin create user: %s, clientId: %s, userName: %s, attr: %j', poolId, clientId, userName, attributeList);
+      debug(
+        'admin create user: %s, clientId: %s, userName: %s, attr: %j',
+        poolId,
+        clientId,
+        userName,
+        attributeList
+      );
       const rsp = await this.cognitoSp().adminCreateUser({
         UserPoolId: poolId,
         Username: userName,
@@ -92,32 +111,42 @@ export class CognitoApi {
         ForceAliasCreation: false,
         MessageAction: 'SUPPRESS',
         TemporaryPassword: '!ItIsTemp01',
-        UserAttributes: attributeList.map(a => {
-          return { Name: a.getName(), Value: a.getValue() }
-        })
-      }).promise();
+        UserAttributes: attributeList.map((a) => {
+          return { Name: a.getName(), Value: a.getValue() };
+        }),
+      });
       debug('admin created user');
-      debug('admin set user password: %s, clientId: %s, userName: %s', poolId, clientId, userName);
+      debug(
+        'admin set user password: %s, clientId: %s, userName: %s',
+        poolId,
+        clientId,
+        userName
+      );
       await this.cognitoSp().adminSetUserPassword({
         UserPoolId: poolId,
         Username: rsp.User.Username,
         Password: password,
-        Permanent: true
-      }).promise();
+        Permanent: true,
+      });
       debug('admin did set user password');
       return {
         user: this.getCognitoUser(poolId, clientId, userName),
         userConfirmed: true,
         userSub: rsp.User.Username,
-        codeDeliveryDetails: undefined
-      }
+        codeDeliveryDetails: undefined,
+      };
     }
   }
 
-  async login(poolId: string, clientId: string, userName: string, password: string): Promise<CognitoUserSession> {
+  async login(
+    poolId: string,
+    clientId: string,
+    userName: string,
+    password: string
+  ): Promise<CognitoUserSession> {
     const authenticationData: IAuthenticationDetailsData = {
       Username: userName,
-      Password: password
+      Password: password,
     };
     const authenticationDetails = new AuthenticationDetails(authenticationData);
 
@@ -125,48 +154,68 @@ export class CognitoApi {
       const user = this.getCognitoUser(poolId, clientId, userName);
       user.authenticateUser(authenticationDetails, {
         onSuccess: (session: CognitoUserSession) => resolve(session),
-        onFailure: (err: any) => reject(err)
+        onFailure: (err: any) => reject(err),
       });
     });
   }
 
-  async refresh(poolId: string, clientId: string, userName: string, refreshToken: string): Promise<CognitoUserSession> {
+  async refresh(
+    poolId: string,
+    clientId: string,
+    userName: string,
+    refreshToken: string
+  ): Promise<CognitoUserSession> {
     return await new Promise<CognitoUserSession>((resolve, reject) => {
       const user = this.getCognitoUser(poolId, clientId, userName);
-      user.refreshSession(new CognitoRefreshToken({ RefreshToken: refreshToken }), (err, session) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(session);
+      user.refreshSession(
+        new CognitoRefreshToken({ RefreshToken: refreshToken }),
+        (err, session) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(session);
+          }
         }
-      });
+      );
     });
   }
 
-  async getUser(poolId: string, userName: string): Promise<AdminGetUserResponse> {
+  async getUser(
+    poolId: string,
+    userName: string
+  ): Promise<AdminGetUserResponse> {
     return await this.cognitoSp().adminGetUser({
       UserPoolId: poolId,
-      Username: userName
-    }).promise();
+      Username: userName,
+    });
   }
 
-  async forgotPassword(poolId: string, clientId: string, userName: string): Promise<any> {
+  async forgotPassword(
+    poolId: string,
+    clientId: string,
+    userName: string
+  ): Promise<any> {
     return await new Promise<any>((resolve, reject) => {
       const user = this.getCognitoUser(poolId, clientId, userName);
       user.forgotPassword({
-        onSuccess: rsp => resolve(rsp),
-        onFailure: error => reject(error)
+        onSuccess: (rsp) => resolve(rsp),
+        onFailure: (error) => reject(error),
       });
     });
   }
 
-  async confirmPassword(poolId: string, clientId: string, userName: string,
-    verificationCode: string, newPassword: string): Promise<void> {
+  async confirmPassword(
+    poolId: string,
+    clientId: string,
+    userName: string,
+    verificationCode: string,
+    newPassword: string
+  ): Promise<void> {
     await new Promise<void>((resolve, reject) => {
       const user = this.getCognitoUser(poolId, clientId, userName);
       user.confirmPassword(verificationCode, newPassword, {
         onSuccess: () => resolve(),
-        onFailure: (error) => reject(error)
+        onFailure: (error) => reject(error),
       });
     });
   }
@@ -175,28 +224,46 @@ export class CognitoApi {
     debug('deleting user: %s, poolId: %s', userName, poolId);
     await this.cognitoSp().adminDeleteUser({
       UserPoolId: poolId,
-      Username: userName
-    }).promise();
+      Username: userName,
+    });
     debug('deleted user');
   }
 
-  async addUserToGroup(poolId: string, userName: string, groupName: string): Promise<void> {
-    debug('adding user to group: %s, poolId: %s, group: %s', userName, poolId, groupName);
+  async addUserToGroup(
+    poolId: string,
+    userName: string,
+    groupName: string
+  ): Promise<void> {
+    debug(
+      'adding user to group: %s, poolId: %s, group: %s',
+      userName,
+      poolId,
+      groupName
+    );
     await this.cognitoSp().adminAddUserToGroup({
       UserPoolId: poolId,
       Username: userName,
-      GroupName: groupName
-    }).promise();
+      GroupName: groupName,
+    });
     debug('added user to group');
   }
 
-  async removeUserFromGroup(poolId: string, userName: string, groupName: string): Promise<void> {
-    debug('removing user from group: %s, poolId: %s, group: %s', userName, poolId, groupName);
+  async removeUserFromGroup(
+    poolId: string,
+    userName: string,
+    groupName: string
+  ): Promise<void> {
+    debug(
+      'removing user from group: %s, poolId: %s, group: %s',
+      userName,
+      poolId,
+      groupName
+    );
     await this.cognitoSp().adminRemoveUserFromGroup({
       UserPoolId: poolId,
       Username: userName,
-      GroupName: groupName
-    }).promise();
+      GroupName: groupName,
+    });
     debug('removed user from group');
   }
 
@@ -204,17 +271,38 @@ export class CognitoApi {
     debug('listing groups for user: %s, poolId: %s', userName, poolId);
     const response = await this.cognitoSp().adminListGroupsForUser({
       UserPoolId: poolId,
-      Username: userName
-    }).promise();
-    return response.Groups.map(g => g.GroupName);
+      Username: userName,
+    });
+    return response.Groups.map((g) => g.GroupName);
   }
 
   async globalSignOut(poolId: string, userName: string): Promise<void> {
     debug('globally signing out user: %s, poolId:', userName, poolId);
     await this.cognitoSp().adminUserGlobalSignOut({
       UserPoolId: poolId,
-      Username: userName
-    }).promise();
+      Username: userName,
+    });
     debug('globally signed out user');
+  }
+
+  private getPoolData(poolId: string, clientId: string): CognitoUserPool {
+    const poolData: ICognitoUserPoolData = {
+      UserPoolId: poolId,
+      ClientId: clientId,
+    };
+    return new CognitoUserPool(poolData);
+  }
+
+  private getCognitoUser(
+    poolId: string,
+    clientId: string,
+    userName: string
+  ): CognitoUser {
+    const pool = this.getPoolData(poolId, clientId);
+    const userData: ICognitoUserData = {
+      Username: userName,
+      Pool: pool,
+    };
+    return new CognitoUser(userData);
   }
 }

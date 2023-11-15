@@ -1,23 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -29,12 +10,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CloudFormationApi = void 0;
-const AWS = __importStar(require("aws-sdk"));
+const client_cloudformation_1 = require("@aws-sdk/client-cloudformation");
 const debug = require('debug')('fluentaws:CloudFormationApi');
 class CloudFormationApi {
     constructor(config) {
-        this.cf = () => new AWS.CloudFormation(this.config);
         this.config = config;
+        this.cf = () => new client_cloudformation_1.CloudFormation(this.config);
     }
     describeStacks() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -42,8 +23,7 @@ class CloudFormationApi {
             let result = [];
             // Perform the call in a function since we may need to recursively call it
             const recursiveFunction = (nextToken) => __awaiter(this, void 0, void 0, function* () {
-                const response = yield this.cf()
-                    .describeStacks(nextToken ? { NextToken: nextToken } : {}).promise();
+                const response = yield this.cf().describeStacks(nextToken ? { NextToken: nextToken } : {});
                 result = result.concat(response.Stacks);
                 if (response.NextToken) {
                     yield recursiveFunction(response.NextToken);
@@ -58,8 +38,8 @@ class CloudFormationApi {
         return __awaiter(this, void 0, void 0, function* () {
             debug('describing stack: %s', stackName);
             const response = yield this.cf().describeStacks({
-                StackName: stackName
-            }).promise();
+                StackName: stackName,
+            });
             if (response.Stacks.length == 0) {
                 throw new Error(`Stack not found: ${stackName}`);
             }
@@ -71,8 +51,8 @@ class CloudFormationApi {
         return __awaiter(this, void 0, void 0, function* () {
             debug('detecting stack drift: %s', stackName);
             const response = yield this.cf().detectStackDrift({
-                StackName: stackName
-            }).promise();
+                StackName: stackName,
+            });
             debug('detected stack drift');
             return response.StackDriftDetectionId;
         });
@@ -81,8 +61,8 @@ class CloudFormationApi {
         return __awaiter(this, void 0, void 0, function* () {
             debug('describing StackDriftDetectionStatus: %s', driftDetectionId);
             const response = yield this.cf().describeStackDriftDetectionStatus({
-                StackDriftDetectionId: driftDetectionId
-            }).promise();
+                StackDriftDetectionId: driftDetectionId,
+            });
             debug('described StackDriftDetectionStatus');
             return response.DetectionStatus;
         });
@@ -91,8 +71,8 @@ class CloudFormationApi {
         return __awaiter(this, void 0, void 0, function* () {
             debug('describing StackResourceDrifts: %s', stackName);
             const response = yield this.cf().describeStackResourceDrifts({
-                StackName: stackName
-            }).promise();
+                StackName: stackName,
+            });
             debug('described StackResourceDrifts');
             return response.StackResourceDrifts;
         });
@@ -104,8 +84,8 @@ class CloudFormationApi {
             const recursiveFunction = (nextToken) => __awaiter(this, void 0, void 0, function* () {
                 const response = yield this.cf().listStackResources({
                     StackName: stackName,
-                    NextToken: nextToken
-                }).promise();
+                    NextToken: nextToken,
+                });
                 result = result.concat(response.StackResourceSummaries);
                 if (response.NextToken) {
                     yield recursiveFunction(response.NextToken);
@@ -121,8 +101,8 @@ class CloudFormationApi {
             debug('getting stack template: %s', stackName);
             const response = yield this.cf().getTemplate({
                 StackName: stackName,
-                TemplateStage: templateStage
-            }).promise();
+                TemplateStage: templateStage,
+            });
             debug('got stack template');
             return response.TemplateBody;
         });

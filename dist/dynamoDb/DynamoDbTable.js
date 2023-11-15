@@ -25,34 +25,38 @@ class DynamoDbTable extends AwsDataApiNode_1.AwsDataApiNode {
             yield this.ensureResolved();
             return AwsApi_1.AwsApi.dynamoDb(this.config()).get({
                 TableName: this.tableName,
-                Key: key
+                Key: key,
             });
         });
     }
     query(key) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            const keyConditionExpression = Object.keys(key).map(k => `${k} = :${k.toLowerCase()}`).join(' and ');
+            const keyConditionExpression = Object.keys(key)
+                .map((k) => `${k} = :${k.toLowerCase()}`)
+                .join(' and ');
             const expressionAttributeValues = {};
-            Object.keys(key).forEach(k => expressionAttributeValues[`:${k.toLowerCase()}`] = key[k]);
+            Object.keys(key).forEach((k) => (expressionAttributeValues[`:${k.toLowerCase()}`] = key[k]));
             return AwsApi_1.AwsApi.dynamoDb(this.config()).query({
                 TableName: this.tableName,
                 KeyConditionExpression: keyConditionExpression,
-                ExpressionAttributeValues: expressionAttributeValues
+                ExpressionAttributeValues: expressionAttributeValues,
             });
         });
     }
     queryByIndex(indexName, key) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
-            const keyConditionExpression = Object.keys(key).map(k => `${k} = :${k.toLowerCase()}`).join(' and ');
+            const keyConditionExpression = Object.keys(key)
+                .map((k) => `${k} = :${k.toLowerCase()}`)
+                .join(' and ');
             const expressionAttributeValues = {};
-            Object.keys(key).forEach(k => expressionAttributeValues[`:${k.toLowerCase()}`] = key[k]);
+            Object.keys(key).forEach((k) => (expressionAttributeValues[`:${k.toLowerCase()}`] = key[k]));
             return AwsApi_1.AwsApi.dynamoDb(this.config()).query({
                 TableName: this.tableName,
                 IndexName: indexName,
                 KeyConditionExpression: keyConditionExpression,
-                ExpressionAttributeValues: expressionAttributeValues
+                ExpressionAttributeValues: expressionAttributeValues,
             });
         });
     }

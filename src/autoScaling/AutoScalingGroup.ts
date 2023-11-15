@@ -1,5 +1,5 @@
-import * as AWS from 'aws-sdk';
-import { ApiNode } from "../node/ApiNode";
+import { AutoScalingGroup as AwsAutoScalingGroup } from '@aws-sdk/client-auto-scaling';
+import { ApiNode } from '../node/ApiNode';
 import { Ec2InstanceCollection } from '../ec2/Ec2InstanceCollection';
 import { ApiNodeFactory } from '../node/ApiNodeFactory';
 import { AwsApi } from '../awsapi/AwsApi';
@@ -8,7 +8,7 @@ import { AwsDataApiNode } from '../node/AwsDataApiNode';
 /**
  * Representation of an AWS Autoscaling group.
  */
-export class AutoScalingGroup extends AwsDataApiNode<AWS.AutoScaling.AutoScalingGroup> {
+export class AutoScalingGroup extends AwsDataApiNode<AwsAutoScalingGroup> {
   name: string;
   ec2InstanceCollection: Ec2InstanceCollection;
 
@@ -27,24 +27,37 @@ export class AutoScalingGroup extends AwsDataApiNode<AWS.AutoScaling.AutoScaling
       // Promise to determine the id's of all instances in the autoscaling group
       this.promiseChain.addVolatile(async () => {
         const awsData = await this.loadAwsData();
-        this.ec2InstanceCollection.instanceIds = awsData.Instances.map(x => x.InstanceId);
+        this.ec2InstanceCollection.instanceIds = awsData.Instances.map(
+          (x) => x.InstanceId
+        );
       });
     }
     return this.ec2InstanceCollection;
   }
 
-  async updateSize(minSize: number, maxSize: number, desiredSize: number): Promise<void> {
+  async updateSize(
+    minSize: number,
+    maxSize: number,
+    desiredSize: number
+  ): Promise<void> {
     await this.ensureResolved();
     return AwsApi.autoScaling(this.config()).update({
       AutoScalingGroupName: this.name,
       MinSize: minSize,
       MaxSize: maxSize,
-      DesiredCapacity: desiredSize
+      DesiredCapacity: desiredSize,
     });
   }
 
-  async setInstanceProtection(instanceIds: string[], value: boolean): Promise<void> {
+  async setInstanceProtection(
+    instanceIds: string[],
+    value: boolean
+  ): Promise<void> {
     await this.ensureResolved();
-    return AwsApi.autoScaling(this.config()).setInstanceProtection(this.name, instanceIds, value);
+    return AwsApi.autoScaling(this.config()).setInstanceProtection(
+      this.name,
+      instanceIds,
+      value
+    );
   }
 }

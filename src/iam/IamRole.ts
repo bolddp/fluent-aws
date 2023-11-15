@@ -1,8 +1,9 @@
-import { AwsDataApiNode } from "../node/AwsDataApiNode";
-import { ApiNode } from "../node/ApiNode";
-import { AwsApi } from "../awsapi/AwsApi";
+import { AwsDataApiNode } from '../node/AwsDataApiNode';
+import { ApiNode } from '../node/ApiNode';
+import { AwsApi } from '../awsapi/AwsApi';
+import { Role } from '@aws-sdk/client-iam';
 
-export class IamRole extends AwsDataApiNode<AWS.IAM.Role> {
+export class IamRole extends AwsDataApiNode<Role> {
   name: string;
 
   constructor(parent: ApiNode, name: string) {

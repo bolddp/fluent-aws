@@ -2,6 +2,7 @@ import { ApiNodeFactory } from '../../src/node/ApiNodeFactory';
 import { apiNodeCollectionStubs } from '../utils/stubs';
 import { AwsApi } from '../../src/awsapi/AwsApi';
 import { CloudFormationStackCollection } from '../../src/cf/CloudFormationStackCollection';
+import { Stack } from '@aws-sdk/client-cloudformation';
 
 describe('CloudFormationStackCollection', () => {
   it('will create from id', async () => {
@@ -18,7 +19,7 @@ describe('CloudFormationStackCollection', () => {
   it('will create from AWS data', async () => {
     const stubs = apiNodeCollectionStubs();
     ApiNodeFactory.cloudFormationStack = stubs.factoryStub;
-    const awsData: AWS.CloudFormation.Stack = <any>(<unknown>{
+    const awsData: Stack = <any>(<unknown>{
       StackName: 'stackName',
     });
 

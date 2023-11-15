@@ -1,23 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -29,37 +10,41 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.S3Api = void 0;
-const AWS = __importStar(require("aws-sdk"));
+const client_s3_1 = require("@aws-sdk/client-s3");
+const s3_request_presigner_1 = require("@aws-sdk/s3-request-presigner");
 class S3Api {
     constructor(config) {
-        this.s3 = () => new AWS.S3({
-            region: this.config.region,
-            credentials: this.config.credentials
-        });
         this.config = config;
+        this.s3 = () => new client_s3_1.S3({
+            region: this.config.region,
+            credentials: this.config.credentials,
+        });
+    }
+    getClient() {
+        return this.s3();
     }
     headBucket(bucketName) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.s3().headBucket({ Bucket: bucketName }).promise();
+            yield this.s3().headBucket({ Bucket: bucketName });
         });
     }
     createBucket(bucketName) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.s3().createBucket({ Bucket: bucketName }).promise();
+            yield this.s3().createBucket({ Bucket: bucketName });
         });
     }
     listObjects(bucketName, prefix) {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield this.s3().listObjects({
                 Bucket: bucketName,
-                Prefix: prefix
-            }).promise();
+                Prefix: prefix,
+            });
             return response.Contents;
         });
     }
     listBuckets() {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.s3().listBuckets().promise();
+            const response = yield this.s3().listBuckets({});
             return response.Buckets;
         });
     }
@@ -67,43 +52,44 @@ class S3Api {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.s3().headObject({
                 Bucket: bucketName,
-                Key: key
-            }).promise();
+                Key: key,
+            });
         });
     }
     getObject(bucketName, key) {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield this.s3().getObject({
                 Bucket: bucketName,
-                Key: key
-            }).promise();
+                Key: key,
+            });
             return response;
         });
     }
     getObjectStream(bucketName, key) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.s3().getObject({
+            const response = yield this.s3().getObject({
                 Bucket: bucketName,
-                Key: key
-            }).createReadStream();
+                Key: key,
+            });
+            return response.Body.transformToWebStream();
         });
     }
     deleteObject(bucketName, key) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.s3().deleteObject({
                 Bucket: bucketName,
-                Key: key
-            }).promise();
+                Key: key,
+            });
         });
     }
     upload(bucketName, key, body, contentType) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.s3().upload({
+            yield this.s3().putObject({
                 Bucket: bucketName,
                 Key: key,
                 Body: body,
-                ContentType: contentType
-            }).promise();
+                ContentType: contentType,
+            });
         });
     }
     putObject(bucketName, key, body) {
@@ -111,8 +97,8 @@ class S3Api {
             yield this.s3().putObject({
                 Bucket: bucketName,
                 Key: key,
-                Body: body
-            }).promise();
+                Body: body,
+            });
         });
     }
     copyObject(sourceBucket, sourceKey, targetBucket, targetKey, acl) {
@@ -121,16 +107,19 @@ class S3Api {
                 CopySource: `/${sourceBucket}/${sourceKey}`,
                 Bucket: targetBucket,
                 Key: targetKey,
-                ACL: acl
-            }).promise();
+                ACL: acl,
+            });
         });
     }
     getSignedUrl(operation, bucket, key) {
-        const url = this.s3().getSignedUrl(operation, {
+        const params = {
             Bucket: bucket,
-            Key: key
-        });
-        return Promise.resolve(url);
+            Key: key,
+        };
+        const command = operation === 'putObject'
+            ? new client_s3_1.PutObjectCommand(params)
+            : new client_s3_1.GetObjectCommand(params);
+        return (0, s3_request_presigner_1.getSignedUrl)(this.s3(), command);
     }
 }
 exports.S3Api = S3Api;
