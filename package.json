@@ -1,6 +1,6 @@
 {
   "name": "fluent-aws",
-  "version": "0.19.1",
+  "version": "0.20.0",
   "description": "Fluent AWS API, written in Typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -47,6 +47,7 @@
     "@aws-sdk/client-route-53": "3.395.0",
     "@aws-sdk/client-s3": "3.395.0",
     "@aws-sdk/client-sns": "3.395.0",
+    "@aws-sdk/client-sqs": "3.395.0",
     "@aws-sdk/client-ssm": "3.395.0",
     "@aws-sdk/client-sts": "3.395.0",
     "@aws-sdk/credential-providers": "3.395.0",

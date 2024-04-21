@@ -48,6 +48,9 @@ const SnsTopic_1 = require("../sns/SnsTopic");
 const Sns_1 = require("../sns/Sns");
 const CognitoUser_1 = require("../cognito/CognitoUser");
 const CognitoUserCollection_1 = require("../cognito/CognitoUserCollection");
+const Sqs_1 = require("../sqs/Sqs");
+const SqsQueueCollection_1 = require("../sqs/SqsQueueCollection");
+const SqsQueue_1 = require("../sqs/SqsQueue");
 class ApiNodeFactory {
     // IAM
     static iamRole(parent, name) {
@@ -201,6 +204,16 @@ class ApiNodeFactory {
     }
     static snsTopic(parent, arn) {
         return new SnsTopic_1.SnsTopic(parent, arn);
+    }
+    // SQS
+    static sqs(parent) {
+        return new Sqs_1.Sqs(parent);
+    }
+    static sqsQueueCollection(parent) {
+        return new SqsQueueCollection_1.SqsQueueCollection(parent);
+    }
+    static sqsQueue(parent, url) {
+        return new SqsQueue_1.SqsQueue(parent, url);
     }
 }
 exports.ApiNodeFactory = ApiNodeFactory;

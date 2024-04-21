@@ -125,6 +125,9 @@ class FluentAws extends ApiNode_1.ApiNode {
     sns() {
         return ApiNodeFactory_1.ApiNodeFactory.sns(this);
     }
+    sqs() {
+        return ApiNodeFactory_1.ApiNodeFactory.sqs(this);
+    }
     systemsManager() {
         return ApiNodeFactory_1.ApiNodeFactory.systemsManager(this);
     }

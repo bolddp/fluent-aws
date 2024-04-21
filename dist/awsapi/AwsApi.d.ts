@@ -1,9 +1,9 @@
 import { SystemsManagerApi } from './SystemsManagerApi';
 import { CloudFormationApi } from './CloudFormationApi';
-import { S3Api } from "./S3Api";
-import { Ec2Api } from "./Ec2Api";
-import { AutoScalingApi } from "./AutoScalingApi";
-import { EcsApi } from "./EcsApi";
+import { S3Api } from './S3Api';
+import { Ec2Api } from './Ec2Api';
+import { AutoScalingApi } from './AutoScalingApi';
+import { EcsApi } from './EcsApi';
 import { IamApi } from './IamApi';
 import { Route53Api } from './Route53Api';
 import { FluentAwsConfig } from '../FluentAwsConfig';
@@ -12,6 +12,7 @@ import { StsApi } from './StsApi';
 import { KmsApi } from './KmsApi';
 import { CognitoApi } from './CognitoApi';
 import { SnsApi } from './SnsApi';
+import { SqsApi } from './SqsApi';
 /**
  * API for AWS services, using the regular Javascript AWS SDK to wrap requests
  * that are needed by the module.
@@ -28,6 +29,7 @@ export declare class AwsApi {
     static route53: (config: FluentAwsConfig) => Route53Api;
     static s3: (config: FluentAwsConfig) => S3Api;
     static sns: (config: FluentAwsConfig) => SnsApi;
+    static sqs: (config: FluentAwsConfig) => SqsApi;
     static sts: (config: FluentAwsConfig) => StsApi;
     static systemsManager: (config: FluentAwsConfig) => SystemsManagerApi;
 }

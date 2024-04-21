@@ -46,6 +46,9 @@ import { SnsTopic } from '../sns/SnsTopic';
 import { Sns } from '../sns/Sns';
 import { CognitoUser } from '../cognito/CognitoUser';
 import { CognitoUserCollection } from '../cognito/CognitoUserCollection';
+import { Sqs } from '../sqs/Sqs';
+import { SqsQueueCollection } from '../sqs/SqsQueueCollection';
+import { SqsQueue } from '../sqs/SqsQueue';
 
 export class ApiNodeFactory {
   // IAM
@@ -208,5 +211,15 @@ export class ApiNodeFactory {
   }
   static snsTopic(parent: ApiNode, arn: string) {
     return new SnsTopic(parent, arn);
+  }
+  // SQS
+  static sqs(parent: ApiNode) {
+    return new Sqs(parent);
+  }
+  static sqsQueueCollection(parent: ApiNode) {
+    return new SqsQueueCollection(parent);
+  }
+  static sqsQueue(parent: ApiNode, url: string) {
+    return new SqsQueue(parent, url);
   }
 }

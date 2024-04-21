@@ -12,6 +12,7 @@ import { Kms } from './kms/Kms';
 import { Cognito } from './cognito/Cognito';
 import { Sns } from './sns/Sns';
 import { FluentAwsConfig } from './FluentAwsConfig';
+import { Sqs } from './sqs/Sqs';
 export declare class FluentAws extends ApiNode {
     configInstance: FluentAwsConfig;
     promiseChain: PromiseChain;
@@ -45,6 +46,7 @@ export declare class FluentAws extends ApiNode {
     route53(): Route53;
     s3(): S3;
     sns(): Sns;
+    sqs(): Sqs;
     systemsManager(): SystemsManager;
 }
 export declare function aws(name?: string): FluentAws;

@@ -1,9 +1,4 @@
-import {
-  ListTopicsCommand,
-  PublishInput,
-  SNS,
-  Topic,
-} from '@aws-sdk/client-sns';
+import { PublishInput, SNS, Topic } from '@aws-sdk/client-sns';
 import { FluentAwsConfig } from '../FluentAwsConfig';
 
 const debug = require('debug')('fluentaws:SnsApi');

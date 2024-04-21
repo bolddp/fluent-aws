@@ -54,6 +54,10 @@ export * from './sns/Sns';
 export * from './sns/SnsTopicCollection';
 export * from './sns/SnsTopic';
 
+export * from './sqs/Sqs';
+export * from './sqs/SqsQueue';
+export * from './sqs/SqsQueueCollection';
+
 export * from './ssm/SystemsManager';
 export * from './ssm/SystemsManagerParameter';
 export * from './ssm/SystemsManagerParameterCollection';

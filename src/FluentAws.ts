@@ -16,6 +16,7 @@ import { Cognito } from './cognito/Cognito';
 import { Sns } from './sns/Sns';
 import { FluentAwsConfig } from './FluentAwsConfig';
 import { fromIni } from '@aws-sdk/credential-providers';
+import { Sqs } from './sqs/Sqs';
 
 (<any>global)['fetch'] = fetch;
 
@@ -145,6 +146,9 @@ export class FluentAws extends ApiNode {
   }
   sns(): Sns {
     return ApiNodeFactory.sns(this);
+  }
+  sqs(): Sqs {
+    return ApiNodeFactory.sqs(this);
   }
   systemsManager(): SystemsManager {
     return ApiNodeFactory.systemsManager(this);

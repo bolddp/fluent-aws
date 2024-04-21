@@ -1,10 +1,10 @@
-import { ApiNode } from "../node/ApiNode";
-import { ApiNodeFactory } from "../node/ApiNodeFactory";
+import { ApiNode } from '../node/ApiNode';
+import { ApiNodeFactory } from '../node/ApiNodeFactory';
 import { SnsTopicCollection } from './SnsTopicCollection';
 import { SnsTopic } from './SnsTopic';
 
 export class Sns extends ApiNode {
-  topicCollection: SnsTopicCollection;
+  private topicCollection: SnsTopicCollection;
 
   constructor(parent: ApiNode) {
     super(parent);

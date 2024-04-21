@@ -14,6 +14,7 @@ const StsApi_1 = require("./StsApi");
 const KmsApi_1 = require("./KmsApi");
 const CognitoApi_1 = require("./CognitoApi");
 const SnsApi_1 = require("./SnsApi");
+const SqsApi_1 = require("./SqsApi");
 const debug = require('debug')('fluentaws:AwsApi');
 /**
  * API for AWS services, using the regular Javascript AWS SDK to wrap requests
@@ -33,5 +34,6 @@ AwsApi.kms = (config) => new KmsApi_1.KmsApi(config);
 AwsApi.route53 = (config) => new Route53Api_1.Route53Api(config);
 AwsApi.s3 = (config) => new S3Api_1.S3Api(config);
 AwsApi.sns = (config) => new SnsApi_1.SnsApi(config);
+AwsApi.sqs = (config) => new SqsApi_1.SqsApi(config);
 AwsApi.sts = (config) => new StsApi_1.StsApi(config);
 AwsApi.systemsManager = (config) => new SystemsManagerApi_1.SystemsManagerApi(config);
