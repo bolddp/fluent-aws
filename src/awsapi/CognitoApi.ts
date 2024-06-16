@@ -13,6 +13,7 @@ import {
 import { FluentAwsConfig } from '../FluentAwsConfig';
 import {
   AdminGetUserResponse,
+  AttributeType,
   CognitoIdentityProvider,
   UserPoolDescriptionType,
   UserType,
@@ -246,6 +247,18 @@ export class CognitoApi {
       GroupName: groupName,
     });
     debug('added user to group');
+  }
+
+  async updateUserAttributes(
+    poolId: string,
+    userName: string,
+    attributes: AttributeType[]
+  ): Promise<void> {
+    await this.cognitoSp().adminUpdateUserAttributes({
+      UserPoolId: poolId,
+      Username: userName,
+      UserAttributes: attributes,
+    });
   }
 
   async removeUserFromGroup(

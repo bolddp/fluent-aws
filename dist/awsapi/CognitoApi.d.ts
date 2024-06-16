@@ -1,6 +1,6 @@
 import { CognitoUserAttribute, ISignUpResult, CognitoUserSession } from 'amazon-cognito-identity-js';
 import { FluentAwsConfig } from '../FluentAwsConfig';
-import { AdminGetUserResponse, CognitoIdentityProvider, UserPoolDescriptionType, UserType } from '@aws-sdk/client-cognito-identity-provider';
+import { AdminGetUserResponse, AttributeType, CognitoIdentityProvider, UserPoolDescriptionType, UserType } from '@aws-sdk/client-cognito-identity-provider';
 export declare class CognitoApi {
     private config;
     private cognitoSp;
@@ -17,6 +17,7 @@ export declare class CognitoApi {
     confirmPassword(poolId: string, clientId: string, userName: string, verificationCode: string, newPassword: string): Promise<void>;
     deleteUser(poolId: string, userName: string): Promise<void>;
     addUserToGroup(poolId: string, userName: string, groupName: string): Promise<void>;
+    updateUserAttributes(poolId: string, userName: string, attributes: AttributeType[]): Promise<void>;
     removeUserFromGroup(poolId: string, userName: string, groupName: string): Promise<void>;
     listGroupsForUser(poolId: string, userName: string): Promise<string[]>;
     globalSignOut(poolId: string, userName: string): Promise<void>;

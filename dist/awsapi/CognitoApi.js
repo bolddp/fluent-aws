@@ -188,6 +188,15 @@ class CognitoApi {
             debug('added user to group');
         });
     }
+    updateUserAttributes(poolId, userName, attributes) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.cognitoSp().adminUpdateUserAttributes({
+                UserPoolId: poolId,
+                Username: userName,
+                UserAttributes: attributes,
+            });
+        });
+    }
     removeUserFromGroup(poolId, userName, groupName) {
         return __awaiter(this, void 0, void 0, function* () {
             debug('removing user from group: %s, poolId: %s, group: %s', userName, poolId, groupName);

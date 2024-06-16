@@ -68,5 +68,14 @@ class CognitoUser extends AwsDataApiNode_1.AwsDataApiNode {
             yield AwsApi_1.AwsApi.cognito(this.config()).deleteUser(this.poolId.poolId, this.userName);
         });
     }
+    updateAttributes(attributes) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.ensureResolved();
+            yield AwsApi_1.AwsApi.cognito(this.config()).updateUserAttributes(this.poolId.poolId, this.userName, Object.entries(attributes).map(([key, value]) => ({
+                Name: key,
+                Value: value,
+            })));
+        });
+    }
 }
 exports.CognitoUser = CognitoUser;

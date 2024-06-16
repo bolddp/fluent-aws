@@ -3,7 +3,10 @@ import { CognitoUserPoolId } from './CognitoUserPool';
 import { AwsApi } from '../awsapi/AwsApi';
 import { ApiNode } from '../node/ApiNode';
 import { AwsDataApiNode } from '../node/AwsDataApiNode';
-import { AdminGetUserResponse } from '@aws-sdk/client-cognito-identity-provider';
+import {
+  AdminGetUserResponse,
+  AttributeType,
+} from '@aws-sdk/client-cognito-identity-provider';
 
 export class CognitoUser extends AwsDataApiNode<AdminGetUserResponse> {
   userName: string;
@@ -88,6 +91,18 @@ export class CognitoUser extends AwsDataApiNode<AdminGetUserResponse> {
     await AwsApi.cognito(this.config()).deleteUser(
       this.poolId.poolId,
       this.userName
+    );
+  }
+
+  async updateAttributes(attributes: { [key: string]: string }): Promise<void> {
+    await this.ensureResolved();
+    await AwsApi.cognito(this.config()).updateUserAttributes(
+      this.poolId.poolId,
+      this.userName,
+      Object.entries(attributes).map(([key, value]) => ({
+        Name: key,
+        Value: value,
+      }))
     );
   }
 }
