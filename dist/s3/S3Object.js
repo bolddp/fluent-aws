@@ -35,7 +35,7 @@ class S3Object extends AwsDataApiNode_1.AwsDataApiNode {
                 return true;
             }
             catch (error) {
-                if (error.statusCode === 404) {
+                if (error.name === 'NotFound') {
                     debug('checked object exists = false... bucket: %s, key: %s', this.bucketName, this.key);
                     return false;
                 }

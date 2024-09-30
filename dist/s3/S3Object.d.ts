@@ -1,6 +1,6 @@
 import { ApiNode } from '../node/ApiNode';
 import { AwsDataApiNode } from '../node/AwsDataApiNode';
-import { GetObjectOutput } from '@aws-sdk/client-s3';
+import { GetObjectOutput, ObjectCannedACL } from '@aws-sdk/client-s3';
 export declare class S3Object extends AwsDataApiNode<GetObjectOutput> {
     bucketName: string;
     key: string;
@@ -11,7 +11,7 @@ export declare class S3Object extends AwsDataApiNode<GetObjectOutput> {
      */
     exists(): Promise<boolean>;
     delete(): Promise<void>;
-    writeS3Object(s3Object: S3Object, acl?: string): Promise<S3Object>;
+    writeS3Object(s3Object: S3Object, acl?: ObjectCannedACL): Promise<S3Object>;
     writeString(contents: string): Promise<void>;
     readString(): Promise<string>;
     readStream(): Promise<ReadableStream>;

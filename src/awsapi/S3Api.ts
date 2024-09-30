@@ -5,6 +5,7 @@ import {
   GetObjectCommand,
   GetObjectCommandInput,
   GetObjectOutput,
+  ObjectCannedACL,
   PutObjectCommand,
   PutObjectCommandInput,
   S3,
@@ -110,7 +111,7 @@ export class S3Api {
     sourceKey: string,
     targetBucket: string,
     targetKey: string,
-    acl?: string
+    acl?: ObjectCannedACL
   ): Promise<void> {
     await this.s3().copyObject({
       CopySource: `/${sourceBucket}/${sourceKey}`,

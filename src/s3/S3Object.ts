@@ -2,7 +2,7 @@ import { ApiNode } from '../node/ApiNode';
 import { Readable } from 'stream';
 import { AwsApi } from '../awsapi/AwsApi';
 import { AwsDataApiNode } from '../node/AwsDataApiNode';
-import { GetObjectOutput } from '@aws-sdk/client-s3';
+import { GetObjectOutput, ObjectCannedACL } from '@aws-sdk/client-s3';
 
 const debug = require('debug')('fluentaws:S3Object');
 
@@ -38,7 +38,7 @@ export class S3Object extends AwsDataApiNode<GetObjectOutput> {
       );
       return true;
     } catch (error) {
-      if (error.statusCode === 404) {
+      if (error.name === 'NotFound') {
         debug(
           'checked object exists = false... bucket: %s, key: %s',
           this.bucketName,
@@ -55,7 +55,10 @@ export class S3Object extends AwsDataApiNode<GetObjectOutput> {
     await AwsApi.s3(this.config()).deleteObject(this.bucketName, this.key);
   }
 
-  async writeS3Object(s3Object: S3Object, acl?: string): Promise<S3Object> {
+  async writeS3Object(
+    s3Object: S3Object,
+    acl?: ObjectCannedACL
+  ): Promise<S3Object> {
     await this.ensureResolved();
     await AwsApi.s3(this.config()).copyObject(
       s3Object.bucketName,
