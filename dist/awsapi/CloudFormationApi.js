@@ -96,8 +96,8 @@ class CloudFormationApi {
             return result;
         });
     }
-    getTemplate(stackName, templateStage = 'Processed') {
-        return __awaiter(this, void 0, void 0, function* () {
+    getTemplate(stackName_1) {
+        return __awaiter(this, arguments, void 0, function* (stackName, templateStage = 'Processed') {
             debug('getting stack template: %s', stackName);
             const response = yield this.cf().getTemplate({
                 StackName: stackName,

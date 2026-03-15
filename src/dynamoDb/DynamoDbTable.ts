@@ -26,7 +26,10 @@ export class DynamoDbTable extends AwsDataApiNode<TableDescription> {
     });
   }
 
-  async query(key: DynamoDbKey): Promise<DynamoDbItem[]> {
+  async query(
+    key: DynamoDbKey,
+    options?: { limit?: number }
+  ): Promise<DynamoDbItem[]> {
     await this.ensureResolved();
     const keyConditionExpression = Object.keys(key)
       .map((k) => `${k} = :${k.toLowerCase()}`)
@@ -39,12 +42,14 @@ export class DynamoDbTable extends AwsDataApiNode<TableDescription> {
       TableName: this.tableName,
       KeyConditionExpression: keyConditionExpression,
       ExpressionAttributeValues: expressionAttributeValues,
+      Limit: options?.limit,
     });
   }
 
   async queryByIndex(
     indexName: string,
-    key: DynamoDbKey
+    key: DynamoDbKey,
+    options?: { limit?: number }
   ): Promise<DynamoDbItem[]> {
     await this.ensureResolved();
     const keyConditionExpression = Object.keys(key)
@@ -59,6 +64,7 @@ export class DynamoDbTable extends AwsDataApiNode<TableDescription> {
       IndexName: indexName,
       KeyConditionExpression: keyConditionExpression,
       ExpressionAttributeValues: expressionAttributeValues,
+      Limit: options?.limit,
     });
   }
 

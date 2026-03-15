@@ -1,7 +1,6 @@
 import { DynamoDbTable } from './../../src/dynamoDb/DynamoDbTable';
 import { AwsApi } from './../../src/awsapi/AwsApi';
 import { apiNodeCollectionStubs } from './../utils/stubs';
-import { aws } from '../../src/FluentAws';
 
 describe('DynamoDbTable', () => {
   it('will load awsData', async () => {
@@ -26,7 +25,7 @@ describe('DynamoDbTable', () => {
       };
 
     const sut = new DynamoDbTable(<any>stubs.parentStub, 'tableName');
-    const result = await sut.query({ key: 'key' });
+    const result = await sut.query({ key: 'key' }, { limit: 1000 });
 
     expect(stubs.awsApiStub).toHaveBeenCalledWith({
       TableName: 'tableName',
@@ -34,6 +33,7 @@ describe('DynamoDbTable', () => {
       ExpressionAttributeValues: {
         ':key': 'key',
       },
+      Limit: 1000,
     });
   });
 
@@ -45,7 +45,11 @@ describe('DynamoDbTable', () => {
       };
 
     const sut = new DynamoDbTable(<any>stubs.parentStub, 'tableName');
-    const result = await sut.queryByIndex('index', { key: 'key' });
+    const result = await sut.queryByIndex(
+      'index',
+      { key: 'key' },
+      { limit: 1001 }
+    );
 
     expect(stubs.awsApiStub).toHaveBeenCalledWith({
       TableName: 'tableName',
@@ -54,6 +58,7 @@ describe('DynamoDbTable', () => {
       ExpressionAttributeValues: {
         ':key': 'key',
       },
+      Limit: 1001,
     });
   });
 

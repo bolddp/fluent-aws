@@ -29,7 +29,7 @@ class DynamoDbTable extends AwsDataApiNode_1.AwsDataApiNode {
             });
         });
     }
-    query(key) {
+    query(key, options) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
             const keyConditionExpression = Object.keys(key)
@@ -41,10 +41,11 @@ class DynamoDbTable extends AwsDataApiNode_1.AwsDataApiNode {
                 TableName: this.tableName,
                 KeyConditionExpression: keyConditionExpression,
                 ExpressionAttributeValues: expressionAttributeValues,
+                Limit: options === null || options === void 0 ? void 0 : options.limit,
             });
         });
     }
-    queryByIndex(indexName, key) {
+    queryByIndex(indexName, key, options) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();
             const keyConditionExpression = Object.keys(key)
@@ -57,6 +58,7 @@ class DynamoDbTable extends AwsDataApiNode_1.AwsDataApiNode {
                 IndexName: indexName,
                 KeyConditionExpression: keyConditionExpression,
                 ExpressionAttributeValues: expressionAttributeValues,
+                Limit: options === null || options === void 0 ? void 0 : options.limit,
             });
         });
     }

@@ -44,8 +44,8 @@ class CloudFormationStack extends AwsDataApiNode_1.AwsDataApiNode {
      * template that was used when the stack was created or last updated. NOTE! This is an operation that
      * may take several minutes.
      */
-    checkDrift(pauseMilliseconds = 10000) {
-        return __awaiter(this, void 0, void 0, function* () {
+    checkDrift() {
+        return __awaiter(this, arguments, void 0, function* (pauseMilliseconds = 10000) {
             yield this.ensureResolved();
             const driftDetectionId = yield AwsApi_1.AwsApi.cloudFormation(this.config()).detectStackDrift(this.stackName);
             while (true) {

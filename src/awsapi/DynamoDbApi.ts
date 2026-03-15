@@ -11,6 +11,7 @@ import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
 const debug = require('debug')('fluentaws:DynamoDbApi');
 
 export class DynamoDbApi {
+  private upperQueryLimit = 100000;
   private dynamoDb = () => new DynamoDB(this.config);
   private docClient = () =>
     DynamoDBDocument.from(this.dynamoDb(), {
@@ -55,20 +56,23 @@ export class DynamoDbApi {
   async query(input: QueryInput): Promise<Record<string, any>[]> {
     debug('querying: %j', input);
     let result: Record<string, any>[] = [];
+    let limitCountdown = input.Limit || this.upperQueryLimit;
     const fnc = async (fncInput: QueryInput) => {
       const response = await this.docClient().query(fncInput);
+      limitCountdown -= (response.Items ?? []).length;
       result = result.concat(response.Items || []);
       debug('#items: %d', response.Items.length);
-      if (response.LastEvaluatedKey) {
-        const newInput = {
+      if (response.LastEvaluatedKey && limitCountdown > 0) {
+        const newInput: QueryInput = {
           ...fncInput,
+          Limit: limitCountdown,
           ExclusiveStartKey: response.LastEvaluatedKey,
         };
         debug('queries recursive: %j', newInput);
         await fnc(newInput);
       }
     };
-    await fnc(input);
+    await fnc({ ...input, Limit: limitCountdown });
     debug('queried');
     return result;
   }

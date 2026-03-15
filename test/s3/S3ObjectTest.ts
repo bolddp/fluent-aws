@@ -38,7 +38,7 @@ describe('S3Object', () => {
   it('will check exists when not exists', async () => {
     const stubs = apiNodeCollectionStubs();
     const awsApiStub = jest.fn().mockImplementation(() => {
-      throw { statusCode: 404 };
+      throw { name: 'NotFound' };
     });
     AwsApi.s3 = () =>
       <any>{

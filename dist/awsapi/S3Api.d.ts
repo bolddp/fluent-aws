@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { Readable } from 'stream';
 import { FluentAwsConfig } from '../FluentAwsConfig';
 import { Bucket, GetObjectOutput, ObjectCannedACL, S3, _Object } from '@aws-sdk/client-s3';

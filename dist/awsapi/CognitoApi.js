@@ -58,8 +58,8 @@ class CognitoApi {
             return result;
         });
     }
-    signup(poolId, clientId, userName, password, attributeList, skipVerification = false) {
-        return __awaiter(this, void 0, void 0, function* () {
+    signup(poolId_1, clientId_1, userName_1, password_1, attributeList_1) {
+        return __awaiter(this, arguments, void 0, function* (poolId, clientId, userName, password, attributeList, skipVerification = false) {
             if (!skipVerification) {
                 debug('signing up: %s, clientId: %s, userName: %s, attr: %j', poolId, clientId, userName, attributeList);
                 return new Promise((resolve, reject) => {

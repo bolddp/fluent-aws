@@ -4,6 +4,7 @@ import { DynamoDB, GetItemInput, QueryInput, TableDescription } from '@aws-sdk/c
 import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
 export declare class DynamoDbApi {
     private config;
+    private upperQueryLimit;
     private dynamoDb;
     private docClient;
     constructor(config: FluentAwsConfig);

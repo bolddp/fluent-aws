@@ -67,8 +67,8 @@ class SystemsManagerApi {
             return response.Parameter;
         });
     }
-    getParameters(names, withDecryption = true) {
-        return __awaiter(this, void 0, void 0, function* () {
+    getParameters(names_1) {
+        return __awaiter(this, arguments, void 0, function* (names, withDecryption = true) {
             debug('getting parameters: %j', names);
             const response = yield this.ssm().getParameters({
                 Names: names,
@@ -78,8 +78,8 @@ class SystemsManagerApi {
             return response.Parameters;
         });
     }
-    getParametersByPath(path, withDecryption = true) {
-        return __awaiter(this, void 0, void 0, function* () {
+    getParametersByPath(path_1) {
+        return __awaiter(this, arguments, void 0, function* (path, withDecryption = true) {
             debug('getting parameters by path: %s', path);
             let result = [];
             const recursiveFunction = (nextToken) => __awaiter(this, void 0, void 0, function* () {

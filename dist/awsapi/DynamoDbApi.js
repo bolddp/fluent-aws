@@ -16,6 +16,7 @@ const debug = require('debug')('fluentaws:DynamoDbApi');
 class DynamoDbApi {
     constructor(config) {
         this.config = config;
+        this.upperQueryLimit = 100000;
         this.dynamoDb = () => new client_dynamodb_1.DynamoDB(this.config);
         this.docClient = () => lib_dynamodb_1.DynamoDBDocument.from(this.dynamoDb(), {
             marshallOptions: {
@@ -59,17 +60,20 @@ class DynamoDbApi {
         return __awaiter(this, void 0, void 0, function* () {
             debug('querying: %j', input);
             let result = [];
+            let limitCountdown = input.Limit || this.upperQueryLimit;
             const fnc = (fncInput) => __awaiter(this, void 0, void 0, function* () {
+                var _a;
                 const response = yield this.docClient().query(fncInput);
+                limitCountdown -= ((_a = response.Items) !== null && _a !== void 0 ? _a : []).length;
                 result = result.concat(response.Items || []);
                 debug('#items: %d', response.Items.length);
-                if (response.LastEvaluatedKey) {
-                    const newInput = Object.assign(Object.assign({}, fncInput), { ExclusiveStartKey: response.LastEvaluatedKey });
+                if (response.LastEvaluatedKey && limitCountdown > 0) {
+                    const newInput = Object.assign(Object.assign({}, fncInput), { Limit: limitCountdown, ExclusiveStartKey: response.LastEvaluatedKey });
                     debug('queries recursive: %j', newInput);
                     yield fnc(newInput);
                 }
             });
-            yield fnc(input);
+            yield fnc(Object.assign(Object.assign({}, input), { Limit: limitCountdown }));
             debug('queried');
             return result;
         });
