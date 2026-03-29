@@ -60,4 +60,25 @@ describe('CognitoUserCollection', () => {
 
     expect(stubs.awsApiStub).toHaveBeenCalledWith('poolId');
   });
+
+  it('will find by email', async () => {
+    const stubs = apiNodeCollectionStubs();
+    ApiNodeFactory.cognitoUser = stubs.factoryStub;
+    AwsApi.cognito = () =>
+      <any>{
+        listUsersByEmail: stubs.awsApiStub.mockReturnValue([
+          { Username: 'userName01' },
+          { Username: 'userName02' },
+        ]),
+      };
+
+    const sut = new CognitoUserCollection(<any>stubs.parentStub, {
+      poolId: 'poolId',
+      clientId: 'clientId',
+    });
+    const result = await sut.findByEmail('test@example.com');
+
+    expect(stubs.awsApiStub).toHaveBeenCalledWith('poolId', 'test@example.com');
+    expect(result).toHaveLength(2);
+  });
 });

@@ -110,6 +110,21 @@ describe('CognitoUserPool', () => {
     );
   });
 
+  it('will find users by email', async () => {
+    const stubs = apiNodeCollectionStubs();
+    ApiNodeFactory.cognitoUserCollection = stubs.factoryStub;
+
+    const sut = new CognitoUserPool(<any>stubs.parentStub, {
+      poolId: 'poolId',
+      clientId: 'clientId',
+    });
+
+    await sut.findUsersByEmail('test@example.com');
+
+    expect(stubs.factoryStub).toHaveBeenCalled();
+    expect(stubs.findByEmailStub).toHaveBeenCalledWith('test@example.com');
+  });
+
   it('will set new password', async () => {
     const stubs = apiNodeCollectionStubs();
     AwsApi.cognito = () =>

@@ -1,6 +1,6 @@
 {
   "name": "fluent-aws",
-  "version": "0.23.0",
+  "version": "0.24.0",
   "description": "Fluent AWS API, written in Typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -29,7 +29,7 @@
     "@types/node-fetch": "2.5.4",
     "jest": "29.5.0",
     "jest-junit": "16.0.0",
-    "jest-stare": "2.5.0",
+    "jest-stare": "2.5.3",
     "rimraf": "3.0.2",
     "ts-jest": "29.2.5",
     "ts-node": "10.9.2",

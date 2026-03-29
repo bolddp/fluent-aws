@@ -49,6 +49,10 @@ export class CognitoUserPool extends AwsDataApiNode<UserPoolDescriptionType> {
     return this.userCollection.getById(userName);
   }
 
+  findUsersByEmail(email: string): Promise<CognitoUser[]> {
+    return this.userCollection.findByEmail(email);
+  }
+
   async signup(
     signupData: CognitoSignupData
   ): Promise<AmazonCognitoIdentity.ISignUpResult> {

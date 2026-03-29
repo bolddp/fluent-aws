@@ -62,6 +62,9 @@ class CognitoUserPool extends AwsDataApiNode_1.AwsDataApiNode {
     user(userName) {
         return this.userCollection.getById(userName);
     }
+    findUsersByEmail(email) {
+        return this.userCollection.findByEmail(email);
+    }
     signup(signupData) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.ensureResolved();

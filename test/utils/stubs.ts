@@ -6,8 +6,10 @@ export const apiNodeCollectionStubs = () => {
   const getByIdStub = jest.fn().mockReturnValue({
     ensureResolved: () => { return Promise.resolve(); }
   });
+  const findByEmailStub = jest.fn().mockResolvedValue([]);
   const factoryStub = jest.fn().mockReturnValue({
     getById: getByIdStub,
+    findByEmail: findByEmailStub,
     ensureResolved: () => { return Promise.resolve(); }
   });
   const awsApiStub = jest.fn();
@@ -15,6 +17,7 @@ export const apiNodeCollectionStubs = () => {
     parentStub,
     factoryStub,
     getByIdStub,
+    findByEmailStub,
     awsApiStub
   }
 };

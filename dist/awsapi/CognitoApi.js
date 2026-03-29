@@ -58,6 +58,26 @@ class CognitoApi {
             return result;
         });
     }
+    listUsersByEmail(poolId, emailValue) {
+        return __awaiter(this, void 0, void 0, function* () {
+            debug('listing users by email: %s', emailValue);
+            let result = [];
+            const recursiveFunction = (paginationToken) => __awaiter(this, void 0, void 0, function* () {
+                const response = yield this.cognitoSp().listUsers({
+                    UserPoolId: poolId,
+                    Filter: `email ^= "${emailValue}"`,
+                    PaginationToken: paginationToken,
+                });
+                result = result.concat(response.Users);
+                if (response.PaginationToken) {
+                    yield recursiveFunction(response.PaginationToken);
+                }
+            });
+            yield recursiveFunction();
+            debug('listed users by email');
+            return result;
+        });
+    }
     signup(poolId_1, clientId_1, userName_1, password_1, attributeList_1) {
         return __awaiter(this, arguments, void 0, function* (poolId, clientId, userName, password, attributeList, skipVerification = false) {
             if (!skipVerification) {

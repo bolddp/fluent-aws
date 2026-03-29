@@ -9,6 +9,7 @@ export declare class CognitoApi {
     listUserPools(): Promise<UserPoolDescriptionType[]>;
     describeUserPool(poolId: string): Promise<UserPoolDescriptionType>;
     listUsers(poolId: string): Promise<UserType[]>;
+    listUsersByEmail(poolId: string, emailValue: string): Promise<UserType[]>;
     signup(poolId: string, clientId: string, userName: string, password: string, attributeList: CognitoUserAttribute[], skipVerification?: boolean): Promise<ISignUpResult>;
     login(poolId: string, clientId: string, userName: string, password: string): Promise<CognitoUserSession>;
     refresh(poolId: string, clientId: string, userName: string, refreshToken: string): Promise<CognitoUserSession>;

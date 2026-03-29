@@ -21,6 +21,11 @@ export class CognitoUserCollection extends ApiNodeCollection<
     return AwsApi.cognito(this.config()).listUsers(this.poolId.poolId);
   }
 
+  async findByEmail(email: string): Promise<CognitoUser[]> {
+    const users = await AwsApi.cognito(this.config()).listUsersByEmail(this.poolId.poolId, email);
+    return users.map((u) => this.apiNodeFromAwsData(u));
+  }
+
   apiNodeFromAwsData(data: UserType): CognitoUser {
     return ApiNodeFactory.cognitoUser(this, data.Username, this.poolId);
   }

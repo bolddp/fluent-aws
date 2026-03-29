@@ -64,6 +64,25 @@ export class CognitoApi {
     return result;
   }
 
+  async listUsersByEmail(poolId: string, emailValue: string): Promise<UserType[]> {
+    debug('listing users by email: %s', emailValue);
+    let result: UserType[] = [];
+    const recursiveFunction = async (paginationToken?: string) => {
+      const response = await this.cognitoSp().listUsers({
+        UserPoolId: poolId,
+        Filter: `email ^= "${emailValue}"`,
+        PaginationToken: paginationToken,
+      });
+      result = result.concat(response.Users);
+      if (response.PaginationToken) {
+        await recursiveFunction(response.PaginationToken);
+      }
+    };
+    await recursiveFunction();
+    debug('listed users by email');
+    return result;
+  }
+
   async signup(
     poolId: string,
     clientId: string,

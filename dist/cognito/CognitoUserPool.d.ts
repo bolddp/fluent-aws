@@ -14,6 +14,7 @@ export declare class CognitoUserPool extends AwsDataApiNode<UserPoolDescriptionT
     loadAwsData(): Promise<UserPoolDescriptionType>;
     users(): CognitoUserCollection;
     user(userName: string): CognitoUser;
+    findUsersByEmail(email: string): Promise<CognitoUser[]>;
     signup(signupData: CognitoSignupData): Promise<AmazonCognitoIdentity.ISignUpResult>;
     /**
      * Requests a verification code for a user with a specific email address. This verification code then

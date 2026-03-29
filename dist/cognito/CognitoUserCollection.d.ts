@@ -7,6 +7,7 @@ export declare class CognitoUserCollection extends ApiNodeCollection<CognitoUser
     poolId: CognitoUserPoolId;
     constructor(parent: ApiNode, poolId: CognitoUserPoolId);
     load(): Promise<UserType[]>;
+    findByEmail(email: string): Promise<CognitoUser[]>;
     apiNodeFromAwsData(data: UserType): CognitoUser;
     apiNodeFromId(id: string): CognitoUser;
 }
