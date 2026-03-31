@@ -240,6 +240,15 @@ export class CognitoApi {
     });
   }
 
+  async confirmUser(poolId: string, userName: string): Promise<void> {
+    debug('confirming user: %s, poolId: %s', userName, poolId);
+    await this.cognitoSp().adminConfirmSignUp({
+      UserPoolId: poolId,
+      Username: userName,
+    });
+    debug('confirmed user');
+  }
+
   async deleteUser(poolId: string, userName: string): Promise<void> {
     debug('deleting user: %s, poolId: %s', userName, poolId);
     await this.cognitoSp().adminDeleteUser({

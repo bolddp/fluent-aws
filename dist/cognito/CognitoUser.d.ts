@@ -17,6 +17,7 @@ export declare class CognitoUser extends AwsDataApiNode<AdminGetUserResponse> {
      */
     listGroups(): Promise<string[]>;
     globalSignOut(): Promise<void>;
+    activate(): Promise<void>;
     delete(): Promise<void>;
     updateAttributes(attributes: {
         [key: string]: string;

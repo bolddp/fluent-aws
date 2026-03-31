@@ -123,6 +123,23 @@ describe('CognitoUser', () => {
     expect(stubs.awsApiStub).toHaveBeenCalledWith('poolId', 'userName');
   });
 
+  it('will activate', async () => {
+    const stubs = apiNodeCollectionStubs();
+    AwsApi.cognito = () =>
+      <any>{
+        confirmUser: stubs.awsApiStub,
+      };
+
+    const sut = new CognitoUser(<any>stubs.parentStub, 'userName', {
+      poolId: 'poolId',
+      clientId: 'clientId',
+    });
+
+    await sut.activate();
+
+    expect(stubs.awsApiStub).toHaveBeenCalledWith('poolId', 'userName');
+  });
+
   it('will delete', async () => {
     const stubs = apiNodeCollectionStubs();
     AwsApi.cognito = () =>

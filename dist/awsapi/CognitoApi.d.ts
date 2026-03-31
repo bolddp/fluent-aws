@@ -16,6 +16,7 @@ export declare class CognitoApi {
     getUser(poolId: string, userName: string): Promise<AdminGetUserResponse>;
     forgotPassword(poolId: string, clientId: string, userName: string): Promise<any>;
     confirmPassword(poolId: string, clientId: string, userName: string, verificationCode: string, newPassword: string): Promise<void>;
+    confirmUser(poolId: string, userName: string): Promise<void>;
     deleteUser(poolId: string, userName: string): Promise<void>;
     addUserToGroup(poolId: string, userName: string, groupName: string): Promise<void>;
     updateUserAttributes(poolId: string, userName: string, attributes: AttributeType[]): Promise<void>;

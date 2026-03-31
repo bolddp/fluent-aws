@@ -86,6 +86,11 @@ export class CognitoUser extends AwsDataApiNode<AdminGetUserResponse> {
     );
   }
 
+  async activate(): Promise<void> {
+    await this.ensureResolved();
+    await AwsApi.cognito(this.config()).confirmUser(this.poolId.poolId, this.userName);
+  }
+
   async delete(): Promise<void> {
     await this.ensureResolved();
     await AwsApi.cognito(this.config()).deleteUser(

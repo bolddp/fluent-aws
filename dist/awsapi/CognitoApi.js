@@ -187,6 +187,16 @@ class CognitoApi {
             });
         });
     }
+    confirmUser(poolId, userName) {
+        return __awaiter(this, void 0, void 0, function* () {
+            debug('confirming user: %s, poolId: %s', userName, poolId);
+            yield this.cognitoSp().adminConfirmSignUp({
+                UserPoolId: poolId,
+                Username: userName,
+            });
+            debug('confirmed user');
+        });
+    }
     deleteUser(poolId, userName) {
         return __awaiter(this, void 0, void 0, function* () {
             debug('deleting user: %s, poolId: %s', userName, poolId);
