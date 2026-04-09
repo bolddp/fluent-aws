@@ -10,4 +10,5 @@ export declare class SystemsManagerApi {
     getParameters(names: string[], withDecryption?: boolean): Promise<Parameter[]>;
     getParametersByPath(path: string, withDecryption?: boolean): Promise<Parameter[]>;
     putParameter(request: PutParameterRequest): Promise<void>;
+    deleteParameter(parameterName: string): Promise<void>;
 }

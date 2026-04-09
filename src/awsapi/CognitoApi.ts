@@ -49,10 +49,10 @@ export class CognitoApi {
   async listUsers(poolId: string): Promise<UserType[]> {
     debug('listing users');
     let result: UserType[] = [];
-    const recursiveFunction = async (paginationToken?: string) => {
+    const recursiveFunction = async (pt?: string) => {
       const response = await this.cognitoSp().listUsers({
         UserPoolId: poolId,
-        PaginationToken: paginationToken,
+        PaginationToken: pt,
       });
       result = result.concat(response.Users);
       if (response.PaginationToken) {
@@ -64,7 +64,10 @@ export class CognitoApi {
     return result;
   }
 
-  async listUsersByEmail(poolId: string, emailValue: string): Promise<UserType[]> {
+  async listUsersByEmail(
+    poolId: string,
+    emailValue: string
+  ): Promise<UserType[]> {
     debug('listing users by email: %s', emailValue);
     let result: UserType[] = [];
     const recursiveFunction = async (paginationToken?: string) => {

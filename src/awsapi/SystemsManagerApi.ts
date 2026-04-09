@@ -101,4 +101,10 @@ export class SystemsManagerApi {
     await this.ssm().putParameter(request);
     debug('put parameter');
   }
+
+  async deleteParameter(parameterName: string): Promise<void> {
+    debug('deleting parameter: %s', parameterName);
+    await this.ssm().deleteParameter({ Name: parameterName });
+    debug('deleted parameter');
+  }
 }

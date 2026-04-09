@@ -12,4 +12,5 @@ export declare class SystemsManagerParameter extends AwsDataApiNode<Parameter> {
      * Returns the metadata for this parameter.
      */
     metaData(): Promise<ParameterMetadata>;
+    delete(): Promise<void>;
 }

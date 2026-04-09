@@ -43,10 +43,10 @@ class CognitoApi {
         return __awaiter(this, void 0, void 0, function* () {
             debug('listing users');
             let result = [];
-            const recursiveFunction = (paginationToken) => __awaiter(this, void 0, void 0, function* () {
+            const recursiveFunction = (pt) => __awaiter(this, void 0, void 0, function* () {
                 const response = yield this.cognitoSp().listUsers({
                     UserPoolId: poolId,
-                    PaginationToken: paginationToken,
+                    PaginationToken: pt,
                 });
                 result = result.concat(response.Users);
                 if (response.PaginationToken) {

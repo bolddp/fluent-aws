@@ -105,5 +105,12 @@ class SystemsManagerApi {
             debug('put parameter');
         });
     }
+    deleteParameter(parameterName) {
+        return __awaiter(this, void 0, void 0, function* () {
+            debug('deleting parameter: %s', parameterName);
+            yield this.ssm().deleteParameter({ Name: parameterName });
+            debug('deleted parameter');
+        });
+    }
 }
 exports.SystemsManagerApi = SystemsManagerApi;

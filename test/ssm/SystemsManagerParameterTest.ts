@@ -19,6 +19,22 @@ describe('SystemsManagerParameter', () => {
     expect(stubs.awsApiStub).toHaveBeenCalledWith('parameterName');
   });
 
+  it('will delete', async () => {
+    const stubs = apiNodeCollectionStubs();
+    AwsApi.systemsManager = () =>
+      <any>{
+        deleteParameter: stubs.awsApiStub,
+      };
+
+    const sut = new SystemsManagerParameter(
+      <any>stubs.parentStub,
+      'parameterName'
+    );
+    await sut.delete();
+
+    expect(stubs.awsApiStub).toHaveBeenCalledWith('parameterName');
+  });
+
   it('will provide metadata', async () => {
     const stubs = apiNodeCollectionStubs();
     AwsApi.systemsManager = () =>

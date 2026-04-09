@@ -29,4 +29,9 @@ export class SystemsManagerParameter extends AwsDataApiNode<Parameter> {
       this.parameterName
     );
   }
+
+  async delete(): Promise<void> {
+    await this.ensureResolved();
+    await AwsApi.systemsManager(this.config()).deleteParameter(this.parameterName);
+  }
 }

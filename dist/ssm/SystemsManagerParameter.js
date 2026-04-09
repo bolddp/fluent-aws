@@ -32,5 +32,11 @@ class SystemsManagerParameter extends AwsDataApiNode_1.AwsDataApiNode {
             return AwsApi_1.AwsApi.systemsManager(this.config()).describeParameter(this.parameterName);
         });
     }
+    delete() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.ensureResolved();
+            yield AwsApi_1.AwsApi.systemsManager(this.config()).deleteParameter(this.parameterName);
+        });
+    }
 }
 exports.SystemsManagerParameter = SystemsManagerParameter;
